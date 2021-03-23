@@ -10,7 +10,7 @@ import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
 
 class ListPantryActivity : AppCompatActivity() {
     companion object {
-        const val GET_PANTRY_EXTRA = "pt.ulisboa.tecnico.cmov.shopist.GET_PANTRY_EXTRA"
+        const val GET_PANTRY_INDEX_INT = "pt.ulisboa.tecnico.cmov.shopist.GET_PANTRY_INDEX_INT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,6 +23,9 @@ class ListPantryActivity : AppCompatActivity() {
     private fun initListPantries() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val globalData = applicationContext as ShopIST
+        if (globalData.pantries.isEmpty()) {
+            globalData.startUp()
+        }
         val adapter = RecyclerAdapter(this, globalData.pantries)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter

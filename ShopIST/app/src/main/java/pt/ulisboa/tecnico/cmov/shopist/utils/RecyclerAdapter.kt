@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.shopist.utils
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import pt.ulisboa.tecnico.cmov.shopist.ListPantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.PantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
+import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class RecyclerAdapter(private val context: Context, private val list: Array<PantryList>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -19,11 +21,13 @@ class RecyclerAdapter(private val context: Context, private val list: Array<Pant
         private val textView: TextView = view.findViewById(R.id.rowText)
 
         init {
-            val buttonView: View = view.findViewById(R.id.rowButton)
-            val position = adapterPosition
-            buttonView.setOnClickListener {
+            // val buttonView: View = view.findViewById(R.id.rowButton)
+            val cardView: View = view.findViewById(R.id.rowCard)
+            cardView.setOnClickListener {
+                val position = adapterPosition
                 val intent = Intent(view.context, PantryActivity::class.java)
-                    .putExtra(ListPantryActivity.GET_PANTRY_EXTRA, position)
+                    .putExtra(ListPantryActivity.GET_PANTRY_INDEX_INT, position)
+                Log.d(ShopIST.TAG, "Got pantry nº$position")
                 view.context.startActivity(intent)
             }
         }
