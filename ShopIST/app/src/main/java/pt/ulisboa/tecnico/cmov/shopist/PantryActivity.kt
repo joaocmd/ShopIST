@@ -34,7 +34,7 @@ class PantryActivity : AppCompatActivity() {
     }
 }
 
-class PantryAdapter(private val dataSet: MutableList<Product>) :
+private class PantryAdapter(private val dataSet: MutableList<Product>) :
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
     /**
