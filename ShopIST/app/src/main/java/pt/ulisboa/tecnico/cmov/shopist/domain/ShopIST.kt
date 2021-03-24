@@ -4,7 +4,7 @@ import android.app.Application
 
 class ShopIST : Application() {
     companion object {
-        const val TAG = "ShopIST"
+        const val TAG = "shopist.domain.ShopIST"
     }
 
     private val allPantry: MutableList<PantryList> = mutableListOf()
