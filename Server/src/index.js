@@ -7,7 +7,6 @@ const port = 3000
 
 const registerEndpoints = (app, prefix = __dirname + '/routes') => {
     const registerAux = (currPath = '') => {
-        console.log(currPath)
         const files = fs.readdirSync(prefix + currPath)
         files.forEach(file => {
             const fullPath = prefix + currPath + '/' + file
@@ -25,6 +24,7 @@ const registerEndpoints = (app, prefix = __dirname + '/routes') => {
 }
 
 app.use(morgan('tiny'))
+app.use(express.json())
 registerEndpoints(app)
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
