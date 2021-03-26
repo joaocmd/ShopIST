@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.ListPantriesActivity
+import pt.ulisboa.tecnico.cmov.shopist.PantriesListActivity
 import pt.ulisboa.tecnico.cmov.shopist.PantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
@@ -26,7 +26,7 @@ class RecyclerAdapter(private val context: Context, private val list: Array<Pant
             cardView.setOnClickListener {
                 val position = adapterPosition
                 val intent = Intent(view.context, PantryActivity::class.java)
-                    .putExtra(ListPantriesActivity.GET_PANTRY_INDEX_INT, position)
+                    .putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, position)
                 Log.d(ShopIST.TAG, "Got pantry nº$position")
                 view.context.startActivity(intent)
             }

@@ -17,7 +17,7 @@ class CreateProduct : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Get pantry list
-        idx = intent.getIntExtra(ListPantriesActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
+        idx = intent.getIntExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
 
         setContentView(R.layout.activity_create_product)
     }

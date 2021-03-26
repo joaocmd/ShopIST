@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
 
-class ListPantriesActivity : AppCompatActivity() {
+class PantriesListActivity : AppCompatActivity() {
     companion object {
         const val GET_PANTRY_INDEX_INT = "shopist.ListPantryActivity.GET_PANTRY_INDEX_INT"
     }

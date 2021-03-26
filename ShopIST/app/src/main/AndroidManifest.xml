@@ -10,9 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST">
-        <activity android:name=".CreateProduct"></activity>
+        <activity android:name=".CreateProduct" />
         <activity android:name=".CreatePantry" />
-        <activity android:name=".ListPantriesActivity">
+        <activity android:name=".PantriesListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
