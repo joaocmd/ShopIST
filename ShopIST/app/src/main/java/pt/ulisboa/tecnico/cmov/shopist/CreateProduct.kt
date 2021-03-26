@@ -10,8 +10,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class CreateProduct : AppCompatActivity() {
 
-    private lateinit var associatedPantry: PantryList
-    private var idx : Int? = null
+    private var idx : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +27,10 @@ class CreateProduct : AppCompatActivity() {
         val productQuantity : Int = findViewById<EditText>(R.id.productQuantity).text.toString().toInt()
 
         val globalData = applicationContext as ShopIST
-        globalData.getPantryList( idx ?: 0).addProduct(Product(productName, productQuantity))
+        globalData.getPantryList(idx).addProduct(Product(productName, productQuantity))
+
+        // Save data in file
+        globalData.savePersistent()
 
         //get current pantry
         //create and add product

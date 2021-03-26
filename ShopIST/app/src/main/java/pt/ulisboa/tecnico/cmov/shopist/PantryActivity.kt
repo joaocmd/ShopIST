@@ -16,14 +16,14 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 class PantryActivity : AppCompatActivity() {
 
     private lateinit var pantryList : PantryList
-    private var idx : Int? = null
+    private var idx : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pantry)
 
         // Get pantry list
-        val idx = intent.getIntExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
+        idx = intent.getIntExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
         val globalData = applicationContext as ShopIST
         pantryList = globalData.getPantryList(idx)
 
@@ -35,9 +35,9 @@ class PantryActivity : AppCompatActivity() {
     }
 
     fun onNewProduct(view: View) {
-        val intent = Intent(applicationContext, CreateProduct::class.java)
-        intent.putExtra( PantriesListActivity.GET_PANTRY_INDEX_INT, idx)
-        startActivity(intent)
+        val int = Intent(applicationContext, CreateProduct::class.java)
+        int.putExtra( PantriesListActivity.GET_PANTRY_INDEX_INT, idx)
+        startActivity(int)
     }
 }
 

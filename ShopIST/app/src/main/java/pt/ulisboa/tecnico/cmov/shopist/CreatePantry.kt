@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import android.widget.TextView
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
-import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class CreatePantry : AppCompatActivity() {
@@ -25,6 +23,9 @@ class CreatePantry : AppCompatActivity() {
         globalData.addPantryList(
             newPantry
         )
+
+        // Save data in file
+        globalData.savePersistent()
 
         finish()
     }
