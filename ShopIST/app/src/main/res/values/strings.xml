@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShopIST</string>
+    <string name="create_pantry_item_title"> Title </string>
+    <string name="create_pantry_title"> Insert your new pantry\'s data </string>
+    <string name="create_pantry_warning"> This new pantry will be added to the family pantry </string>
+    <string name="create_pantry_item_complete"> Add new Pantry </string>
 </resources>

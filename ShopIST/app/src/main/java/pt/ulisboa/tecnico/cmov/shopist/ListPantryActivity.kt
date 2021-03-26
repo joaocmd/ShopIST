@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -30,6 +31,11 @@ class ListPantryActivity : AppCompatActivity() {
         initListPantries()
     }
 
+    override fun onResume() {
+        initListPantries()
+        super.onResume()
+    }
+
     private fun initListPantries() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         val globalData = applicationContext as ShopIST
@@ -44,6 +50,8 @@ class ListPantryActivity : AppCompatActivity() {
     }
 
     fun onNewPantry(view: View) {
+        val intent = Intent(applicationContext, CreatePantryList::class.java)
+        startActivity(intent)
         // TODO:
     }
 }
