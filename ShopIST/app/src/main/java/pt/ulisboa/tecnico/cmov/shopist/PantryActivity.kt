@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +9,23 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class PantryActivity : AppCompatActivity() {
+
+    private lateinit var pantryList : PantryList
+    private var idx : Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pantry)
 
         // Get pantry list
-         val idx = intent.getIntExtra(ListPantryActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
+        val idx = intent.getIntExtra(ListPantriesActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
         val globalData = applicationContext as ShopIST
-        val pantryList = globalData.getPantryList(idx)
+        pantryList = globalData.getPantryList(idx)
 
         // Set products
         val listView = findViewById<RecyclerView>(R.id.recyclerView)
@@ -30,7 +35,9 @@ class PantryActivity : AppCompatActivity() {
     }
 
     fun onNewProduct(view: View) {
-        // TODO:
+        val intent = Intent(applicationContext, CreateProduct::class.java)
+        intent.putExtra( ListPantriesActivity.GET_PANTRY_INDEX_INT, idx)
+        startActivity(intent)
     }
 }
 
@@ -43,7 +50,7 @@ private class PantryAdapter(private val dataSet: MutableList<Product>) :
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.rowText)
-
+        val quantityView : TextView = view.findViewById(R.id.displayCurrentProductQuantity)
         init {
             // Define click listener for the ViewHolder's View.
         }
@@ -53,7 +60,7 @@ private class PantryAdapter(private val dataSet: MutableList<Product>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.recycler_view_row, viewGroup, false)
+                .inflate(R.layout.product_row, viewGroup, false)
 
         return ViewHolder(view)
     }
@@ -64,6 +71,7 @@ private class PantryAdapter(private val dataSet: MutableList<Product>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.textView.text = dataSet[position].name
+        viewHolder.quantityView.text = dataSet[position].currentQuantity.toString()
     }
 
     // Return the size of your dataset (invoked by the layout manager)

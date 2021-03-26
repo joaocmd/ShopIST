@@ -7,11 +7,10 @@ import android.view.View
 import android.view.Window
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.databinding.ActivityListPantryBinding
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
 
-class ListPantryActivity : AppCompatActivity() {
+class ListPantriesActivity : AppCompatActivity() {
     companion object {
         const val GET_PANTRY_INDEX_INT = "shopist.ListPantryActivity.GET_PANTRY_INDEX_INT"
     }
@@ -26,7 +25,7 @@ class ListPantryActivity : AppCompatActivity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         supportActionBar?.hide(); //hide the title bar
 
-        setContentView(R.layout.activity_list_pantry)
+        setContentView(R.layout.activity_list_pantries)
 
         initListPantries()
     }
@@ -50,7 +49,7 @@ class ListPantryActivity : AppCompatActivity() {
     }
 
     fun onNewPantry(view: View) {
-        val intent = Intent(applicationContext, CreatePantryList::class.java)
+        val intent = Intent(applicationContext, CreatePantry::class.java)
         startActivity(intent)
         // TODO:
     }

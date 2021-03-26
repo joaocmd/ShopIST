@@ -10,15 +10,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST">
-        <activity android:name=".CreatePantryList"></activity>
-        <activity android:name=".ListPantryActivity">
+        <activity android:name=".CreateProduct"></activity>
+        <activity android:name=".CreatePantry" />
+        <activity android:name=".ListPantriesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PantryActivity"></activity>
+        <activity android:name=".PantryActivity" />
     </application>
 
 </manifest>

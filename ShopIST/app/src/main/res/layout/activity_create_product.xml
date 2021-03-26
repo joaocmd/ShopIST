@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePantry">
+    tools:context=".CreateProduct">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,29 +23,30 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_pantry_title"
+                android:text="@string/create_product_title"
                 android:layout_marginBottom="20dp" />
 
             <EditText
-                android:id="@+id/editTextPantryName"
+                android:id="@+id/productName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="@string/create_pantry_item_title"/>
+                android:text="@string/create_product_item_name"/>
+
+            <EditText
+                android:id="@+id/productQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="numberSigned" />
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_pantry_item_complete"
-                android:onClick="onCreatePantry"/>
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create_pantry_warning"/>
+                android:text="@string/create_product_item_complete"
+                android:onClick="onCreateProduct"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

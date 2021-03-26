@@ -25,15 +25,15 @@ class ShopIST : Application() {
     // For testing purposes
     fun startUp() {
         val pantry1 = PantryList("My Testing Pantry")
-        pantry1.addProduct(Product("1-Product1"))
-        pantry1.addProduct(Product("1-Product2"))
-        pantry1.addProduct(Product("1-Product3"))
+        pantry1.addProduct(Product("1-Product1", 1))
+        pantry1.addProduct(Product("1-Product2", 2))
+        pantry1.addProduct(Product("1-Product3", 3))
         addPantryList(pantry1)
 
         val pantry2 = PantryList("My Second Testing Pantry")
-        pantry2.addProduct(Product("2-Product1"))
-        pantry2.addProduct(Product("2-Product2"))
-        pantry2.addProduct(Product("2-Product3"))
+        pantry2.addProduct(Product("2-Product1", 4))
+        pantry2.addProduct(Product("2-Product2", 6))
+        pantry2.addProduct(Product("2-Product3", 6))
         addPantryList(pantry2)
     }
 }
