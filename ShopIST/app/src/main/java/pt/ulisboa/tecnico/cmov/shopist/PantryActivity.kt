@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
-import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class PantryActivity : AppCompatActivity() {
@@ -20,6 +19,11 @@ class PantryActivity : AppCompatActivity() {
     private lateinit var adapter : PantryAdapter
     private var idx : Int = 0
 
+    companion object {
+        private const val TAG = "shopist.PantryActivity"
+        const val SHOW_ITEM = "$TAG.SHOW_ITEM"
+    }
+
     inner class PantryAdapter(private val dataSet: MutableList<Item>) :
             RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
@@ -27,35 +31,42 @@ class PantryActivity : AppCompatActivity() {
          * Provide a reference to the type of views that you are using
          * (custom ViewHolder).
          */
-        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val textView: TextView = view.findViewById(R.id.rowText)
-            val quantityView : TextView = view.findViewById(R.id.displayCurrentProductQuantity)
-            init {
-                // Define click listener for the ViewHolder's View.
+        inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+            private val textView: TextView = view.findViewById(R.id.rowText)
+            private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
+            private val needingQuantityView : TextView = view.findViewById(R.id.needingQuantityDisplay)
+
+            fun bind(item: Item) {
+                textView.text = item.product.name
+                pantryQuantityView.text = item.pantryQuantity.toString()
+                needingQuantityView.text = item.needingQuantity.toString()
+
+                view.setOnClickListener {
+                    val int = Intent(applicationContext, AddItemActivity::class.java)
+                    int.putExtra(SHOW_ITEM, item.product.uuid)
+                    startActivity(int)
+                }
+
+                view.setOnLongClickListener {
+                    // set long click change top menu so that we're able to delete items
+                    // it can also simply appear on the menu, though
+                    true
+                }
             }
         }
 
-        // Create new views (invoked by the layout manager)
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-            // Create a new view, which defines the UI of the list item
             val view = LayoutInflater.from(viewGroup.context)
                     .inflate(R.layout.product_row, viewGroup, false)
 
             return ViewHolder(view)
         }
 
-        // Replace the contents of a view (invoked by the layout manager)
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-            // Get element from your dataset at this position and replace the
-            // contents of the view with that element
-            viewHolder.textView.text = dataSet[position].product.name
-            viewHolder.quantityView.text = dataSet[position].pantryQuantity.toString()
+            viewHolder.bind(dataSet[position])
         }
 
-        // Return the size of your dataset (invoked by the layout manager)
         override fun getItemCount() = dataSet.size
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

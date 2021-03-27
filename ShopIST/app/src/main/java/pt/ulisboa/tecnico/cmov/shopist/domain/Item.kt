@@ -2,13 +2,16 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import java.util.*
 
-class Item(prod: Product, initialQuant: Int) {
-    val product: Product = prod
-    var pantryQuantity: Int = initialQuant
-
+class Item(val product: Product,
+           var pantryQuantity: Int,
+           var needingQuantity: Int,
+           var cartQuantity: Int) {
     companion object {
         fun createItem(i: ItemDto, products: Map<UUID, Product>): Item {
-            return Item(products[i.productUUID]!!, i.pantryQuantity)
+            return Item(products[i.productUUID]!!,
+                    i.pantryQuantity,
+                    i.needingQuantity,
+                    i.cartQuantity)
         }
     }
 }

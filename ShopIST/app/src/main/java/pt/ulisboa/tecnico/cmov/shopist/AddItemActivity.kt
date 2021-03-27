@@ -95,7 +95,7 @@ class AddItemActivity : AppCompatActivity() {
         if (previousItem != null) {
             previousItem.pantryQuantity += pantryQuantity
         } else {
-            currentPantry.addItem(Item(selectedProduct!!, pantryQuantity))
+            currentPantry.addItem(Item(selectedProduct!!, pantryQuantity, 0, 0))
         }
 
         // Save data in file

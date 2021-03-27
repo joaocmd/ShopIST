@@ -15,12 +15,8 @@ class PantriesListActivity : AppCompatActivity() {
         const val GET_PANTRY_INDEX_INT = "shopist.ListPantryActivity.GET_PANTRY_INDEX_INT"
     }
 
-//    private lateinit var binding: ActivityListPantryBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        binding = ActivityListPantryBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
         supportActionBar?.hide(); //hide the title bar
@@ -44,8 +40,6 @@ class PantriesListActivity : AppCompatActivity() {
         val adapter = RecyclerAdapter(this, globalData.pantries)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-//        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-//        binding.recyclerView.adapter = adapter
     }
 
     fun onNewPantry(view: View) {

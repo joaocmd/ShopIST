@@ -48,9 +48,9 @@ class ShopIST : Application() {
 
     fun startUp() {
         // Load previous data
-        loadPersistent()
+//        loadPersistent()
 
-        // For testing purposes
+        // FIXME: Remove for production
         if (allPantry.size == 0) {
             val product1 = Product("Pasta de Dentes")
             val product2 = Product("Escova de Dentes")
@@ -63,13 +63,13 @@ class ShopIST : Application() {
             addProduct(product4)
 
             val pantry1 = PantryList("Dani's Pantry")
-            pantry1.addItem(Item(product1, 10))
-            pantry1.addItem(Item(product2, 2))
+            pantry1.addItem(Item(product1, 10, 0, 0))
+            pantry1.addItem(Item(product2, 2, 0, 0))
             addPantryList(pantry1)
 
             val pantry2 = PantryList("Joca's Pantry")
-            pantry2.addItem(Item(product3, 1))
-            pantry2.addItem(Item(product4, 2))
+            pantry2.addItem(Item(product3, 1, 1, 1))
+            pantry2.addItem(Item(product4, 2, 0, 2))
             addPantryList(pantry2)
         }
     }
