@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.shopist
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +13,19 @@ import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import java.util.*
 
 class PantryActivity : AppCompatActivity() {
 
     private lateinit var pantryList : PantryList
     private lateinit var adapter : PantryAdapter
-    private var idx : Int = 0
 
     companion object {
         private const val TAG = "shopist.PantryActivity"
         const val SHOW_ITEM = "$TAG.SHOW_ITEM"
     }
 
-    inner class PantryAdapter(private val dataSet: MutableList<Item>) :
+    inner class PantryAdapter(private val pantryList: PantryList) :
             RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
         /**
@@ -42,9 +43,9 @@ class PantryActivity : AppCompatActivity() {
                 needingQuantityView.text = item.needingQuantity.toString()
 
                 view.setOnClickListener {
-                    val int = Intent(applicationContext, AddItemActivity::class.java)
-                    int.putExtra(SHOW_ITEM, item.product.uuid)
-                    startActivity(int)
+//                    val int = Intent(applicationContext, PantryItemActivity::class.java)
+//                    int.putExtra(SHOW_ITEM, "${pantryId}::${item.product.uuid}")
+//                    startActivity(int)
                 }
 
                 view.setOnLongClickListener {
@@ -63,10 +64,10 @@ class PantryActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-            viewHolder.bind(dataSet[position])
+            viewHolder.bind(pantryList.items[position])
         }
 
-        override fun getItemCount() = dataSet.size
+        override fun getItemCount() = pantryList.items.size
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,13 +75,13 @@ class PantryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pantry)
 
         // Get pantry list
-        idx = intent.getIntExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
+        val uuid = UUID.fromString(intent.getStringExtra(PantriesListActivity.GET_PANTRY_INDEX_INT))
         val globalData = applicationContext as ShopIST
-        pantryList = globalData.getPantryList(idx)
+        pantryList = globalData.getPantryList(uuid)
 
         // Set products
         val listView = findViewById<RecyclerView>(R.id.recyclerView)
-        adapter = PantryAdapter(pantryList.items)
+        adapter = PantryAdapter(pantryList)
         listView.layoutManager = LinearLayoutManager(this)
         listView.adapter = adapter
     }
@@ -92,7 +93,7 @@ class PantryActivity : AppCompatActivity() {
 
     fun onNewItem(view: View) {
         val int = Intent(applicationContext, AddItemActivity::class.java)
-        int.putExtra( PantriesListActivity.GET_PANTRY_INDEX_INT, idx)
+        int.putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, pantryList.uuid.toString())
         startActivity(int)
     }
 }

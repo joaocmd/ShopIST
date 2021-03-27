@@ -16,20 +16,18 @@ class ShopIST : Application() {
         const val FILENAME_DATA = "data.json"
     }
 
-    private var allPantry: MutableList<PantryList> = mutableListOf()
+    private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
 
     val pantries: Array<PantryList>
-        get() = this.allPantry.toTypedArray()
+        get() = this.allPantries.values.sortedBy { it.title }.toTypedArray()
 
     fun addPantryList(pantryList: PantryList) {
-        allPantry.add(pantryList)
+        allPantries[pantryList.uuid] = pantryList
     }
 
-    fun getPantryList(idx: Int): PantryList {
-        // if (idx < 0 || idx >= allPantry.size) {
-        // }
-        return allPantry[idx]
+    fun getPantryList(uuid: UUID): PantryList {
+        return allPantries[uuid]!!
     }
 
     fun addProduct(product: Product) {
@@ -51,7 +49,7 @@ class ShopIST : Application() {
 //        loadPersistent()
 
         // FIXME: Remove for production
-        if (allPantry.size == 0) {
+        if (allPantries.size == 0) {
             val product1 = Product("Pasta de Dentes")
             val product2 = Product("Escova de Dentes")
             val product3 = Product("Baguette")
@@ -75,7 +73,7 @@ class ShopIST : Application() {
     }
 
     inner class ShopISTDto {
-        var pantries: MutableList<PantryDto> = mutableListOf()
+        var pantriesList: MutableList<PantryListDto> = mutableListOf()
         var products: MutableList<ProductDto> = mutableListOf()
     }
 
@@ -113,7 +111,9 @@ class ShopIST : Application() {
             shopIstDto.products.map { p -> allProducts[p.uuid] = Product.createProduct(p)}
 
             // Set pantries
-            allPantry = shopIstDto.pantries.map { p -> PantryList.createPantry(p, allProducts) }.toMutableList()
+            val pairs = shopIstDto.pantriesList
+                .map { p -> Pair(p.uuid, PantryList.createPantry(p, allProducts)) }
+            allPantries = mutableMapOf(*pairs.toTypedArray())
         } catch (e: Exception) {
             // TODO: Detect if it is the first time using app, otherwise say that data was lost
             Log.d(TAG, "Can't read data file.")
@@ -124,7 +124,7 @@ class ShopIST : Application() {
     fun savePersistent() {
         // Get dto
         val shopIstDto = ShopISTDto()
-        shopIstDto.pantries = allPantry.map { p -> PantryDto(p) }.toMutableList()
+        shopIstDto.pantriesList = allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
         shopIstDto.products = allProducts.values.map { p -> ProductDto(p) }.toMutableList()
         val json = Gson().toJson(shopIstDto)
 

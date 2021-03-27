@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
+import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import java.util.*
 
 
 class AddItemActivity : AppCompatActivity() {
 
-    private var idx : Int = 0
+    private lateinit var pantryList: PantryList
     private var selectedProduct: Product? = null
     private var products = emptyList<Product>()
 
@@ -23,7 +26,9 @@ class AddItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // Get pantry list
-        idx = intent.getIntExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, 0) // FIXME: Default value must not be 0
+
+        val uuid = UUID.fromString(intent.getStringExtra(PantriesListActivity.GET_PANTRY_INDEX_INT))
+        pantryList = (applicationContext as ShopIST).getPantryList(uuid)
 
         setContentView(R.layout.activity_add_item)
         initListProducts()
@@ -89,18 +94,15 @@ class AddItemActivity : AppCompatActivity() {
         val globalData = applicationContext as ShopIST
 
         // Check if product is already in pantry
-        val currentPantry = globalData.getPantryList(idx)
-
-        val previousItem = currentPantry.hasProduct(selectedProduct!!)
-        if (previousItem != null) {
-            previousItem.pantryQuantity += pantryQuantity
+        if (!pantryList.hasProduct(selectedProduct!!)) {
+            pantryList.addItem(Item(selectedProduct!!, pantryQuantity, 0, 0))
         } else {
-            currentPantry.addItem(Item(selectedProduct!!, pantryQuantity, 0, 0))
+            // FIXME: disable this
+            Toast.makeText(this, "The item is already in your pantry list", Toast.LENGTH_LONG)
         }
 
         // Save data in file
         globalData.savePersistent()
-
         finish()
     }
 

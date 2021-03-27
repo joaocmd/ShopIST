@@ -2,17 +2,18 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import java.util.*
 
-class PantryList(title: String) {
+class PantryList(val title: String) {
     companion object {
-        fun createPantry(p: PantryDto, products: Map<UUID, Product>): PantryList {
+        fun createPantry(p: PantryListDto, products: Map<UUID, Product>): PantryList {
             val pantry = PantryList(p.title)
             pantry.items = p.items.map { i -> Item.createItem(i, products) }.toMutableList()
             return pantry
         }
     }
 
-    val title = title.capitalize()
     // TODO: Get a location
+    val uuid = UUID.randomUUID()
+
     var location: String = ""
     // FIXME:
     var items: MutableList<Item> = mutableListOf()
@@ -21,9 +22,9 @@ class PantryList(title: String) {
         items.add(item)
     }
 
-    fun hasProduct(product: Product): Item? {
+    fun hasProduct(product: Product): Boolean {
         val found = items.filter { item -> item.product == product }
-        return if (found.isNotEmpty()) found[0] else null
+        return found.isNotEmpty()
     }
 }
 

@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist.utils
 
-import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,26 +13,22 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
-class RecyclerAdapter(private val context: Context, private val list: Array<PantryList>) :
+class RecyclerAdapter(private val list: Array<PantryList>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val textView: TextView = view.findViewById(R.id.rowText)
-
-        init {
-            // val buttonView: View = view.findViewById(R.id.rowButton)
-            val cardView: View = view.findViewById(R.id.rowCard)
-            cardView.setOnClickListener {
-                val position = adapterPosition
-                val intent = Intent(view.context, PantryActivity::class.java)
-                    .putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, position)
-                Log.d(ShopIST.TAG, "Got pantry nº$position")
-                view.context.startActivity(intent)
-            }
-        }
 
         fun bind(pantryList: PantryList) {
             textView.text = pantryList.title
+
+            val cardView: View = view.findViewById(R.id.rowCard)
+            cardView.setOnClickListener {
+                val intent = Intent(view.context, PantryActivity::class.java)
+                    .putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, pantryList.uuid.toString())
+                Log.d(ShopIST.TAG, "Got pantry ${pantryList.uuid}")
+                view.context.startActivity(intent)
+            }
         }
     }
 
@@ -44,13 +39,9 @@ class RecyclerAdapter(private val context: Context, private val list: Array<Pant
         return ViewHolder(view)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
         viewHolder.bind(list[position])
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount() = list.size
 }

@@ -51,19 +51,20 @@
             android:hint="@string/add_item_quantity"
             android:autofillHints="@string/add_item_quantity_hint" />
 
-        <Button
+            <Button
+                android:id="@+id/addItemButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onAddItem"
+                android:text="@string/add_item_button" />
+
+            <Button
             android:id="@+id/createProductButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/create_product_item_complete"
             android:onClick="onCreateNewProduct"/>
 
-        <Button
-            android:id="@+id/addItemButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onAddItem"
-            android:text="@string/add_item_button" />
-    </LinearLayout>
+        </LinearLayout>
 </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

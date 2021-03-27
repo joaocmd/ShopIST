@@ -31,8 +31,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPersonName"
-                android:text="@string/create_pantry_item_title"/>
+                android:hint="@string/create_pantry_item_title"
+                android:inputType="none|textCapWords" />
 
             <Button
                 android:id="@+id/createProductButton"
