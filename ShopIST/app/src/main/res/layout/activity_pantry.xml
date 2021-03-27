@@ -13,9 +13,9 @@
             android:id="@+id/newProductButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onNewProduct"
+            android:onClick="onNewItem"
             android:layout_marginBottom="30dp"
-            android:text="New Product" />
+            android:text="@string/add_item_title" />
 
     </LinearLayout>
 

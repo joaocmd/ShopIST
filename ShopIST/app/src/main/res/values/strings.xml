@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">ShopIST</string>
     <string name="create_pantry_item_title"> Title </string>
+    <string name="add_item_title"> Add new item </string>
+    <string name="add_item_quantity"> Item quantity </string>
+    <string name="add_item_quantity_hint">Value greater than or equal to 0</string>
+    <string name="add_item_button"> Insert new item </string>
     <string name="create_product_item_name"> Product name </string>
     <string name="create_product_title"> Insert new product </string>
     <string name="create_pantry_title"> Insert your new pantry\'s data </string>

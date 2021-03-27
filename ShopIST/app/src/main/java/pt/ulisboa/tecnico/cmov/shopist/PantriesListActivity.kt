@@ -49,7 +49,7 @@ class PantriesListActivity : AppCompatActivity() {
     }
 
     fun onNewPantry(view: View) {
-        val intent = Intent(applicationContext, CreatePantry::class.java)
+        val intent = Intent(applicationContext, CreatePantryActivity::class.java)
         startActivity(intent)
         // TODO:
     }
