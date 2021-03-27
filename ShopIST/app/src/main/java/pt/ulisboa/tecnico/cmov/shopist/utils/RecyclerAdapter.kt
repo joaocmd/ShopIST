@@ -7,11 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.PantriesListActivity
 import pt.ulisboa.tecnico.cmov.shopist.PantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
-import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class RecyclerAdapter(private val list: Array<PantryList>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
@@ -25,8 +23,7 @@ class RecyclerAdapter(private val list: Array<PantryList>) :
             val cardView: View = view.findViewById(R.id.rowCard)
             cardView.setOnClickListener {
                 val intent = Intent(view.context, PantryActivity::class.java)
-                    .putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, pantryList.uuid.toString())
-                Log.d(ShopIST.TAG, "Got pantry ${pantryList.uuid}")
+                    .putExtra(PantryActivity.PANTRY_ID, pantryList.uuid.toString())
                 view.context.startActivity(intent)
             }
         }

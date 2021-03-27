@@ -22,11 +22,11 @@ class PantryActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "shopist.PantryActivity"
         const val PANTRY_ID = "$TAG.PANTRY_ID"
-        const val ITEM_ID = "$TAG.ITEM_ID"
     }
 
     inner class PantryAdapter(private val pantryList: PantryList) :
             RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
+
 
         /**
          * Provide a reference to the type of views that you are using
@@ -44,8 +44,8 @@ class PantryActivity : AppCompatActivity() {
 
                 view.setOnClickListener {
                     val intent = Intent(applicationContext, PantryItemActivity::class.java)
-                    intent.putExtra(PANTRY_ID,pantryList.uuid.toString())
-                    intent.putExtra(ITEM_ID, item.product.uuid.toString())
+                    intent.putExtra(PantryItemActivity.PANTRY_ID, pantryList.uuid.toString())
+                    intent.putExtra(PantryItemActivity.ITEM_ID, item.product.uuid.toString())
                     startActivity(intent)
                 }
 
@@ -76,7 +76,7 @@ class PantryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pantry)
 
         // Get pantry list
-        val uuid = UUID.fromString(intent.getStringExtra(PantriesListActivity.GET_PANTRY_INDEX_INT))
+        val uuid = UUID.fromString(intent.getStringExtra(PANTRY_ID))
         val globalData = applicationContext as ShopIST
         pantryList = globalData.getPantryList(uuid)
 
@@ -94,7 +94,7 @@ class PantryActivity : AppCompatActivity() {
 
     fun onNewItem(view: View) {
         val intent = Intent(applicationContext, AddItemActivity::class.java)
-        intent.putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, pantryList.uuid.toString())
+        intent.putExtra(AddItemActivity.PANTRY_ID, pantryList.uuid.toString())
         startActivity(intent)
     }
 }

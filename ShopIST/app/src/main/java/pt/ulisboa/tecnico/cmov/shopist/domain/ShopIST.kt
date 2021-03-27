@@ -46,7 +46,7 @@ class ShopIST : Application() {
 
     fun startUp() {
         // Load previous data
-//        loadPersistent()
+        loadPersistent()
 
         // FIXME: Remove for production
         if (allPantries.size == 0) {
@@ -112,7 +112,7 @@ class ShopIST : Application() {
 
             // Set pantries
             val pairs = shopIstDto.pantriesList
-                .map { p -> Pair(p.uuid, PantryList.createPantry(p, allProducts)) }
+                .map { p -> Pair(p.uuid, PantryList(p, allProducts)) }
             allPantries = mutableMapOf(*pairs.toTypedArray())
         } catch (e: Exception) {
             // TODO: Detect if it is the first time using app, otherwise say that data was lost

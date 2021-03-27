@@ -11,9 +11,6 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
 
 class PantriesListActivity : AppCompatActivity() {
-    companion object {
-        const val GET_PANTRY_INDEX_INT = "shopist.ListPantryActivity.GET_PANTRY_INDEX_INT"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

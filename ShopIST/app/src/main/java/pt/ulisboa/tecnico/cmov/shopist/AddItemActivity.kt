@@ -21,12 +21,16 @@ class AddItemActivity : AppCompatActivity() {
     private var selectedProduct: Product? = null
     private var products = emptyList<Product>()
 
+    companion object {
+        private const val TAG = "shopist.AddItemActivity"
+        const val PANTRY_ID = "shopist.AddItemActivity"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Get pantry list
-
-        val uuid = UUID.fromString(intent.getStringExtra(PantriesListActivity.GET_PANTRY_INDEX_INT))
+        val uuid = UUID.fromString(intent.getStringExtra(PANTRY_ID))
         pantryList = (applicationContext as ShopIST).getPantryList(uuid)
 
         setContentView(R.layout.activity_add_item)

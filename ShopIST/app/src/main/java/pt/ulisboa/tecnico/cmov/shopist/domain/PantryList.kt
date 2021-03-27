@@ -3,20 +3,16 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import java.util.*
 
 class PantryList(val title: String) {
-    companion object {
-        fun createPantry(p: PantryListDto, products: Map<UUID, Product>): PantryList {
-            val pantry = PantryList(p.title)
-            pantry.items = p.items.map { i -> Item.createItem(i, products) }.toMutableList()
-            return pantry
-        }
-    }
 
-    // TODO: Get a location
-    val uuid = UUID.randomUUID()
-
-    var location: String = ""
-    // FIXME:
+    var uuid = UUID.randomUUID()
     var items: MutableList<Item> = mutableListOf()
+    // TODO: Get a location
+    var location: String = ""
+
+    constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.title) {
+        uuid = p.uuid
+        items = p.items.map { i -> Item(i, products) }.toMutableList()
+    }
 
     fun addItem(item: Item) {
         items.add(item)
@@ -25,6 +21,10 @@ class PantryList(val title: String) {
     fun hasProduct(product: Product): Boolean {
         val found = items.filter { item -> item.product == product }
         return found.isNotEmpty()
+    }
+
+    fun getItem(uuid: UUID) : Item {
+        return items.first { i -> i.product.uuid == uuid }
     }
 }
 
