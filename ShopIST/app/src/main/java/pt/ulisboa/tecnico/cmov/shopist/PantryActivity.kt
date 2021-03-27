@@ -21,7 +21,8 @@ class PantryActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "shopist.PantryActivity"
-        const val SHOW_ITEM = "$TAG.SHOW_ITEM"
+        const val PANTRY_ID = "$TAG.PANTRY_ID"
+        const val ITEM_ID = "$TAG.ITEM_ID"
     }
 
     inner class PantryAdapter(private val pantryList: PantryList) :
@@ -42,9 +43,10 @@ class PantryActivity : AppCompatActivity() {
                 needingQuantityView.text = item.needingQuantity.toString()
 
                 view.setOnClickListener {
-//                    val int = Intent(applicationContext, PantryItemActivity::class.java)
-//                    int.putExtra(SHOW_ITEM, "${pantryId}::${item.product.uuid}")
-//                    startActivity(int)
+                    val intent = Intent(applicationContext, PantryItemActivity::class.java)
+                    intent.putExtra(PANTRY_ID,pantryList.uuid.toString())
+                    intent.putExtra(ITEM_ID, item.product.uuid.toString())
+                    startActivity(intent)
                 }
 
                 view.setOnLongClickListener {

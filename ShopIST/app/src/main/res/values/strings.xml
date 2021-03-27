@@ -20,4 +20,8 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="pantry_list_name">Pantry List Name</string>
+    <string name="product_name">Product Name</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 </resources>

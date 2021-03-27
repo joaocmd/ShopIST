@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST">
+        <activity android:name=".PantryItemActivity"></activity>
         <activity android:name=".AddItemActivity" />
         <activity android:name=".CreateProductActivity" />
         <activity android:name=".CreatePantryActivity" />
