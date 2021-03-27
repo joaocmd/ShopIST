@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.*
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
@@ -98,7 +97,7 @@ class AddItemActivity : AppCompatActivity() {
             pantryList.addItem(Item(selectedProduct!!, pantryQuantity, 0, 0))
         } else {
             // FIXME: disable this
-            Toast.makeText(this, "The item is already in your pantry list", Toast.LENGTH_LONG)
+            Toast.makeText(this, "The item is already in your pantry list", Toast.LENGTH_LONG).show()
         }
 
         // Save data in file
@@ -107,7 +106,7 @@ class AddItemActivity : AppCompatActivity() {
     }
 
     fun onCreateNewProduct(view: View) {
-        val int = Intent(applicationContext, CreateProductActivity::class.java)
-        startActivity(int)
+        val intent = Intent(applicationContext, CreateProductActivity::class.java)
+        startActivity(intent)
     }
 }

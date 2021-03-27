@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.shopist
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -92,8 +91,8 @@ class PantryActivity : AppCompatActivity() {
     }
 
     fun onNewItem(view: View) {
-        val int = Intent(applicationContext, AddItemActivity::class.java)
-        int.putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, pantryList.uuid.toString())
-        startActivity(int)
+        val intent = Intent(applicationContext, AddItemActivity::class.java)
+        intent.putExtra(PantriesListActivity.GET_PANTRY_INDEX_INT, pantryList.uuid.toString())
+        startActivity(intent)
     }
 }
