@@ -2,44 +2,83 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:layout_marginBottom="15dp"
     android:foreground="?android:attr/selectableItemBackground"
 
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/rowCard"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/productImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:srcCompat="@tools:sample/avatars" />
+        <LinearLayout
+            android:id="@+id/firstLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/secondView"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/rowText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Pao" />
 
-        <TextView
-            android:id="@+id/pantryQuantityDisplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            <ImageView
+                android:id="@+id/productImageView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_launcher_background" />
 
-        <TextView
-            android:id="@+id/needingQuantityDisplay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            <TextView
+                android:id="@+id/rowText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Pao"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
-    </LinearLayout>
 
+        </LinearLayout>
+
+        <View
+            android:id="@+id/secondView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:id="@+id/thirdLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/secondView"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/pantryQuantityDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="5"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/needingQuantityDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="5"
+                android:textColor="#821e1e"
+                android:layout_weight="1"
+                android:gravity="center" />
+            <TextView
+                android:id="@+id/CartQuantityDisplay"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="5"
+                android:textColor="#67a327"
+                android:layout_weight="1"
+                android:gravity="center"  />
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
