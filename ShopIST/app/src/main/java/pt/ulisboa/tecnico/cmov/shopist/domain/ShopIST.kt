@@ -98,7 +98,6 @@ class ShopIST : Application() {
                 try {
                     fis.close()
                     scanner?.close()
-                    result = result && true
                 } catch (e: IOException) {
                     Log.d(TAG, "Close error.")
                 }
