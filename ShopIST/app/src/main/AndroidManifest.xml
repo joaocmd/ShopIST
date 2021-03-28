@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="pt.ulisboa.tecnico.cmov.shopist">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name=".domain.ShopIST"
         android:allowBackup="true"
@@ -10,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST">
-        <activity android:name=".PantryItemActivity"></activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity android:name=".PantryItemActivity" />
         <activity android:name=".AddItemActivity" />
         <activity android:name=".CreateProductActivity" />
         <activity android:name=".CreatePantryActivity" />
@@ -22,6 +29,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PantryActivity" />
+        <activity android:name=".LocationPickerActivity" />
     </application>
 
 </manifest>

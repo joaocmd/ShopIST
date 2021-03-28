@@ -12,6 +12,7 @@
     <string name="create_pantry_item_complete"> Add new Pantry </string>
     <string name="create_product_item_complete"> Add new Product </string>
     <string name="title_activity_test">Test</string>
+    <string name="new_pantry">New Pantry</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

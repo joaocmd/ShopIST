@@ -89,7 +89,7 @@ class ShopIST : Application() {
             while (scanner.hasNextLine()) {
                 sb.append(scanner.nextLine())
             }
-            Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show()
         } catch (e: FileNotFoundException) {
             Log.e(TAG, "File not found", e)
             result = false
@@ -106,6 +106,7 @@ class ShopIST : Application() {
         // Try to build file
         try {
             val shopIstDto = Gson().fromJson(sb.toString(), ShopISTDto()::class.java)
+            // TODO: Refactor this to use the proper class constructor
             // Set products
             shopIstDto.products.map { p -> allProducts[p.uuid] = Product.createProduct(p)}
 
@@ -122,6 +123,7 @@ class ShopIST : Application() {
 
     fun savePersistent() {
         // Get dto
+        // TODO: Refactor this to create the DTO using the DTO constructor
         val shopIstDto = ShopISTDto()
         shopIstDto.pantriesList = allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
         shopIstDto.products = allProducts.values.map { p -> ProductDto(p) }.toMutableList()
