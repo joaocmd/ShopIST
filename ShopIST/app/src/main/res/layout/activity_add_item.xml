@@ -6,44 +6,52 @@
     android:layout_height="match_parent"
     tools:context=".AddItemActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
-        android:baselineAligned="false" android:gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         >
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.9"
-            android:layout_marginTop="40dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="1">
-
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="@string/add_item_title"/>
+                android:text="@string/add_item_title"
+                />
+        </LinearLayout>
 
-            <ScrollView
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@id/layout1"
+            android:layout_above="@id/layout2">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.9">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioGroup
+                <RadioGroup
                     android:id="@+id/productsList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </LinearLayout>
         </ScrollView>
-
+        <LinearLayout
+            android:id="@+id/layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
         <EditText
             android:id="@+id/productQuantity"
             android:layout_width="match_parent"
@@ -51,16 +59,17 @@
             android:ems="10"
             android:inputType="numberSigned"
             android:hint="@string/add_item_quantity"
-            android:autofillHints="@string/add_item_quantity_hint" />
+            android:autofillHints="@string/add_item_quantity_hint"
+            />
 
-            <Button
-                android:id="@+id/addItemButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="onAddItem"
-                android:text="@string/add_item_button" />
+        <Button
+            android:id="@+id/addItemButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onAddItem"
+            android:text="@string/add_item_button"/>
 
-            <Button
+        <Button
             android:id="@+id/createProductButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,5 +77,5 @@
             android:onClick="onCreateNewProduct"/>
 
         </LinearLayout>
-</LinearLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
