@@ -36,11 +36,13 @@ class PantryActivity : AppCompatActivity() {
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
             private val needingQuantityView : TextView = view.findViewById(R.id.needingQuantityDisplay)
+            private val cartQuantityView : TextView = view.findViewById(R.id.cartQuantityDisplay)
 
             fun bind(item: Item) {
                 textView.text = item.product.name
                 pantryQuantityView.text = item.pantryQuantity.toString()
                 needingQuantityView.text = item.needingQuantity.toString()
+                cartQuantityView.text = item.cartQuantity.toString()
 
                 view.setOnClickListener {
                     val intent = Intent(applicationContext, PantryItemActivity::class.java)

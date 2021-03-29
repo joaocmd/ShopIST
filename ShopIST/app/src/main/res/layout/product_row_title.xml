@@ -53,7 +53,7 @@
 
             </ImageView>
             <ImageView
-                android:id="@+id/CartQuantityDisplay"
+                android:id="@+id/cartQuantityDisplay"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
