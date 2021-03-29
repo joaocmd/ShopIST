@@ -11,7 +11,7 @@ import pt.ulisboa.tecnico.cmov.shopist.PantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 
-class RecyclerAdapter(private val list: Array<PantryList>) :
+class RecyclerAdapter(var list: Array<PantryList>) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {

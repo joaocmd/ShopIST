@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,6 +33,8 @@ class PantriesList : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var recyclerAdapter: RecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,15 +43,37 @@ class PantriesList : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_pantries_list, container, false)
+        val root = inflater.inflate(R.layout.fragment_pantries_list, container, false)
+        val recyclerView: RecyclerView = root.findViewById(R.id.recyclerView)
+
+        val globalData = activity?.applicationContext as ShopIST
+        if (globalData.pantries.isEmpty()) {
+            globalData.startUp()
+        }
+        recyclerAdapter = RecyclerAdapter(globalData.pantries)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = recyclerAdapter
+
+        root.findViewById<Button>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
+        root.findViewById<Button>(R.id.dummyLocationButton).setOnClickListener{ dummyMap() }
+
+        return root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        updateData()
+        super.onResume()
+    }
+
+    private fun updateData() {
+        val globalData = activity?.applicationContext as ShopIST
+        recyclerAdapter.list = globalData.pantries
+        recyclerAdapter.notifyDataSetChanged()
     }
 
     companion object {
@@ -70,24 +95,8 @@ class PantriesList : Fragment() {
                 }
             }
     }
-    override fun onResume() {
-        initListPantries()
-        super.onResume()
-    }
 
-    private fun initListPantries() {
-        // FIXME: activity => view
-        val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerView)
-        val globalData = activity?.applicationContext as ShopIST
-        if (globalData.pantries.isEmpty()) {
-            globalData.startUp()
-        }
-        val adapter = RecyclerAdapter(globalData.pantries)
-        recyclerView?.layoutManager = LinearLayoutManager(context)
-        recyclerView?.adapter = adapter
-    }
-
-    fun onNewPantry(view: View) {
+    private fun onNewPantry() {
         val intent = Intent(activity?.applicationContext, CreatePantryActivity::class.java)
         startActivity(intent)
         // TODO:
@@ -95,7 +104,7 @@ class PantriesList : Fragment() {
 
     // FIXME: This whole code needs to be removed (including the button in layout)
     val REQUEST_GET_MAP_LOCATION = 0;
-    fun dummyMap(view: View) {
+    fun dummyMap() {
         val intent = Intent(activity?.applicationContext, LocationPickerActivity::class.java)
         startActivityForResult(intent, REQUEST_GET_MAP_LOCATION)
     }
