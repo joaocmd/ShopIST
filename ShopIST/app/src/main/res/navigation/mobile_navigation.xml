@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_list_pantries">
+    app:startDestination="@+id/nav_pantries_list">
 
     <fragment
-        android:id="@+id/nav_list_pantries"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.PantriesList"
-        android:label="test"
+        android:id="@+id/nav_pantries_list"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesList"
+        android:label="@string/pantries_list"
         tools:layout="@layout/fragment_pantries_list" >
         <action
             android:id="@+id/action_nav_list_pantries_to_nav_pantry"
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_pantry"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.Pantry"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.Pantry"
         tools:layout="@layout/fragment_pantry" >
         <action
             android:id="@+id/action_nav_pantry_to_pantryItem"
@@ -24,8 +24,24 @@
     </fragment>
     <fragment
         android:id="@+id/nav_pantry_item"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.PantryItem"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItem"
         android:label="activity_pantry_item"
         tools:layout="@layout/fragment_pantry_item" />
+
+    <fragment
+        android:id="@+id/nav_shoppings_list"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingsList"
+        android:label="@string/shoppings_list"
+        tools:layout="@layout/fragment_shoppings_list">
+        <action
+            android:id="@+id/action_nav_shoppings_list_to_nav_create_shopping_list"
+            app:destination="@id/nav_create_shopping_list" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_create_shopping_list"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingList"
+        android:label="CREATE_SHOPPING_LIST"
+        tools:layout="@layout/fragment_create_shopping_list"/>
 
 </navigation>

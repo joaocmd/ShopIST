@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import com.google.gson.Gson
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -18,9 +17,13 @@ class ShopIST : Application() {
 
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
+    private var allShoppingLists: MutableMap<UUID, ShoppingList> = mutableMapOf()
 
     val pantries: Array<PantryList>
         get() = this.allPantries.values.sortedBy { it.title }.toTypedArray()
+
+    val shoppingLists: Array<ShoppingList>
+        get() = this.allShoppingLists.values.sortedBy { it.title }.toTypedArray()
 
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList
@@ -42,6 +45,14 @@ class ShopIST : Application() {
         return allProducts[uuid]
     }
 
+    fun addShoppingList(shoppingList: ShoppingList) {
+        allShoppingLists[shoppingList.uuid] = shoppingList
+    }
+
+    fun getShoppingList(uuid: UUID): ShoppingList {
+        return allShoppingLists[uuid]!!
+    }
+
     //--------------
 
     fun startUp() {
@@ -61,13 +72,13 @@ class ShopIST : Application() {
             addProduct(product4)
 
             val pantry1 = PantryList("Dani's Pantry")
-            pantry1.addItem(Item(product1, 10, 0, 0))
-            pantry1.addItem(Item(product2, 2, 0, 0))
+            pantry1.addItem(Item(product1, pantry1, 10, 0, 0))
+            pantry1.addItem(Item(product2, pantry1, 2, 0, 0))
             addPantryList(pantry1)
 
             val pantry2 = PantryList("Joca's Pantry")
-            pantry2.addItem(Item(product3, 1, 1, 1))
-            pantry2.addItem(Item(product4, 2, 0, 2))
+            pantry2.addItem(Item(product3, pantry2, 1, 1, 1))
+            pantry2.addItem(Item(product4, pantry2, 2, 0, 2))
             addPantryList(pantry2)
         }
     }
@@ -112,7 +123,9 @@ class ShopIST : Application() {
 
             // Set pantries
             val pairs = shopIstDto.pantriesList
-                .map { p -> Pair(p.uuid, PantryList(p, allProducts)) }
+                .map { p -> Pair(p.uuid,
+                    PantryList(p, allProducts)
+                ) }
             allPantries = mutableMapOf(*pairs.toTypedArray())
         } catch (e: Exception) {
             // TODO: Detect if it is the first time using app, otherwise say that data was lost

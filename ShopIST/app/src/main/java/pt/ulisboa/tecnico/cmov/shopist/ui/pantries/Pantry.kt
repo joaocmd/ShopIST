@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.shopist.ui
+package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
 import android.os.Bundle

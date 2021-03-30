@@ -98,7 +98,7 @@ class AddItemActivity : AppCompatActivity() {
 
         // Check if product is already in pantry
         if (!pantryList.hasProduct(selectedProduct!!)) {
-            pantryList.addItem(Item(selectedProduct!!, pantryQuantity, 0, 0))
+            pantryList.addItem(Item(selectedProduct!!, pantryList, pantryQuantity, 0, 0))
         } else {
             // FIXME: disable this
             Toast.makeText(this, "The item is already in your pantry list", Toast.LENGTH_LONG).show()

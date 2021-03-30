@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.shopist.ui
+package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
 import android.os.Bundle
@@ -30,13 +30,6 @@ class PantriesList : Fragment() {
 
     private lateinit var recyclerAdapter: PantriesListAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //activity?.requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
-        //activity?.supportActionBar?.hide(); //hide the title bar
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,9 +40,6 @@ class PantriesList : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.recyclerView)
 
         val globalData = activity?.applicationContext as ShopIST
-        if (globalData.pantries.isEmpty()) {
-            globalData.startUp()
-        }
         recyclerAdapter = PantriesListAdapter(globalData.pantries, requireActivity())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
@@ -70,25 +60,6 @@ class PantriesList : Fragment() {
         recyclerAdapter.list = globalData.pantries
         recyclerAdapter.notifyDataSetChanged()
     }
-
-    // companion object {
-    //     /**
-    //      * Use this factory method to create a new instance of
-    //      * this fragment using the provided parameters.
-    //      *
-    //      * @param param1 Parameter 1.
-    //      * @param param2 Parameter 2.
-    //      * @return A new instance of fragment PantriesList.
-    //      */
-    //     @JvmStatic
-    //     fun newInstance(param1: String, param2: String) =
-    //         PantriesList().apply {
-    //             arguments = Bundle().apply {
-    //                 putString(ARG_PARAM1, param1)
-    //                 putString(ARG_PARAM2, param2)
-    //             }
-    //         }
-    // }
 
     private fun onNewPantry() {
         val intent = Intent(activity?.applicationContext, CreatePantryActivity::class.java)

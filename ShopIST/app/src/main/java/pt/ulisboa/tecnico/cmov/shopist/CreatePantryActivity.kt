@@ -17,7 +17,7 @@ class CreatePantryActivity : AppCompatActivity() {
     fun onCreatePantry(view: View) {
         val globalData = applicationContext as ShopIST
 
-        val newPantry = PantryList(findViewById<EditText>(R.id.editTextPantryName).text.toString())
+        val newPantry = PantryList(findViewById<EditText>(R.id.editTitle).text.toString())
         globalData.addPantryList(newPantry)
 
         // Save data in file

@@ -1,22 +1,14 @@
-package pt.ulisboa.tecnico.cmov.shopist.ui
+package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.AddItemActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
-import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
 
@@ -109,12 +101,11 @@ class PantryItem : Fragment() {
         cartView.text = cart.toString()
     }
 
-    fun cancel() {
-        // requireActivity().supportFragmentManager.popBackStack()
+    private fun cancel() {
         findNavController().popBackStack()
     }
 
-    fun saveAndReturn() {
+    private fun saveAndReturn() {
         item.pantryQuantity = pantry
         item.needingQuantity = needing
         item.cartQuantity = cart

@@ -4,14 +4,14 @@ import java.util.*
 
 class PantryList(val title: String) {
 
-    var uuid = UUID.randomUUID()
+    var uuid: UUID = UUID.randomUUID()
     var items: MutableList<Item> = mutableListOf()
     // TODO: Get a location
     var location: String = ""
 
     constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.title) {
         uuid = p.uuid
-        items = p.items.map { i -> Item(i, products) }.toMutableList()
+        items = p.items.map { i -> Item(i, products, this) }.toMutableList()
     }
 
     fun addItem(item: Item) {

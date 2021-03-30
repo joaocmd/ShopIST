@@ -35,7 +35,7 @@
                 android:inputType="none|textCapWords" />
 
             <Button
-                android:id="@+id/createProductButton"
+                android:id="@+id/editTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_pantry_item_complete"

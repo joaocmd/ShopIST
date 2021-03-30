@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 class SideMenuNavigation : AppCompatActivity() {
 
@@ -20,6 +21,12 @@ class SideMenuNavigation : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val globalData = applicationContext as ShopIST
+        if (globalData.pantries.isEmpty()) {
+            globalData.startUp()
+        }
+
         setContentView(R.layout.activity_side_menu_navigation)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -36,7 +43,8 @@ class SideMenuNavigation : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_list_pantries, R.id.nav_pantry
+                R.id.nav_pantries_list, R.id.nav_pantry,
+                R.id.nav_shoppings_list
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
