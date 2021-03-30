@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".CreateProductActivity" />
-        <activity android:name=".CreatePantryActivity" />
+        <activity android:name=".ui.pantries.CreatePantry" />
         <activity android:name=".LocationPickerActivity" />
     </application>
 

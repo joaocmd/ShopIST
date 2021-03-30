@@ -1,19 +1,18 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.CreatePantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
@@ -58,9 +57,7 @@ class PantriesList : Fragment() {
     }
 
     private fun onNewPantry() {
-        val intent = Intent(activity?.applicationContext, CreatePantryActivity::class.java)
-        startActivity(intent)
-        // TODO:
+        findNavController().navigate(R.id.action_nav_pantries_list_to_nav_create_pantry)
     }
 
     inner class PantriesListAdapter(

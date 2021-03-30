@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_list_pantries_to_nav_pantry"
             app:destination="@id/nav_pantry" />
+        <action
+            android:id="@+id/action_nav_pantries_list_to_nav_create_pantry"
+            app:destination="@id/nav_create_pantry" />
     </fragment>
     <fragment
         android:id="@+id/nav_pantry"
@@ -51,5 +54,10 @@
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.AddItem"
         android:label="fragment_add_pantry_item"
         tools:layout="@layout/fragment_add_pantry_item" />
+    <fragment
+        android:id="@+id/nav_create_pantry"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreatePantry"
+        android:label="fragment_create_pantry"
+        tools:layout="@layout/fragment_create_pantry" />
 
 </navigation>
