@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_nav_pantry_to_pantryItem"
             app:destination="@id/nav_pantry_item" />
+        <action
+            android:id="@+id/action_nav_pantry_to_add_item"
+            app:destination="@id/nav_add_item" />
     </fragment>
     <fragment
         android:id="@+id/nav_pantry_item"
@@ -43,5 +46,10 @@
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingList"
         android:label="@string/new_shopping_list"
         tools:layout="@layout/fragment_create_shopping_list" />
+    <fragment
+        android:id="@+id/nav_add_item"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.AddItem"
+        android:label="fragment_add_pantry_item"
+        tools:layout="@layout/fragment_add_pantry_item" />
 
 </navigation>

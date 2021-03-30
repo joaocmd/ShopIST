@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddItemActivity">
+    tools:context=".ui.pantries.AddItem">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -62,19 +62,17 @@
             android:autofillHints="@string/add_item_quantity_hint"
             />
 
-        <Button
-            android:id="@+id/addItemButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="onAddItem"
-            android:text="@string/add_item_button"/>
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_item_button" />
 
-        <Button
-            android:id="@+id/editTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/create_product_item_complete"
-            android:onClick="onCreateNewProduct"/>
+            <Button
+                android:id="@+id/addNewProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_product_item_complete" />
 
         </LinearLayout>
     </RelativeLayout>

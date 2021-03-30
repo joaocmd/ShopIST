@@ -28,20 +28,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".PantryItemActivity" />
-        <activity android:name=".AddItemActivity" />
         <activity android:name=".CreateProductActivity" />
         <activity android:name=".CreatePantryActivity" />
-        <activity android:name=".PantriesListActivity">
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            -->
-        </activity>
-        <activity android:name=".PantryActivity" />
         <activity android:name=".LocationPickerActivity" />
     </application>
 

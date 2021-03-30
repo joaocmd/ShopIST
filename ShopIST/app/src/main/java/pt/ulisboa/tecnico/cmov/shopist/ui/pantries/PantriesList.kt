@@ -79,7 +79,9 @@ class PantriesList : Fragment() {
                 cardView.setOnClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_list_pantries_to_nav_pantry,
-                        bundleOf(Pantry.ARG_PANTRY_ID to pantryList.uuid.toString())
+                        bundleOf(
+                            Pantry.ARG_PANTRY_ID to pantryList.uuid.toString()
+                        )
                     )
                 }
             }
