@@ -2,21 +2,18 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.CreatePantryActivity
-import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
@@ -37,7 +34,7 @@ class PantriesList : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_pantries_list, container, false)
-        val recyclerView: RecyclerView = root.findViewById(R.id.recyclerView)
+        val recyclerView: RecyclerView = root.findViewById(R.id.storesList)
 
         val globalData = activity?.applicationContext as ShopIST
         recyclerAdapter = PantriesListAdapter(globalData.pantries, requireActivity())
