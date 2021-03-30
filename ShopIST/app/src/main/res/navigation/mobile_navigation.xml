@@ -41,7 +41,7 @@
     <fragment
         android:id="@+id/nav_create_shopping_list"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingList"
-        android:label="CREATE_SHOPPING_LIST"
-        tools:layout="@layout/fragment_create_shopping_list"/>
+        android:label="@string/new_shopping_list"
+        tools:layout="@layout/fragment_create_shopping_list" />
 
 </navigation>

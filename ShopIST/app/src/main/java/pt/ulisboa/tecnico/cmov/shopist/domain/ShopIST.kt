@@ -17,12 +17,12 @@ class ShopIST : Application() {
 
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
-    private var allShoppingLists: MutableMap<UUID, ShoppingList> = mutableMapOf()
+    private var allShoppingLists: MutableMap<UUID, Store> = mutableMapOf()
 
     val pantries: Array<PantryList>
         get() = this.allPantries.values.sortedBy { it.title }.toTypedArray()
 
-    val shoppingLists: Array<ShoppingList>
+    val shoppingLists: Array<Store>
         get() = this.allShoppingLists.values.sortedBy { it.title }.toTypedArray()
 
     fun addPantryList(pantryList: PantryList) {
@@ -45,11 +45,11 @@ class ShopIST : Application() {
         return allProducts[uuid]
     }
 
-    fun addShoppingList(shoppingList: ShoppingList) {
+    fun addShoppingList(shoppingList: Store) {
         allShoppingLists[shoppingList.uuid] = shoppingList
     }
 
-    fun getShoppingList(uuid: UUID): ShoppingList {
+    fun getShoppingList(uuid: UUID): Store {
         return allShoppingLists[uuid]!!
     }
 
@@ -83,9 +83,31 @@ class ShopIST : Application() {
         }
     }
 
-    inner class ShopISTDto {
+    inner class ShopISTDto() {
         var pantriesList: MutableList<PantryListDto> = mutableListOf()
         var products: MutableList<ProductDto> = mutableListOf()
+        var stores: MutableList<StoreDto> = mutableListOf()
+
+        constructor(shopIST: ShopIST) : this() {
+            pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
+            products = shopIST.allProducts.values.map { p -> ProductDto(p) }.toMutableList()
+            stores = shopIST.allShoppingLists.values.map { s -> StoreDto(s) }.toMutableList()
+        }
+    }
+
+    private fun populateShopIST(shopISTDto: ShopISTDto) {
+        // Set stores
+        shopISTDto.stores.forEach { s -> allShoppingLists[s.uuid] = Store.createStore(s) }
+
+        // Set products
+        shopISTDto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allShoppingLists)}
+
+        // Set pantries
+        val pairs = shopISTDto.pantriesList
+            .map { p -> Pair(p.uuid,
+                PantryList(p, allProducts)
+            ) }
+        allPantries = mutableMapOf(*pairs.toTypedArray())
     }
 
     private fun loadPersistent(): Boolean {
@@ -117,16 +139,7 @@ class ShopIST : Application() {
         // Try to build file
         try {
             val shopIstDto = Gson().fromJson(sb.toString(), ShopISTDto()::class.java)
-            // TODO: Refactor this to use the proper class constructor
-            // Set products
-            shopIstDto.products.map { p -> allProducts[p.uuid] = Product.createProduct(p)}
-
-            // Set pantries
-            val pairs = shopIstDto.pantriesList
-                .map { p -> Pair(p.uuid,
-                    PantryList(p, allProducts)
-                ) }
-            allPantries = mutableMapOf(*pairs.toTypedArray())
+            populateShopIST(shopIstDto)
         } catch (e: Exception) {
             // TODO: Detect if it is the first time using app, otherwise say that data was lost
             Log.d(TAG, "Can't read data file.")
@@ -136,10 +149,7 @@ class ShopIST : Application() {
 
     fun savePersistent() {
         // Get dto
-        // TODO: Refactor this to create the DTO using the DTO constructor
-        val shopIstDto = ShopISTDto()
-        shopIstDto.pantriesList = allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
-        shopIstDto.products = allProducts.values.map { p -> ProductDto(p) }.toMutableList()
+        val shopIstDto = ShopISTDto(this)
         val json = Gson().toJson(shopIstDto)
 
         var fos: FileOutputStream? = null

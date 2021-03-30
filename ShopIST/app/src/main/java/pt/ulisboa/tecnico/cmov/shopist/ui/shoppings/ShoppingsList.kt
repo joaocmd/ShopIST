@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,10 +11,9 @@ import androidx.fragment.app.FragmentActivity
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.CreatePantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.domain.ShoppingList
+import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import java.util.*
 
 /**
@@ -62,7 +60,7 @@ class ShoppingsList : Fragment() {
     }
 
     inner class ShoppingsListAdapter(
-        var list: Array<ShoppingList>,
+        var list: Array<Store>,
         private val activity: FragmentActivity
     ) :
         RecyclerView.Adapter<ShoppingsListAdapter.ViewHolder>() {
@@ -70,7 +68,7 @@ class ShoppingsList : Fragment() {
         inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
             private val textView: TextView = view.findViewById(R.id.rowText)
 
-            fun bind(shoppingList: ShoppingList) {
+            fun bind(shoppingList: Store) {
                 textView.text = shoppingList.title
 
                 // val cardView: View = view.findViewById(R.id.rowCard)

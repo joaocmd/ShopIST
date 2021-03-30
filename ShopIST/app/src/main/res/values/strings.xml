@@ -11,6 +11,10 @@
     <string name="create_pantry_warning"> This new pantry will be added to the family pantry </string>
     <string name="create_pantry_item_complete"> Add new Pantry </string>
     <string name="create_product_item_complete"> Add new Product </string>
+    <string name="create_shopping_title"> Add new Shopping List </string>
+    <string name="create_shopping_complete"> Add new Store </string>
+    <string name="shopping_location_not_set"> Location not set </string>
+    <string name="shopping_location_set"> Location set! </string>
     <string name="title_activity_test">Test</string>
     <string name="new_pantry">New Pantry</string>
     <!-- Strings used for fragments for navigation -->
@@ -36,4 +40,5 @@
     <string name="pantries_list">My Pantries</string>
     <string name="shoppings_list">Shopping Lists</string>
     <string name="new_shopping_list">New Shopping List</string>
+    <string name="store_choose_location">Choose location</string>
 </resources>

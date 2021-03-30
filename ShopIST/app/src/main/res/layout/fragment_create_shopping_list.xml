@@ -22,7 +22,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_pantry_title"
+                android:text="@string/create_shopping_title"
                 android:layout_marginBottom="20dp" />
 
             <EditText
@@ -34,16 +34,27 @@
                 android:inputType="none|textCapWords" />
 
             <Button
+                android:id="@+id/chooseLocationButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:text="@string/store_choose_location" />
+
+            <TextView
+                android:id="@+id/locationMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/shopping_location_not_set" />
+
+            <Button
                 android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_pantry_item_complete" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create_pantry_warning"/>
+                android:text="@string/create_shopping_complete"
+                android:enabled="false"
+                android:clickable="false"
+                />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

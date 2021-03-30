@@ -45,7 +45,6 @@ class PantriesList : Fragment() {
         recyclerView.adapter = recyclerAdapter
 
         root.findViewById<Button>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
-        root.findViewById<Button>(R.id.dummyLocationButton).setOnClickListener{ dummyMap() }
 
         return root
     }
@@ -65,26 +64,6 @@ class PantriesList : Fragment() {
         val intent = Intent(activity?.applicationContext, CreatePantryActivity::class.java)
         startActivity(intent)
         // TODO:
-    }
-
-    // FIXME: This whole code needs to be removed (including the button in layout)
-    val REQUEST_GET_MAP_LOCATION = 0;
-    fun dummyMap() {
-        val intent = Intent(activity?.applicationContext, LocationPickerActivity::class.java)
-        startActivityForResult(intent, REQUEST_GET_MAP_LOCATION)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_GET_MAP_LOCATION && resultCode == AppCompatActivity.RESULT_OK) {
-            if (data !== null) {
-                val lat = data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0.0)
-                val lon = data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0.0)
-                Log.d(ShopIST.TAG, "Lat: $lat, Lon: $lon")
-            }
-        } else if (requestCode == REQUEST_GET_MAP_LOCATION && resultCode == AppCompatActivity.RESULT_CANCELED) {
-            Log.d(ShopIST.TAG, "Location canceled")
-        }
     }
 
     inner class PantriesListAdapter(
