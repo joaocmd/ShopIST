@@ -18,9 +18,14 @@
         android:id="@+id/nav_pantry"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.Pantry"
         tools:layout="@layout/fragment_pantry" >
-        <argument
-            android:name="pantryId"
-            app:argType="string" />
+        <action
+            android:id="@+id/action_nav_pantry_to_pantryItem"
+            app:destination="@id/nav_pantry_item" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_pantry_item"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.PantryItem"
+        android:label="activity_pantry_item"
+        tools:layout="@layout/fragment_pantry_item" />
 
 </navigation>

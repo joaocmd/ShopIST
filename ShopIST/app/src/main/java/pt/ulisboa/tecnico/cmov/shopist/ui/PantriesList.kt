@@ -8,14 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentActivity
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.CreatePantryActivity
 import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
 
 /**
  * A simple [Fragment] subclass.
@@ -24,7 +28,7 @@ import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
  */
 class PantriesList : Fragment() {
 
-    private lateinit var recyclerAdapter: RecyclerAdapter
+    private lateinit var recyclerAdapter: PantriesListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +50,7 @@ class PantriesList : Fragment() {
         if (globalData.pantries.isEmpty()) {
             globalData.startUp()
         }
-        recyclerAdapter = RecyclerAdapter(globalData.pantries, requireActivity())
+        recyclerAdapter = PantriesListAdapter(globalData.pantries, requireActivity())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
 
@@ -110,5 +114,41 @@ class PantriesList : Fragment() {
         } else if (requestCode == REQUEST_GET_MAP_LOCATION && resultCode == AppCompatActivity.RESULT_CANCELED) {
             Log.d(ShopIST.TAG, "Location canceled")
         }
+    }
+
+    inner class PantriesListAdapter(
+        var list: Array<PantryList>,
+        private val activity: FragmentActivity
+    ) :
+        RecyclerView.Adapter<PantriesListAdapter.ViewHolder>() {
+
+        inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
+            private val textView: TextView = view.findViewById(R.id.rowText)
+
+            fun bind(pantryList: PantryList) {
+                textView.text = pantryList.title
+
+                val cardView: View = view.findViewById(R.id.rowCard)
+                cardView.setOnClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_list_pantries_to_nav_pantry,
+                        bundleOf(Pantry.ARG_PANTRY_ID to pantryList.uuid.toString())
+                    )
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(viewGroup.context)
+                .inflate(R.layout.recycler_view_row, viewGroup, false)
+
+            return ViewHolder(view, activity)
+        }
+
+        override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+            viewHolder.bind(list[position])
+        }
+
+        override fun getItemCount() = list.size
     }
 }

@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.AddItemActivity
@@ -84,13 +86,16 @@ class Pantry : Fragment() {
                 needingQuantityView.text = item.needingQuantity.toString()
                 cartQuantityView.text = item.cartQuantity.toString()
 
-                // view.setOnClickListener {
-                //     val intent = Intent(applicationContext, PantryItemActivity::class.java)
-                //     intent.putExtra(PantryItemActivity.PANTRY_ID, pantryList.uuid.toString())
-                //     intent.putExtra(PantryItemActivity.ITEM_ID, item.product.uuid.toString())
-                //     startActivity(intent)
-                // }
-                //
+                view.setOnClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_pantry_to_pantryItem,
+                        bundleOf(
+                            PantryItem.ARG_PANTRY_ID to pantryList.uuid.toString(),
+                            PantryItem.ARG_PRODUCT_ID to item.product.uuid.toString()
+                        )
+                    )
+                }
+
                 // view.setOnLongClickListener {
                 //     // set long click change top menu so that we're able to delete items
                 //     // it can also simply appear on the menu, though
