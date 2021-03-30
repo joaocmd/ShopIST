@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_list_pantries">
+
+    <fragment
+        android:id="@+id/nav_list_pantries"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.PantriesList"
+        android:label="test"
+        tools:layout="@layout/fragment_pantries_list" >
+        <action
+            android:id="@+id/action_nav_list_pantries_to_nav_pantry"
+            app:destination="@id/nav_pantry" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_pantry"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.Pantry"
+        tools:layout="@layout/fragment_pantry" >
+        <action
+            android:id="@+id/action_nav_pantry_to_pantryItem"
+            app:destination="@id/nav_pantry_item" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_pantry_item"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.PantryItem"
+        android:label="activity_pantry_item"
+        tools:layout="@layout/fragment_pantry_item" />
+
+</navigation>
