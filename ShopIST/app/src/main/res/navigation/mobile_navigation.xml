@@ -38,7 +38,7 @@
         android:id="@+id/nav_shoppings_list"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingsList"
         android:label="@string/shoppings_list"
-        tools:layout="@layout/fragment_shoppings_list">
+        tools:layout="@layout/fragment_stores_list">
         <action
             android:id="@+id/action_nav_shoppings_list_to_nav_create_shopping_list"
             app:destination="@id/nav_create_shopping_list" />
@@ -48,12 +48,12 @@
         android:id="@+id/nav_create_shopping_list"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingList"
         android:label="@string/new_shopping_list"
-        tools:layout="@layout/fragment_create_shopping_list" />
+        tools:layout="@layout/fragment_stores_new" />
     <fragment
         android:id="@+id/nav_add_item"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.AddItem"
         android:label="fragment_add_pantry_item"
-        tools:layout="@layout/fragment_add_pantry_item" >
+        tools:layout="@layout/fragment_pantry_add_item" >
         <action
             android:id="@+id/action_nav_add_item_to_nav_create_product"
             app:destination="@id/nav_create_product" />
@@ -62,11 +62,11 @@
         android:id="@+id/nav_create_pantry"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreatePantry"
         android:label="fragment_create_pantry"
-        tools:layout="@layout/fragment_create_pantry" />
+        tools:layout="@layout/fragment_pantries_new" />
     <fragment
         android:id="@+id/nav_create_product"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProduct"
         android:label="CreateProduct"
-        tools:layout="@layout/fragment_create_product"/>
+        tools:layout="@layout/fragment_pantry_create_product"/>
 
 </navigation>

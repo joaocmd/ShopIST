@@ -28,7 +28,7 @@ class CreateProduct: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_create_product, container, false)
+        val root = inflater.inflate(R.layout.fragment_pantry_create_product, container, false)
 
         recyclerView = root.findViewById(R.id.storesList)
         productNameView = root.findViewById(R.id.productName)

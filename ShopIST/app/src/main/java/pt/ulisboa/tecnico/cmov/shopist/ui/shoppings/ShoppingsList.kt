@@ -31,7 +31,7 @@ class ShoppingsList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_shoppings_list, container, false)
+        val root = inflater.inflate(R.layout.fragment_stores_list, container, false)
         val recyclerView: RecyclerView = root.findViewById(R.id.storesList)
 
         val globalData = activity?.applicationContext as ShopIST

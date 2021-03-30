@@ -39,7 +39,7 @@ class CreateShoppingList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_create_shopping_list, container, false)
+        root = inflater.inflate(R.layout.fragment_stores_new, container, false)
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
         root.findViewById<View>(R.id.chooseLocationButton).setOnClickListener { chooseLocation() }
 

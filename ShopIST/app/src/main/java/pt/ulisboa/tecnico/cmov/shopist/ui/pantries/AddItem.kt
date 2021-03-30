@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,7 +43,7 @@ class AddItem : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_add_pantry_item, container, false)
+        val root = inflater.inflate(R.layout.fragment_pantry_add_item, container, false)
         val globalData = activity?.applicationContext as ShopIST
         products = globalData.getAllProducts()
 

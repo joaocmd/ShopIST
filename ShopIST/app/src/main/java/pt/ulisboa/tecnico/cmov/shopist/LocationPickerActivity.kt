@@ -172,7 +172,7 @@ class LocationPickerActivity : AppCompatActivity(),
         return false
     }
 
-    fun onSaveLocationButton(view: View) {
+    fun onSaveLocationButton(@Suppress("UNUSED_PARAMETER") view: View) {
         if (selectedMarker !== null) {
             val lat = selectedMarker!!.position.latitude
             val lon = selectedMarker!!.position.longitude
@@ -189,7 +189,7 @@ class LocationPickerActivity : AppCompatActivity(),
         }
     }
 
-    fun onCancelButton(view: View) {
+    fun onCancelButton(@Suppress("UNUSED_PARAMETER") view: View) {
         setResult(
             RESULT_CANCELED
         )
