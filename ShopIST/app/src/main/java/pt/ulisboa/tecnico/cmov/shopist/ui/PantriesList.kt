@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,20 +17,12 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.RecyclerAdapter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 /**
  * A simple [Fragment] subclass.
  * Use the [PantriesList.newInstance] factory method to
  * create an instance of this fragment.
  */
 class PantriesList : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private lateinit var recyclerAdapter: RecyclerAdapter
 
@@ -55,7 +46,7 @@ class PantriesList : Fragment() {
         if (globalData.pantries.isEmpty()) {
             globalData.startUp()
         }
-        recyclerAdapter = RecyclerAdapter(globalData.pantries)
+        recyclerAdapter = RecyclerAdapter(globalData.pantries, requireActivity())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
 
@@ -76,25 +67,24 @@ class PantriesList : Fragment() {
         recyclerAdapter.notifyDataSetChanged()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PantriesList.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PantriesList().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-    }
+    // companion object {
+    //     /**
+    //      * Use this factory method to create a new instance of
+    //      * this fragment using the provided parameters.
+    //      *
+    //      * @param param1 Parameter 1.
+    //      * @param param2 Parameter 2.
+    //      * @return A new instance of fragment PantriesList.
+    //      */
+    //     @JvmStatic
+    //     fun newInstance(param1: String, param2: String) =
+    //         PantriesList().apply {
+    //             arguments = Bundle().apply {
+    //                 putString(ARG_PARAM1, param1)
+    //                 putString(ARG_PARAM2, param2)
+    //             }
+    //         }
+    // }
 
     private fun onNewPantry() {
         val intent = Intent(activity?.applicationContext, CreatePantryActivity::class.java)

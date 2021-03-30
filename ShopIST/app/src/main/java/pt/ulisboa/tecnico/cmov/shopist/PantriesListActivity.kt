@@ -36,7 +36,7 @@ class PantriesListActivity : AppCompatActivity() {
         if (globalData.pantries.isEmpty()) {
             globalData.startUp()
         }
-        val adapter = RecyclerAdapter(globalData.pantries)
+        val adapter = RecyclerAdapter(globalData.pantries, this)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
     }

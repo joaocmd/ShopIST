@@ -3,30 +3,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_list_pantries">
 
     <fragment
         android:id="@+id/nav_list_pantries"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.PantriesList"
         android:label="test"
-        tools:layout="@layout/fragment_pantries_list" />
-
-
+        tools:layout="@layout/fragment_pantries_list" >
+        <action
+            android:id="@+id/action_nav_list_pantries_to_nav_pantry"
+            app:destination="@id/nav_pantry" />
+    </fragment>
     <fragment
-        android:id="@+id/nav_home"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_pantry"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.Pantry"
+        tools:layout="@layout/fragment_pantry" >
+        <argument
+            android:name="pantryId"
+            app:argType="string" />
+    </fragment>
 
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 </navigation>
