@@ -10,7 +10,6 @@ import android.widget.*
 import android.widget.RadioGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import pt.ulisboa.tecnico.cmov.shopist.CreateProductActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
@@ -35,7 +34,6 @@ class AddItem : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            Log.d("asd", it.getString(ARG_PANTRY_ID) ?: "nothing")
             val id = UUID.fromString(it.getString(ARG_PANTRY_ID))
             pantryList = (requireActivity().applicationContext as ShopIST).getPantryList(id)
         }
@@ -125,7 +123,6 @@ class AddItem : Fragment() {
     }
 
     private fun onCreateNewProduct() {
-        val intent = Intent(activity?.applicationContext, CreateProductActivity::class.java)
-        startActivity(intent)
+        findNavController().navigate(R.id.action_nav_add_item_to_nav_create_product)
     }
 }

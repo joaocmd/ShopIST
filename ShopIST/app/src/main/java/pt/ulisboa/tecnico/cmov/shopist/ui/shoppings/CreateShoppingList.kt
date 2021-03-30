@@ -48,7 +48,7 @@ class CreateShoppingList : Fragment() {
 
     private fun saveAndReturn() {
         val globalData = requireActivity().applicationContext as ShopIST
-        val title = root.findViewById<EditText>(R.id.editTitle).text.toString()
+        val title = root.findViewById<EditText>(R.id.titleInput).text.toString()
 
         if (title.length <= 1) {
             Toast.makeText(context, "First type a title.", Toast.LENGTH_SHORT).show()
