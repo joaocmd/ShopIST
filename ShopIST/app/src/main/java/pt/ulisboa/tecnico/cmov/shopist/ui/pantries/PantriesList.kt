@@ -33,7 +33,7 @@ class PantriesList : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_pantries_list, container, false)
-        val recyclerView: RecyclerView = root.findViewById(R.id.storesList)
+        val recyclerView: RecyclerView = root.findViewById(R.id.pantriesList)
 
         val globalData = activity?.applicationContext as ShopIST
         recyclerAdapter = PantriesListAdapter(globalData.pantries, requireActivity())

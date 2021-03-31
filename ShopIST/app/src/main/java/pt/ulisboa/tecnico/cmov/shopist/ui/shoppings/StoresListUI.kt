@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,12 +20,12 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [ShoppingsList.newInstance] factory method to
+ * Use the [StoresListUI.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ShoppingsList : Fragment() {
+class StoresListUI : Fragment() {
 
-    private lateinit var recyclerAdapter: ShoppingsListAdapter
+    private lateinit var recyclerAdapter: StoreListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,7 +37,7 @@ class ShoppingsList : Fragment() {
         val recyclerView: RecyclerView = root.findViewById(R.id.storesList)
 
         val globalData = activity?.applicationContext as ShopIST
-        recyclerAdapter = ShoppingsListAdapter(globalData.shoppingLists, requireActivity())
+        recyclerAdapter = StoreListAdapter(globalData.stores, requireActivity())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
 
@@ -51,7 +53,7 @@ class ShoppingsList : Fragment() {
 
     private fun updateData() {
         val globalData = activity?.applicationContext as ShopIST
-        recyclerAdapter.list = globalData.shoppingLists
+        recyclerAdapter.list = globalData.stores
         recyclerAdapter.notifyDataSetChanged()
     }
 
@@ -59,25 +61,25 @@ class ShoppingsList : Fragment() {
         findNavController().navigate(R.id.action_nav_shoppings_list_to_nav_create_shopping_list)
     }
 
-    inner class ShoppingsListAdapter(
+    inner class StoreListAdapter(
         var list: Array<Store>,
         private val activity: FragmentActivity
     ) :
-        RecyclerView.Adapter<ShoppingsListAdapter.ViewHolder>() {
+        RecyclerView.Adapter<StoreListAdapter.ViewHolder>() {
 
         inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
             private val textView: TextView = view.findViewById(R.id.rowText)
 
-            fun bind(shoppingList: Store) {
-                textView.text = shoppingList.title
+            fun bind(store: Store) {
+                textView.text = store.title
 
-                // val cardView: View = view.findViewById(R.id.rowCard)
-                // cardView.setOnClickListener {
-                //     view.findNavController().navigate(
-                //         R.id.action_nav_list_pantries_to_nav_pantry,
-                //         bundleOf(Pantry.ARG_PANTRY_ID to pantryList.uuid.toString())
-                //     )
-                // }
+                val cardView: View = view.findViewById(R.id.rowCard)
+                cardView.setOnClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_stores_list_to_nav_store_shopping_list,
+                        bundleOf(ShoppingListUI.ARG_STORE_ID to store.uuid.toString())
+                    )
+                }
             }
         }
 

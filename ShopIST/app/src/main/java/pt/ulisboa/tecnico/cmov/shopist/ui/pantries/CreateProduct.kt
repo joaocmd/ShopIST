@@ -35,7 +35,7 @@ class CreateProduct: Fragment() {
 
 
         val globalData = activity?.applicationContext as ShopIST
-        val adapter = StoresListAdapter(globalData.shoppingLists)
+        val adapter = StoresListAdapter(globalData.stores)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 

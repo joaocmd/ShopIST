@@ -9,7 +9,7 @@
             android:icon="@drawable/ic_baseline_home_24"
             android:title="@string/pantries_list" />
         <item
-            android:id="@+id/nav_shoppings_list"
+            android:id="@+id/nav_stores_list"
             android:icon="@drawable/ic_baseline_add_shopping_cart_24"
             android:title="@string/shoppings_list" />
     </group>

@@ -26,7 +26,7 @@
         android:fillViewport="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/storesList"
+            android:id="@+id/pantriesList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 

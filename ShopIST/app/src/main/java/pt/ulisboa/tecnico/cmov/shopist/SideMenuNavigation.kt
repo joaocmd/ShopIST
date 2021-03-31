@@ -44,7 +44,7 @@ class SideMenuNavigation : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_pantries_list, R.id.nav_pantry,
-                R.id.nav_shoppings_list
+                R.id.nav_stores_list
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

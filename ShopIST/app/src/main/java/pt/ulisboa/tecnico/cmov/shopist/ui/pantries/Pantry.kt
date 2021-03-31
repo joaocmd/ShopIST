@@ -43,7 +43,7 @@ class Pantry : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_pantry, container, false)
-        val listView: RecyclerView = root.findViewById(R.id.storesList)
+        val listView: RecyclerView = root.findViewById(R.id.productsList)
 
         recyclerAdapter = PantryAdapter(pantryList)
 
