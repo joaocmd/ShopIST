@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList;
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item;
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList;
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product;
+import kotlin.math.max
 
 class ShoppingListItem(val product: Product) {
 
@@ -39,7 +40,8 @@ class ShoppingListItem(val product: Product) {
        items.forEach {
           val cartQuantity = quantities[it.pantryList]!!.cart
           it.pantryQuantity += cartQuantity
-          it.needingQuantity -= cartQuantity
+          it.needingQuantity -= max(it.needingQuantity - cartQuantity, 0)
+          it.cartQuantity = 0
        }
    }
 }
