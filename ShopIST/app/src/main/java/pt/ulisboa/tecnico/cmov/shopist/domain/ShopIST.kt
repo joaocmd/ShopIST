@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import android.app.Application
 import android.util.Log
 import com.google.gson.Gson
+import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
+import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -17,13 +19,15 @@ class ShopIST : Application() {
 
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
-    private var allShoppingLists: MutableMap<UUID, Store> = mutableMapOf()
+    private var allStores: MutableMap<UUID, Store> = mutableMapOf()
+
+    var currentShoppingListItem: ShoppingListItem? = null
 
     val pantries: Array<PantryList>
         get() = this.allPantries.values.sortedBy { it.title }.toTypedArray()
 
-    val shoppingLists: Array<Store>
-        get() = this.allShoppingLists.values.sortedBy { it.title }.toTypedArray()
+    val stores: Array<Store>
+        get() = this.allStores.values.sortedBy { it.title }.toTypedArray()
 
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList
@@ -45,12 +49,12 @@ class ShopIST : Application() {
         return allProducts[uuid]
     }
 
-    fun addShoppingList(shoppingList: Store) {
-        allShoppingLists[shoppingList.uuid] = shoppingList
+    fun addStore(store: Store) {
+        allStores[store.uuid] = store
     }
 
-    fun getShoppingList(uuid: UUID): Store {
-        return allShoppingLists[uuid]!!
+    fun getShoppingList(uuid: UUID): ShoppingList {
+        return ShoppingList(allStores[uuid]!!, allPantries.values)
     }
 
     //--------------
@@ -60,7 +64,7 @@ class ShopIST : Application() {
         loadPersistent()
 
         // FIXME: Remove for production
-        if (allPantries.size == 0) {
+        if (allPantries.isEmpty()) {
             val product1 = Product("Pasta de Dentes")
             val product2 = Product("Escova de Dentes")
             val product3 = Product("Baguette")
@@ -91,16 +95,16 @@ class ShopIST : Application() {
         constructor(shopIST: ShopIST) : this() {
             pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
             products = shopIST.allProducts.values.map { p -> ProductDto(p) }.toMutableList()
-            stores = shopIST.allShoppingLists.values.map { s -> StoreDto(s) }.toMutableList()
+            stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
         }
     }
 
     private fun populateShopIST(shopISTDto: ShopISTDto) {
         // Set stores
-        shopISTDto.stores.forEach { s -> allShoppingLists[s.uuid] = Store.createStore(s) }
+        shopISTDto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
 
         // Set products
-        shopISTDto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allShoppingLists)}
+        shopISTDto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allStores)}
 
         // Set pantries
         val pairs = shopISTDto.pantriesList

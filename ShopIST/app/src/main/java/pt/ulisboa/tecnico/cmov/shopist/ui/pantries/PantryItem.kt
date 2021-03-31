@@ -12,15 +12,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PantryItem.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PantryItem : Fragment() {
-
-    private lateinit var pantryId: UUID
-    private lateinit var productId: UUID
 
     private lateinit var item: Item
 
@@ -33,12 +25,20 @@ class PantryItem : Fragment() {
     private var cart = 0
     private lateinit var cartView: TextView
 
+    companion object {
+        const val ARG_PANTRY_ID = "pantryId"
+        const val ARG_PRODUCT_ID = "productId"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            pantryId = UUID.fromString(it.getString(ARG_PANTRY_ID))
-            productId = UUID.fromString(it.getString(ARG_PRODUCT_ID))
+            val pantryId = UUID.fromString(it.getString(ARG_PANTRY_ID))
+            val productId = UUID.fromString(it.getString(ARG_PRODUCT_ID))
+            val globalData = requireActivity().applicationContext as ShopIST
+
+            val pantryList = globalData.getPantryList(pantryId)
+            item = pantryList.getItem(productId)
         }
     }
 
@@ -48,10 +48,6 @@ class PantryItem : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_pantry_item, container, false)
-
-        val globalData = requireActivity().applicationContext as ShopIST
-        val pantryList = globalData.getPantryList(pantryId)
-        item = pantryList.getItem(productId)
 
         pantryView = root.findViewById(R.id.pantryView)
         pantry = item.pantryQuantity
@@ -111,19 +107,5 @@ class PantryItem : Fragment() {
         item.cartQuantity = cart
         (requireActivity().applicationContext as ShopIST).savePersistent()
         cancel()
-    }
-
-    companion object {
-        const val ARG_PANTRY_ID = "pantryId"
-        const val ARG_PRODUCT_ID = "productId"
-
-        @JvmStatic
-        fun newInstance(pantryId: String, productId: String) =
-            PantryItem().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PANTRY_ID, pantryId);
-                    putString(ARG_PRODUCT_ID, productId);
-                }
-            }
     }
 }

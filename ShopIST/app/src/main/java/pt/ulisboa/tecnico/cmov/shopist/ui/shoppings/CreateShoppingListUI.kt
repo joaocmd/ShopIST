@@ -22,10 +22,10 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CreateShoppingList.newInstance] factory method to
+ * Use the [CreateShoppingListUI.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CreateShoppingList : Fragment() {
+class CreateShoppingListUI : Fragment() {
 
     companion object {
         const val GET_STORE_LOCATION = 0;
@@ -39,7 +39,7 @@ class CreateShoppingList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        root = inflater.inflate(R.layout.fragment_create_shopping_list, container, false)
+        root = inflater.inflate(R.layout.fragment_stores_new, container, false)
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
         root.findViewById<View>(R.id.chooseLocationButton).setOnClickListener { chooseLocation() }
 
@@ -48,7 +48,7 @@ class CreateShoppingList : Fragment() {
 
     private fun saveAndReturn() {
         val globalData = requireActivity().applicationContext as ShopIST
-        val title = root.findViewById<EditText>(R.id.editTitle).text.toString()
+        val title = root.findViewById<EditText>(R.id.titleInput).text.toString()
 
         if (title.length <= 1) {
             Toast.makeText(context, "First type a title.", Toast.LENGTH_SHORT).show()
@@ -60,7 +60,7 @@ class CreateShoppingList : Fragment() {
         }
 
         val newShoppingList = Store(title, coords)
-        globalData.addShoppingList(newShoppingList)
+        globalData.addStore(newShoppingList)
         globalData.savePersistent()
         findNavController().popBackStack()
     }

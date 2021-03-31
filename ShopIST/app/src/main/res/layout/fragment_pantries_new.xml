@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePantryActivity">
+    tools:context=".ui.pantries.CreatePantry">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                 android:layout_marginBottom="20dp" />
 
             <EditText
-                android:id="@+id/editTextPantryName"
+                android:id="@+id/productName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -35,11 +35,10 @@
                 android:inputType="none|textCapWords" />
 
             <Button
-                android:id="@+id/editTitle"
+                android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_pantry_item_complete"
-                android:onClick="onCreatePantry"/>
+                android:text="@string/create_pantry_item_complete" />
 
             <TextView
                 android:id="@+id/textView2"

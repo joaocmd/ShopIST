@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,9 +9,9 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import pt.ulisboa.tecnico.cmov.shopist.AddItemActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
@@ -26,13 +25,15 @@ import java.util.*
  */
 class Pantry : Fragment() {
 
-    private lateinit var pantryId: UUID
+    private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            pantryId = UUID.fromString(it.getString(ARG_PANTRY_ID))
+            val pantryId = UUID.fromString(it.getString(ARG_PANTRY_ID))
+            val globalData = requireActivity().applicationContext as ShopIST
+            pantryList = globalData.getPantryList(pantryId)
         }
     }
 
@@ -42,10 +43,9 @@ class Pantry : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_pantry, container, false)
-        val listView: RecyclerView = root.findViewById(R.id.storesList)
+        val listView: RecyclerView = root.findViewById(R.id.productsList)
 
-        val globalData = requireActivity().applicationContext as ShopIST
-        recyclerAdapter = PantryAdapter(globalData.getPantryList(pantryId))
+        recyclerAdapter = PantryAdapter(pantryList)
 
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = recyclerAdapter
@@ -61,9 +61,12 @@ class Pantry : Fragment() {
     }
 
     private fun onNewItem() {
-        val intent = Intent(requireActivity().applicationContext, AddItemActivity::class.java)
-        intent.putExtra(AddItemActivity.PANTRY_ID, pantryId.toString())
-        startActivity(intent)
+        findNavController().navigate(
+            R.id.action_nav_pantry_to_add_item,
+            bundleOf(
+                AddItem.ARG_PANTRY_ID to pantryList.uuid.toString()
+            )
+        )
     }
 
     inner class PantryAdapter(private val pantryList: PantryList) :
@@ -126,7 +129,7 @@ class Pantry : Fragment() {
         fun newInstance(pantryId: String) =
             Pantry().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PANTRY_ID, pantryId);
+                    putString(ARG_PANTRY_ID, pantryId)
                 }
             }
     }

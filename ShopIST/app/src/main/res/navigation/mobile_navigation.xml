@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_nav_list_pantries_to_nav_pantry"
             app:destination="@id/nav_pantry" />
+        <action
+            android:id="@+id/action_nav_pantries_list_to_nav_create_pantry"
+            app:destination="@id/nav_create_pantry" />
     </fragment>
     <fragment
         android:id="@+id/nav_pantry"
@@ -21,6 +24,9 @@
         <action
             android:id="@+id/action_nav_pantry_to_pantryItem"
             app:destination="@id/nav_pantry_item" />
+        <action
+            android:id="@+id/action_nav_pantry_to_add_item"
+            app:destination="@id/nav_add_item" />
     </fragment>
     <fragment
         android:id="@+id/nav_pantry_item"
@@ -29,19 +35,57 @@
         tools:layout="@layout/fragment_pantry_item" />
 
     <fragment
-        android:id="@+id/nav_shoppings_list"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingsList"
+        android:id="@+id/nav_stores_list"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.StoresListUI"
         android:label="@string/shoppings_list"
-        tools:layout="@layout/fragment_shoppings_list">
+        tools:layout="@layout/fragment_stores_list">
         <action
             android:id="@+id/action_nav_shoppings_list_to_nav_create_shopping_list"
             app:destination="@id/nav_create_shopping_list" />
+        <action
+            android:id="@+id/action_nav_stores_list_to_nav_store_shopping_list"
+            app:destination="@id/nav_store_shopping_list" />
     </fragment>
+    <fragment
+        android:id="@+id/nav_store_shopping_list"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI"
+        android:label="@string/shoppings_list"
+        tools:layout="@layout/fragment_store_shopping_list">
+        <action
+            android:id="@+id/action_nav_store_shopping_list_to_nav_store_shopping_list_item"
+            app:destination="@id/nav_store_shopping_list_item" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_store_shopping_list_item"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListItemUI"
+        android:label="@string/shoppings_list"
+        tools:layout="@layout/fragment_store_shopping_list_item">
+    </fragment>
+
 
     <fragment
         android:id="@+id/nav_create_shopping_list"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingList"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingListUI"
         android:label="@string/new_shopping_list"
-        tools:layout="@layout/fragment_create_shopping_list" />
+        tools:layout="@layout/fragment_stores_new" />
+    <fragment
+        android:id="@+id/nav_add_item"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.AddItem"
+        android:label="fragment_add_pantry_item"
+        tools:layout="@layout/fragment_pantry_add_item" >
+        <action
+            android:id="@+id/action_nav_add_item_to_nav_create_product"
+            app:destination="@id/nav_create_product" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_pantry"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreatePantry"
+        android:label="fragment_create_pantry"
+        tools:layout="@layout/fragment_pantries_new" />
+    <fragment
+        android:id="@+id/nav_create_product"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProduct"
+        android:label="CreateProduct"
+        tools:layout="@layout/fragment_pantry_create_product"/>
 
 </navigation>

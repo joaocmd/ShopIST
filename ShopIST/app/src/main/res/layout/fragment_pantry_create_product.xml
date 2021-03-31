@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CreatePantryActivity">
+    tools:context=".ui.pantries.CreateProductActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,39 +23,44 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_shopping_title"
+                android:text="@string/create_product_title"
                 android:layout_marginBottom="20dp" />
 
             <EditText
-                android:id="@+id/editTitle"
+                android:id="@+id/productName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="@string/create_pantry_item_title"
-                android:inputType="none|textCapWords" />
-
-            <Button
-                android:id="@+id/chooseLocationButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:text="@string/store_choose_location" />
+                android:inputType="textPersonName"
+                android:hint="@string/create_product_item_name"
+                android:layout_marginBottom="20dp"/>
 
             <TextView
-                android:id="@+id/locationMessage"
+                android:id="@+id/storesListTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="@string/shopping_location_not_set" />
+                android:text="@string/create_product_stores_title"
+                android:layout_marginBottom="20dp" />
+
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/storesList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </androidx.recyclerview.widget.RecyclerView>
+            </ScrollView>
 
             <Button
                 android:id="@+id/okButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_shopping_complete"
-                android:enabled="false"
-                android:clickable="false"
-                />
+                android:text="@string/create_product_item_complete" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
-package pt.ulisboa.tecnico.cmov.shopist
+package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,44 +7,53 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 
-class CreateProductActivity : AppCompatActivity() {
+class CreateProduct: Fragment() {
 
     private val selectedStores: MutableSet<Store> = mutableSetOf()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_product)
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var productNameView: EditText
 
-        initListStores()
-    }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val root = inflater.inflate(R.layout.fragment_pantry_create_product, container, false)
 
-    private fun initListStores() {
-        val recyclerView = findViewById<RecyclerView>(R.id.storesList)
-        val globalData = applicationContext as ShopIST
-        val adapter = StoresListAdapter(globalData.shoppingLists)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView = root.findViewById(R.id.storesList)
+        productNameView = root.findViewById(R.id.productName)
+
+
+        val globalData = activity?.applicationContext as ShopIST
+        val adapter = StoresListAdapter(globalData.stores)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
+
+        root.findViewById<View>(R.id.okButton).setOnClickListener { onCreateProduct() }
+
+        return root
     }
 
-    fun onCreateProduct(view: View) {
-
-        val productName = findViewById<EditText>(R.id.productName).text.toString()
-        val product = Product(productName)
+    private fun onCreateProduct() {
+        val product = Product(productNameView.text.toString())
         product.stores = selectedStores
 
-        val globalData = applicationContext as ShopIST
+        val globalData = activity?.applicationContext as ShopIST
         globalData.addProduct(product)
 
         // Save data in file
         globalData.savePersistent()
-
-        finish()
+        findNavController().popBackStack()
     }
 
     inner class StoresListAdapter(
@@ -60,7 +68,7 @@ class CreateProductActivity : AppCompatActivity() {
                 textView.text = store.title
 
                 val checkBox: CheckBox = view.findViewById(R.id.checkBox)
-                checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                checkBox.setOnCheckedChangeListener { _, _ ->
                     if (selectedStores.contains(store)) {
                         selectedStores.remove(store)
                     } else {

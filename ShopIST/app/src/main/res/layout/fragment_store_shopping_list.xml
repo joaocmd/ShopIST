@@ -14,11 +14,18 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/newItemButton"
+            android:id="@+id/okButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:text="@string/add_item_title" />
+            android:text="@string/checkout" />
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:text="@string/cancel" />
 
     </LinearLayout>
 
@@ -28,8 +35,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
+        android:fillViewport="true">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/productsList"
             android:layout_width="match_parent"

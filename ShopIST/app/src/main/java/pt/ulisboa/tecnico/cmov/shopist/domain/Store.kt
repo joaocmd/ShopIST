@@ -16,21 +16,4 @@ class Store(val title: String, val location: LatLng) {
         }
     }
 
-    fun getItems(allPantries: Collection<PantryList>): Map<Product, List<Item>> {
-        val res = mutableMapOf<Product, MutableList<Item>>()
-        for (pantry in allPantries) {
-            for (item in pantry.items) {
-                // TODO: Check when product does not have store
-                if (item.product.stores.contains(this) || item.product.stores.isEmpty()) {
-                    if (res.containsKey(item.product)) {
-                        res[item.product]!!.add(item)
-                    } else {
-                        res[item.product] = mutableListOf(item)
-                    }
-                }
-            }
-        }
-
-        return res
-    }
 }
