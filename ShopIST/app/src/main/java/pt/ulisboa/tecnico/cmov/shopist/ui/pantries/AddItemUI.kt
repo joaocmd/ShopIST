@@ -17,7 +17,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
 
 
-class AddItem : Fragment() {
+class AddItemUI : Fragment() {
 
     private lateinit var pantryList: PantryList
     private var selectedProduct: Product? = null

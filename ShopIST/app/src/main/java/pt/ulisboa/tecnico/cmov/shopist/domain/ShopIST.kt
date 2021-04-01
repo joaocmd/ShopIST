@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import android.app.Application
 import android.util.Log
+import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
@@ -20,6 +21,7 @@ class ShopIST : Application() {
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
     private var allStores: MutableMap<UUID, Store> = mutableMapOf()
+    private var defaultStore: Store? = null
 
     var currentShoppingListItem: ShoppingListItem? = null
 
@@ -57,6 +59,14 @@ class ShopIST : Application() {
         return ShoppingList(allStores[uuid]!!, allPantries.values)
     }
 
+    fun setDefaultStore(store: Store) {
+        defaultStore = store
+    }
+
+    fun getDefaultStore(): Store? {
+        return defaultStore
+    }
+
     //--------------
 
     fun startUp() {
@@ -65,10 +75,31 @@ class ShopIST : Application() {
 
         // FIXME: Remove for production
         if (allPantries.isEmpty()) {
+            val store1 = Store("Bom Dia", LatLng(38.73361076643277,-9.142712429165842))
+            val store2 = Store("Pingo Doce", LatLng(38.735076664409554,-9.14225209504366))
+            val store3 = Store("Intermarche", LatLng(38.73595121972168,-9.141665026545525))
+
+            addStore(store1)
+            addStore(store2)
+            addStore(store3)
+            setDefaultStore(store2)
+
             val product1 = Product("Pasta de Dentes")
+            product1.stores.add(store1)
+            product1.stores.add(store2)
+
             val product2 = Product("Escova de Dentes")
+            product2.stores.add(store2)
+            product2.stores.add(store3)
+
             val product3 = Product("Baguette")
+            product2.stores.add(store1)
+            product2.stores.add(store3)
+
             val product4 = Product("Croissant de Chocolate")
+            product2.stores.add(store1)
+            product2.stores.add(store2)
+            product2.stores.add(store3)
 
             addProduct(product1)
             addProduct(product2)
@@ -91,11 +122,13 @@ class ShopIST : Application() {
         var pantriesList: MutableList<PantryListDto> = mutableListOf()
         var products: MutableList<ProductDto> = mutableListOf()
         var stores: MutableList<StoreDto> = mutableListOf()
+        var defaultStore: Store? = null
 
         constructor(shopIST: ShopIST) : this() {
             pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
             products = shopIST.allProducts.values.map { p -> ProductDto(p) }.toMutableList()
             stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
+            defaultStore = shopIST.defaultStore
         }
     }
 

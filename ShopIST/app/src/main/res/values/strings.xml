@@ -3,6 +3,7 @@
     <string name="create_pantry_item_title"> Title </string>
     <string name="add_item_title"> Add new item </string>
     <string name="add_item_quantity"> Item quantity </string>
+    <string name="add_item_quantity_title">Change Item Quantity</string>
     <string name="add_item_quantity_hint">Value greater than or equal to 0</string>
     <string name="add_item_button"> Insert new item </string>
     <string name="create_product_item_name"> Product name </string>
@@ -16,6 +17,7 @@
     <string name="create_shopping_complete"> Add new Store </string>
     <string name="shopping_location_not_set"> Location not set </string>
     <string name="shopping_location_set"> Location set! </string>
+    <string name="shopping_default_store">Set as default store for products</string>
     <string name="title_activity_test">Test</string>
     <string name="new_pantry">New Pantry</string>
     <!-- Strings used for fragments for navigation -->
@@ -44,4 +46,6 @@
     <string name="store_choose_location">Choose location</string>
     <string name="checkout">Checkout</string>
     <string name="cancel">Cancel</string>
+    <string name="ok">Ok</string>
+    <string name="product">Product</string>
 </resources>

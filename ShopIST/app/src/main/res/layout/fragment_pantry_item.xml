@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PantryItemActivity"
+    tools:context=".ui.pantries.PantryItemUI"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:layout_marginTop="40dp">
@@ -166,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:text="Ok" />
+                android:text="@string/ok" />
 
             <Button
                 android:id="@+id/cancelButton"
@@ -174,7 +174,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
-                android:text="Cancelar" />
+                android:text="@string/cancel" />
 
         </LinearLayout>
     </LinearLayout>

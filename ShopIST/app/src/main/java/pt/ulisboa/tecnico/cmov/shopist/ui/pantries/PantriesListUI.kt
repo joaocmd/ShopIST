@@ -19,10 +19,10 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
 /**
  * A simple [Fragment] subclass.
- * Use the [PantriesList.newInstance] factory method to
+ * Use the [PantriesListUI.newInstance] factory method to
  * create an instance of this fragment.
  */
-class PantriesList : Fragment() {
+class PantriesListUI : Fragment() {
 
     private lateinit var recyclerAdapter: PantriesListAdapter
 
@@ -77,7 +77,7 @@ class PantriesList : Fragment() {
                     view.findNavController().navigate(
                         R.id.action_nav_list_pantries_to_nav_pantry,
                         bundleOf(
-                            Pantry.ARG_PANTRY_ID to pantryList.uuid.toString()
+                            PantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
                         )
                     )
                 }

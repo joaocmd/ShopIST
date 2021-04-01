@@ -27,6 +27,8 @@ class ShoppingListItemUI : Fragment() {
         val root = inflater.inflate(R.layout.fragment_store_shopping_list_item, container, false)
         shoppingListItem = (activity?.applicationContext as ShopIST).currentShoppingListItem!!
 
+        // Set product title
+        root.findViewById<TextView>(R.id.productTitleView).text = shoppingListItem.product.name
 
         recyclerView = root.findViewById(R.id.shoppingListItemList)
         recyclerView.layoutManager = LinearLayoutManager(context)

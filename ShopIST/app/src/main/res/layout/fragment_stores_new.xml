@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.pantries.CreatePantry">
+    tools:context=".ui.shoppings.CreateShoppingListUI">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,6 +46,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:text="@string/shopping_location_not_set" />
+
+            <CheckBox
+                android:id="@+id/defaultStoreCheckBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shopping_default_store" />
 
             <Button
                 android:id="@+id/okButton"

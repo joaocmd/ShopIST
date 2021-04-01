@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 
-class CreateProduct: Fragment() {
+class CreateProductUI: Fragment() {
 
     private val selectedStores: MutableSet<Store> = mutableSetOf()
 
@@ -45,9 +46,22 @@ class CreateProduct: Fragment() {
     }
 
     private fun onCreateProduct() {
+        val title = productNameView.text.toString()
+
+        // Check if has a name
+        if (title.isEmpty()) {
+            Toast.makeText(context, "First type a title.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Check if has a store
+        if (selectedStores.isEmpty()) {
+            Toast.makeText(context, "Select at least one store.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val product = Product(productNameView.text.toString())
         product.stores = selectedStores
-
         val globalData = activity?.applicationContext as ShopIST
         globalData.addProduct(product)
 
@@ -68,6 +82,14 @@ class CreateProduct: Fragment() {
                 textView.text = store.title
 
                 val checkBox: CheckBox = view.findViewById(R.id.checkBox)
+
+                val globalData = activity?.applicationContext as ShopIST
+                val defaultStore = globalData.getDefaultStore()
+                if (defaultStore != null && defaultStore == store) {
+                    checkBox.isChecked = true
+                }
+
+
                 checkBox.setOnCheckedChangeListener { _, _ ->
                     if (selectedStores.contains(store)) {
                         selectedStores.remove(store)

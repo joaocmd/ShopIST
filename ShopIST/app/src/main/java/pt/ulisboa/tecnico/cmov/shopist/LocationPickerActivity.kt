@@ -148,7 +148,6 @@ class LocationPickerActivity : AppCompatActivity(),
                             lastKnownLocation = location
                             val lat = location.latitude
                             val lon = location.longitude
-                            Log.d(ShopIST.TAG, "Lat: $lat, Lon: $lon")
 
                             map.moveCamera(
                                 CameraUpdateFactory.newLatLngZoom(

@@ -20,10 +20,10 @@ import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [Pantry.newInstance] factory method to
+ * Use the [PantryUI.newInstance] factory method to
  * create an instance of this fragment.
  */
-class Pantry : Fragment() {
+class PantryUI : Fragment() {
 
     private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
@@ -64,7 +64,7 @@ class Pantry : Fragment() {
         findNavController().navigate(
             R.id.action_nav_pantry_to_add_item,
             bundleOf(
-                AddItem.ARG_PANTRY_ID to pantryList.uuid.toString()
+                AddItemUI.ARG_PANTRY_ID to pantryList.uuid.toString()
             )
         )
     }
@@ -93,8 +93,8 @@ class Pantry : Fragment() {
                     view.findNavController().navigate(
                         R.id.action_nav_pantry_to_pantryItem,
                         bundleOf(
-                            PantryItem.ARG_PANTRY_ID to pantryList.uuid.toString(),
-                            PantryItem.ARG_PRODUCT_ID to item.product.uuid.toString()
+                            PantryItemUI.ARG_PANTRY_ID to pantryList.uuid.toString(),
+                            PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
                         )
                     )
                 }
@@ -127,7 +127,7 @@ class Pantry : Fragment() {
 
         @JvmStatic
         fun newInstance(pantryId: String) =
-            Pantry().apply {
+            PantryUI().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PANTRY_ID, pantryId)
                 }

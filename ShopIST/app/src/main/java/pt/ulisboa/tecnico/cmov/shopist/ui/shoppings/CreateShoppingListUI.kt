@@ -33,6 +33,7 @@ class CreateShoppingListUI : Fragment() {
 
     private lateinit var root: View
     private lateinit var coords: LatLng
+    private var isDefaultStore = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +43,7 @@ class CreateShoppingListUI : Fragment() {
         root = inflater.inflate(R.layout.fragment_stores_new, container, false)
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
         root.findViewById<View>(R.id.chooseLocationButton).setOnClickListener { chooseLocation() }
+        root.findViewById<View>(R.id.defaultStoreCheckBox).setOnClickListener { toggleDefaultStore() }
 
         return root
     }
@@ -61,6 +63,9 @@ class CreateShoppingListUI : Fragment() {
 
         val newShoppingList = Store(title, coords)
         globalData.addStore(newShoppingList)
+        if (isDefaultStore) {
+            globalData.setDefaultStore(newShoppingList)
+        }
         globalData.savePersistent()
         findNavController().popBackStack()
     }
@@ -68,6 +73,10 @@ class CreateShoppingListUI : Fragment() {
     private fun chooseLocation() {
         val intent = Intent(activity?.applicationContext, LocationPickerActivity::class.java)
         startActivityForResult(intent, GET_STORE_LOCATION)
+    }
+
+    private fun toggleDefaultStore() {
+        isDefaultStore = !isDefaultStore
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -83,7 +92,7 @@ class CreateShoppingListUI : Fragment() {
                 button.isClickable = true
                 button.isEnabled = true
 
-                Log.d(ShopIST.TAG, "Lat: $lat, Lon: $lon")
+                Log.d(ShopIST.TAG, "Received - Lat: $lat, Lon: $lon")
             }
         } else if (requestCode == GET_STORE_LOCATION && resultCode == AppCompatActivity.RESULT_CANCELED) {
             Log.d(ShopIST.TAG, "Location canceled")

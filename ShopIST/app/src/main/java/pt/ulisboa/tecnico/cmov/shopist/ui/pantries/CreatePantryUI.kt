@@ -11,7 +11,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 
-class CreatePantry : Fragment() {
+class CreatePantryUI : Fragment() {
 
     private lateinit var editTitle: EditText
 

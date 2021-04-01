@@ -12,7 +12,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
 
-class PantryItem : Fragment() {
+class PantryItemUI : Fragment() {
 
     private lateinit var item: Item
 
@@ -48,6 +48,10 @@ class PantryItem : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_pantry_item, container, false)
+
+        // Set product and pantry titles
+        root.findViewById<TextView>(R.id.productTitleView).text = item.product.name
+        root.findViewById<TextView>(R.id.pantryTitleView).text = item.pantryList.title
 
         pantryView = root.findViewById(R.id.pantryView)
         pantry = item.pantryQuantity
