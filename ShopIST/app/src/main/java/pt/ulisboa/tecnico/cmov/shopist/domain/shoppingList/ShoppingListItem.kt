@@ -40,7 +40,7 @@ class ShoppingListItem(val product: Product) {
        items.forEach {
           val cartQuantity = quantities[it.pantryList]!!.cart
           it.pantryQuantity += cartQuantity
-          it.needingQuantity -= max(it.needingQuantity - cartQuantity, 0)
+          it.needingQuantity = max(it.needingQuantity - cartQuantity, 0)
           it.cartQuantity = 0
        }
    }

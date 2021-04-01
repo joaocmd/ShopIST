@@ -21,7 +21,7 @@ class CreatePantryUI : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_pantries_new, container, false)
-        editTitle = root.findViewById(R.id.okButton)
+        editTitle = root.findViewById(R.id.pantryName)
         root.findViewById<View>(R.id.okButton) .setOnClickListener { createPantry() }
 
         return root

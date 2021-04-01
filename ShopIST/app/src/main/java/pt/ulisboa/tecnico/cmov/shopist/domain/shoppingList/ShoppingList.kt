@@ -14,14 +14,13 @@ class ShoppingList() {
         for (pantry in allPantries) {
             for (item in pantry.items) {
                 // TODO: Check when product does not have any store
-                // FIXME: enable this if
-                // if (item.product.stores.contains(store)) {
+                if (item.product.stores.contains(store) && item.needingQuantity > 0) {
                     if (tempItems.containsKey(item.product)) {
                         tempItems[item.product]!!.add(item)
                     } else {
                         tempItems[item.product] = mutableListOf(item)
                     }
-                // }
+                }
             }
         }
 

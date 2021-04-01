@@ -87,6 +87,7 @@ class CreateProductUI: Fragment() {
                 val defaultStore = globalData.getDefaultStore()
                 if (defaultStore != null && defaultStore == store) {
                     checkBox.isChecked = true
+                    selectedStores.add(store)
                 }
 
 

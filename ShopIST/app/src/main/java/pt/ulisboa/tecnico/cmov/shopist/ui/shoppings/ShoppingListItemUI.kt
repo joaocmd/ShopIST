@@ -15,6 +15,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 
 class ShoppingListItemUI : Fragment() {
+    // TODO: Add button to set to min and max quantity on cart
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var shoppingListItem: ShoppingListItem

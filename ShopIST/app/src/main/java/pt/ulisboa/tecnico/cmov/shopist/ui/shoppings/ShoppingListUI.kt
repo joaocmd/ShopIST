@@ -46,6 +46,8 @@ class ShoppingListUI : Fragment() {
         val root = inflater.inflate(R.layout.fragment_store_shopping_list, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)
 
+        // TODO: Change title bar to have store name
+
         recyclerAdapter = ShoppingListAdapter(shoppingList)
 
         listView.layoutManager = LinearLayoutManager(context)

@@ -93,13 +93,13 @@ class ShopIST : Application() {
             product2.stores.add(store3)
 
             val product3 = Product("Baguette")
-            product2.stores.add(store1)
-            product2.stores.add(store3)
+            product3.stores.add(store1)
+            product3.stores.add(store3)
 
             val product4 = Product("Croissant de Chocolate")
-            product2.stores.add(store1)
-            product2.stores.add(store2)
-            product2.stores.add(store3)
+            product4.stores.add(store1)
+            product4.stores.add(store2)
+            product4.stores.add(store3)
 
             addProduct(product1)
             addProduct(product2)
@@ -122,19 +122,26 @@ class ShopIST : Application() {
         var pantriesList: MutableList<PantryListDto> = mutableListOf()
         var products: MutableList<ProductDto> = mutableListOf()
         var stores: MutableList<StoreDto> = mutableListOf()
-        var defaultStore: Store? = null
+        var defaultStore: StoreDto? = null
 
         constructor(shopIST: ShopIST) : this() {
             pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
             products = shopIST.allProducts.values.map { p -> ProductDto(p) }.toMutableList()
             stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
-            defaultStore = shopIST.defaultStore
+            if (shopIST.defaultStore != null) {
+                defaultStore = StoreDto(shopIST.defaultStore!!)
+            }
         }
     }
 
     private fun populateShopIST(shopISTDto: ShopISTDto) {
         // Set stores
         shopISTDto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
+
+        // Set default store
+        if (shopISTDto.defaultStore != null) {
+            defaultStore = allStores[shopISTDto.defaultStore!!.uuid]
+        }
 
         // Set products
         shopISTDto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allStores)}

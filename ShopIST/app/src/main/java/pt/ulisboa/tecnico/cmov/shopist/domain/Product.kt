@@ -8,7 +8,6 @@ class Product(name: String) {
     var name: String = name
     var barcode: Int? = null
     var image: String? = null
-    // TODO: Add store on product creation interface
     var stores: MutableSet<Store> = mutableSetOf()
 
     companion object {

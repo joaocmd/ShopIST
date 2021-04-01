@@ -23,7 +23,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
  * create an instance of this fragment.
  */
 class PantriesListUI : Fragment() {
-
+    // TODO: Don't show cart quantities
     private lateinit var recyclerAdapter: PantriesListAdapter
 
     override fun onCreateView(
