@@ -9,6 +9,8 @@
     <string name="create_product_item_name"> Product name </string>
     <string name="create_product_title"> Insert new product </string>
     <string name="create_product_stores_title"> Choose stores to buy in </string>
+    <string name="edit_product">Edit Product</string>
+    <string name="edit_product_save">Save Product</string>
     <string name="create_pantry_title"> Insert your new pantry\'s data </string>
     <string name="create_pantry_warning"> This new pantry will be added to the family pantry </string>
     <string name="create_pantry_item_complete"> Add new Pantry </string>

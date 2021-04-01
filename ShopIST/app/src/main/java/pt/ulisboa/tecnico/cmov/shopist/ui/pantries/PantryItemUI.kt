@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
@@ -76,6 +78,15 @@ class PantryItemUI : Fragment() {
         // Navigation Buttons
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
+        // FIXME: Remove this
+        root.findViewById<View>(R.id.editProductButton).setOnClickListener {
+            it.findNavController().navigate(
+                R.id.action_nav_pantry_item_to_nav_create_product,
+                bundleOf(
+                    CreateProductUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                )
+            )
+        }
 
         return root
     }

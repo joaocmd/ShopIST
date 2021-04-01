@@ -32,7 +32,11 @@
         android:id="@+id/nav_pantry_item"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI"
         android:label="@string/add_item_quantity_title"
-        tools:layout="@layout/fragment_pantry_item" />
+        tools:layout="@layout/fragment_pantry_item" >
+        <action
+            android:id="@+id/action_nav_pantry_item_to_nav_create_product"
+            app:destination="@id/nav_create_product" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_stores_list"
