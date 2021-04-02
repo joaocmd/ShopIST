@@ -53,7 +53,7 @@ class SideMenuNavigation : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.side_menu_navigation, menu)
+        menuInflater.inflate(R.menu.edit_item_menu, menu)
         return true
     }
 
