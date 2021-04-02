@@ -1,57 +1,67 @@
 <resources>
     <string name="app_name">ShopIST</string>
+
+    <!-- Products -->
+    <string name="create_product_item_name"> Product name </string>
+    <string name="create_product_title"> Insert new product </string>
+    <string name="create_product_stores_title"> Choose stores to buy in </string>
+    <string name="create_product_item_complete"> Add new Product </string>
+    <string name="edit_product">Edit Product</string>
+    <string name="edit_product_save">Save Product</string>
+    <string name="product_name">Product Name</string>
+    <string name="product">Product</string>
+
+    <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Title </string>
     <string name="add_item_title"> Add new item </string>
     <string name="add_item_quantity"> Item quantity </string>
     <string name="add_item_quantity_title">Change Item Quantity</string>
     <string name="add_item_quantity_hint">Value greater than or equal to 0</string>
     <string name="add_item_button"> Insert new item </string>
-    <string name="create_product_item_name"> Product name </string>
-    <string name="create_product_title"> Insert new product </string>
-    <string name="create_product_stores_title"> Choose stores to buy in </string>
-    <string name="edit_product">Edit Product</string>
-    <string name="edit_product_save">Save Product</string>
+
+    <!-- Pantry Lists -->
+    <string name="new_pantry">New Pantry</string>
     <string name="create_pantry_title"> Insert your new pantry\'s data </string>
     <string name="create_pantry_warning"> This new pantry will be added to the family pantry </string>
     <string name="create_pantry_item_complete"> Add new Pantry </string>
+    <string name="pantry_list_name">Pantry List Name</string>
     <string name="edit_pantry"> Edit Pantry </string>
     <string name="edit_pantry_complete">Save Pantry</string>
-    <string name="create_product_item_complete"> Add new Product </string>
+
+    <!-- Shopping Lists -->
     <string name="create_shopping_title"> Add new Shopping List </string>
     <string name="create_shopping_complete"> Add new Store </string>
     <string name="edit_shopping"> Edit Store </string>
     <string name="edit_shopping_complete"> Save Store </string>
+    <string name="new_shopping_list">New Shopping List</string>
+    <string name="shopping_default_store">Set as default store for products</string>
+    <string name="checkout">Checkout</string>
+
+    <!-- Navigation -->
+    <string name="pantries_list">My Pantries</string>
+    <string name="shoppings_list">Shopping Lists</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_side_menu_navigation">SideMenuNavigation</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">ShopISTa</string>
+    <string name="nav_header_subtitle">hugo@trabalha.sff</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- Global -->
     <string name="location_not_set"> Location not set </string>
     <string name="location_set"> Location set! </string>
-    <string name="shopping_default_store">Set as default store for products</string>
+    <string name="choose_location">Choose location</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+
+    <!-- Others -->
     <string name="title_activity_test">Test</string>
-    <string name="new_pantry">New Pantry</string>
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="pantry_list_name">Pantry List Name</string>
-    <string name="product_name">Product Name</string>
-    <string name="plus">+</string>
-    <string name="minus">-</string>
-    <string name="title_activity_side_menu_navigation">SideMenuNavigation</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="pantries_list">My Pantries</string>
-    <string name="shoppings_list">Shopping Lists</string>
-    <string name="new_shopping_list">New Shopping List</string>
-    <string name="choose_location">Choose location</string>
-    <string name="checkout">Checkout</string>
-    <string name="cancel">Cancel</string>
-    <string name="ok">Ok</string>
-    <string name="product">Product</string>
 </resources>
