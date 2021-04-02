@@ -3,10 +3,10 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-class Store(var title: String) {
+class Store(var title: String) : Distanceable {
     var uuid: UUID = UUID.randomUUID()
     var items: Map<Product, Item> = mapOf()
-    var location: LatLng? = null
+    override var location: LatLng? = null
 
     constructor(title: String, location: LatLng): this(title) {
         this.location = location

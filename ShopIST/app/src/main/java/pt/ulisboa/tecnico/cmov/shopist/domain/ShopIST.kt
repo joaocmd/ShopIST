@@ -16,6 +16,7 @@ class ShopIST : Application() {
     companion object {
         const val TAG = "shopist.domain.ShopIST"
         const val FILENAME_DATA = "data.json"
+        const val OPEN_AUTO_MAX_DISTANCE = 50
     }
 
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
@@ -71,6 +72,17 @@ class ShopIST : Application() {
         return defaultStore
     }
 
+    fun getAllLists(): List<Distanceable> {
+        val res = mutableListOf<Distanceable>()
+        allPantries.forEach {
+            res.add(it.value)
+        }
+        allStores.forEach {
+            res.add(it.value)
+        }
+        return res
+    }
+
     //--------------
 
     fun startUp() {
@@ -111,11 +123,13 @@ class ShopIST : Application() {
             addProduct(product4)
 
             val pantry1 = PantryList("Dani's Pantry")
+            pantry1.location = LatLng(38.73783576632948, -9.137839190661907)
             pantry1.addItem(Item(product1, pantry1, 10, 0, 0))
             pantry1.addItem(Item(product2, pantry1, 2, 0, 0))
             addPantryList(pantry1)
 
             val pantry2 = PantryList("Joca's Pantry")
+            pantry2.location = LatLng(38.732010405640224, -9.142283610999584)
             pantry2.addItem(Item(product3, pantry2, 1, 1, 1))
             pantry2.addItem(Item(product4, pantry2, 2, 0, 2))
             addPantryList(pantry2)
