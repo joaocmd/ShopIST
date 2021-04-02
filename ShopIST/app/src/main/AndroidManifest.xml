@@ -12,11 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST">
+        <activity android:name=".ReadBarcodeActivity"></activity>
         <activity
             android:name=".SideMenuNavigation"
             android:label="@string/title_activity_side_menu_navigation"
             android:theme="@style/Theme.ShopIST.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

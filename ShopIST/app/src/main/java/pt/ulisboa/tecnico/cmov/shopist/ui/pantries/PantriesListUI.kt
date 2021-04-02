@@ -63,8 +63,13 @@ class PantriesListUI : Fragment() {
         recyclerView.adapter = recyclerAdapter
 
         root.findViewById<Button>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
+        root.findViewById<Button>(R.id.readBarcodeButton).setOnClickListener{ readBarcode() }
 
         return root
+    }
+
+    private fun readBarcode() {
+        TODO("dani pls")
     }
 
     override fun onResume() {
