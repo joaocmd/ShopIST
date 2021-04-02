@@ -55,6 +55,10 @@ class ShopIST : Application() {
         allStores[store.uuid] = store
     }
 
+    fun getStore(uuid: UUID): Store {
+        return allStores[uuid]!!
+    }
+
     fun getShoppingList(uuid: UUID): ShoppingList {
         return ShoppingList(allStores[uuid]!!, allPantries.values)
     }

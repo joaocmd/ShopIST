@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -28,12 +25,23 @@ import java.util.*
 class CreateShoppingListUI : Fragment() {
 
     companion object {
-        const val GET_STORE_LOCATION = 0;
+        const val GET_STORE_LOCATION = 0
+        const val ARG_STORE_ID = "storeId"
     }
 
     private lateinit var root: View
     private lateinit var coords: LatLng
     private var isDefaultStore = false
+    private var editStore: Store? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            val storeId = UUID.fromString(it.getString(ARG_STORE_ID))
+            val globalData = requireActivity().applicationContext as ShopIST
+            editStore = globalData.getStore(storeId)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +53,24 @@ class CreateShoppingListUI : Fragment() {
         root.findViewById<View>(R.id.chooseLocationButton).setOnClickListener { chooseLocation() }
         root.findViewById<View>(R.id.defaultStoreCheckBox).setOnClickListener { toggleDefaultStore() }
 
+        if (editStore != null) {
+            coords = editStore!!.location
+
+            root.findViewById<EditText>(R.id.titleInput).setText(editStore!!.title)
+            root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.shopping_location_set)
+            root.findViewById<TextView>(R.id.textView).text = getString(R.string.edit_shopping)
+
+            val globalData = requireActivity().applicationContext as ShopIST
+            if (globalData.getDefaultStore() == editStore) {
+                isDefaultStore = true
+                root.findViewById<CheckBox>(R.id.defaultStoreCheckBox).isChecked = true
+            }
+
+            val button = root.findViewById<Button>(R.id.okButton)
+            button.isClickable = true
+            button.isEnabled = true
+            button.text = getString(R.string.edit_shopping_complete)
+        }
         return root
     }
 
@@ -61,10 +87,15 @@ class CreateShoppingListUI : Fragment() {
             return
         }
 
-        val newShoppingList = Store(title, coords)
-        globalData.addStore(newShoppingList)
-        if (isDefaultStore) {
-            globalData.setDefaultStore(newShoppingList)
+        if (editStore == null) {
+            val newShoppingList = Store(title, coords)
+            globalData.addStore(newShoppingList)
+            if (isDefaultStore) {
+                globalData.setDefaultStore(newShoppingList)
+            }
+        } else {
+            editStore!!.title = title
+            editStore!!.location = coords
         }
         globalData.savePersistent()
         findNavController().popBackStack()

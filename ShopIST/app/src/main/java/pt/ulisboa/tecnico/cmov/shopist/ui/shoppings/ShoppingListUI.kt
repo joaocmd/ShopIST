@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI
 import java.util.*
 
 /**
@@ -23,6 +26,7 @@ import java.util.*
 class ShoppingListUI : Fragment() {
 
     private lateinit var shoppingList: ShoppingList
+    private lateinit var storeId: UUID
     private lateinit var recyclerAdapter: ShoppingListAdapter
 
     companion object {
@@ -32,7 +36,7 @@ class ShoppingListUI : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val storeId = UUID.fromString(it.getString(ARG_STORE_ID))
+            storeId = UUID.fromString(it.getString(ARG_STORE_ID))
             val globalData = requireActivity().applicationContext as ShopIST
             shoppingList = globalData.getShoppingList(storeId)
         }
@@ -56,6 +60,16 @@ class ShoppingListUI : Fragment() {
         // Navigation Buttons
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
+
+        // TODO: Improve the location of this button
+        root.findViewById<View>(R.id.editStoreButton).setOnClickListener {
+            it.findNavController().navigate(
+                R.id.action_nav_store_shopping_list_to_nav_create_shopping_list,
+                bundleOf(
+                    CreateShoppingListUI.ARG_STORE_ID to storeId.toString()
+                )
+            )
+        }
 
         return root
     }

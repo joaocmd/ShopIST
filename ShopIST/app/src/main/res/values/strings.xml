@@ -17,6 +17,8 @@
     <string name="create_product_item_complete"> Add new Product </string>
     <string name="create_shopping_title"> Add new Shopping List </string>
     <string name="create_shopping_complete"> Add new Store </string>
+    <string name="edit_shopping"> Edit Store </string>
+    <string name="edit_shopping_complete"> Save Store </string>
     <string name="shopping_location_not_set"> Location not set </string>
     <string name="shopping_location_set"> Location set! </string>
     <string name="shopping_default_store">Set as default store for products</string>

@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_nav_store_shopping_list_to_nav_store_shopping_list_item"
             app:destination="@id/nav_store_shopping_list_item" />
+        <action
+            android:id="@+id/action_nav_store_shopping_list_to_nav_create_shopping_list"
+            app:destination="@id/nav_create_shopping_list" />
     </fragment>
     <fragment
         android:id="@+id/nav_store_shopping_list_item"

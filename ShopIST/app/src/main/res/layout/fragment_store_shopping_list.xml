@@ -17,8 +17,14 @@
             android:id="@+id/okButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
             android:text="@string/checkout" />
+
+        <!-- TODO: Improve location of the next button -->
+        <Button
+            android:id="@+id/editStoreButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_shopping" />
 
         <Button
             android:id="@+id/cancelButton"
