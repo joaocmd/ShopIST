@@ -16,6 +16,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingListUI
 import java.util.*
 
 /**
@@ -51,6 +52,15 @@ class PantryUI : Fragment() {
         listView.adapter = recyclerAdapter
 
         root.findViewById<Button>(R.id.newItemButton).setOnClickListener { onNewItem() }
+        // TODO: Improve location of this button
+        root.findViewById<Button>(R.id.editPantryButton).setOnClickListener {
+            it.findNavController().navigate(
+                R.id.action_nav_pantry_to_nav_create_pantry,
+                bundleOf(
+                    CreatePantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
+                )
+            )
+        }
 
         return root
     }

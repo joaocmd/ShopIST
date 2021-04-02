@@ -38,14 +38,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
-                android:text="@string/store_choose_location" />
+                android:text="@string/choose_location" />
 
             <TextView
                 android:id="@+id/locationMessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:text="@string/shopping_location_not_set" />
+                android:text="@string/location_not_set" />
 
             <CheckBox
                 android:id="@+id/defaultStoreCheckBox"
@@ -58,8 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/create_shopping_complete"
-                android:enabled="false"
-                android:clickable="false"
                 />
         </LinearLayout>
     </LinearLayout>

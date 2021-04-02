@@ -1,18 +1,23 @@
 package pt.ulisboa.tecnico.cmov.shopist.domain
 
+import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-class PantryList(val title: String) {
+class PantryList(var title: String) {
 
     var uuid: UUID = UUID.randomUUID()
     private var _items: MutableList<Item> = mutableListOf()
 
     val items: MutableList<Item>
         get() = _items.sortedBy { it.product.name }.toMutableList()
-    // TODO: Get a location
-    var location: String = ""
 
-    constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.title) {
+    var location: LatLng? = null
+
+    constructor(title: String, location: LatLng?): this(title) {
+        this.location = location
+    }
+
+    constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.title, p.location) {
         uuid = p.uuid
         _items = p.items.map { i -> Item(i, products, this) }.toMutableList()
     }

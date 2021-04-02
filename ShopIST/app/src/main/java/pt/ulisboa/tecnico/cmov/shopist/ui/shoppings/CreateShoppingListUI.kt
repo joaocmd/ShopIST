@@ -30,7 +30,7 @@ class CreateShoppingListUI : Fragment() {
     }
 
     private lateinit var root: View
-    private lateinit var coords: LatLng
+    private var coords: LatLng? = null
     private var isDefaultStore = false
     private var editStore: Store? = null
 
@@ -57,7 +57,9 @@ class CreateShoppingListUI : Fragment() {
             coords = editStore!!.location
 
             root.findViewById<EditText>(R.id.titleInput).setText(editStore!!.title)
-            root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.shopping_location_set)
+            if (editStore!!.location != null) {
+                root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_set)
+            }
             root.findViewById<TextView>(R.id.textView).text = getString(R.string.edit_shopping)
 
             val globalData = requireActivity().applicationContext as ShopIST
@@ -66,10 +68,7 @@ class CreateShoppingListUI : Fragment() {
                 root.findViewById<CheckBox>(R.id.defaultStoreCheckBox).isChecked = true
             }
 
-            val button = root.findViewById<Button>(R.id.okButton)
-            button.isClickable = true
-            button.isEnabled = true
-            button.text = getString(R.string.edit_shopping_complete)
+            root.findViewById<Button>(R.id.okButton).text = getString(R.string.edit_shopping_complete)
         }
         return root
     }
@@ -82,13 +81,10 @@ class CreateShoppingListUI : Fragment() {
             Toast.makeText(context, "First type a title.", Toast.LENGTH_SHORT).show()
             return
         }
-        if (!this::coords.isInitialized) {
-            Toast.makeText(context, "First select a location.", Toast.LENGTH_SHORT).show()
-            return
-        }
 
         if (editStore == null) {
-            val newShoppingList = Store(title, coords)
+            val newShoppingList = Store(title)
+            newShoppingList.location = coords
             globalData.addStore(newShoppingList)
             if (isDefaultStore) {
                 globalData.setDefaultStore(newShoppingList)
@@ -96,6 +92,9 @@ class CreateShoppingListUI : Fragment() {
         } else {
             editStore!!.title = title
             editStore!!.location = coords
+            if (isDefaultStore) {
+                globalData.setDefaultStore(editStore!!)
+            }
         }
         globalData.savePersistent()
         findNavController().popBackStack()
@@ -118,18 +117,14 @@ class CreateShoppingListUI : Fragment() {
                 val lon = data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0.0)
                 coords = LatLng(lat, lon)
                 // Set UI
-                root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.shopping_location_set)
-                val button = root.findViewById<Button>(R.id.okButton)
-                button.isClickable = true
-                button.isEnabled = true
+                root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_set)
 
                 Log.d(ShopIST.TAG, "Received - Lat: $lat, Lon: $lon")
             }
         } else if (requestCode == GET_STORE_LOCATION && resultCode == AppCompatActivity.RESULT_CANCELED) {
             Log.d(ShopIST.TAG, "Location canceled")
-            root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.shopping_location_not_set)
-            root.findViewById<Button>(R.id.okButton).isClickable = false
-            root.findViewById<Button>(R.id.okButton).isEnabled = false
+            root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_not_set)
+            coords = null
         }
     }
 }

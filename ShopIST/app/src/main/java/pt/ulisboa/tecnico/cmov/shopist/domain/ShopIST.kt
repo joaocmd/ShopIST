@@ -126,14 +126,14 @@ class ShopIST : Application() {
         var pantriesList: MutableList<PantryListDto> = mutableListOf()
         var products: MutableList<ProductDto> = mutableListOf()
         var stores: MutableList<StoreDto> = mutableListOf()
-        var defaultStore: StoreDto? = null
+        var defaultStoreId: UUID? = null
 
         constructor(shopIST: ShopIST) : this() {
             pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
             products = shopIST.allProducts.values.map { p -> ProductDto(p) }.toMutableList()
             stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
             if (shopIST.defaultStore != null) {
-                defaultStore = StoreDto(shopIST.defaultStore!!)
+                defaultStoreId = shopIST.defaultStore!!.uuid
             }
         }
     }
@@ -143,8 +143,8 @@ class ShopIST : Application() {
         shopISTDto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
 
         // Set default store
-        if (shopISTDto.defaultStore != null) {
-            defaultStore = allStores[shopISTDto.defaultStore!!.uuid]
+        if (shopISTDto.defaultStoreId != null) {
+            defaultStore = allStores[shopISTDto.defaultStoreId!!]
         }
 
         // Set products
