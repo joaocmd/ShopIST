@@ -10,6 +10,7 @@
     <string name="edit_product_save">Save Product</string>
     <string name="product_name">Product Name</string>
     <string name="product">Product</string>
+    <string name="product_add_barcode">Scan Barcode</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Title </string>

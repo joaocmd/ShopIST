@@ -1,18 +1,25 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 
 class ShoppingListItemUI : Fragment() {
     // TODO: Add button to set to min and max quantity on cart
@@ -28,6 +35,8 @@ class ShoppingListItemUI : Fragment() {
         val root = inflater.inflate(R.layout.fragment_store_shopping_list_item, container, false)
         shoppingListItem = (activity?.applicationContext as ShopIST).currentShoppingListItem!!
 
+        root.findViewById<Button>(R.id.scanBarcodeButton).setOnClickListener{ readBarcode() }
+
         // Set product title
         root.findViewById<TextView>(R.id.productTitleView).text = shoppingListItem.product.name
 
@@ -38,6 +47,29 @@ class ShoppingListItemUI : Fragment() {
         return root
     }
 
+    // Barcode getter
+    private fun readBarcode() {
+        val intent = Intent(activity?.applicationContext, BarcodeScannerActivity::class.java)
+        startActivityForResult(intent, PantriesListUI.GET_BARCODE_PRODUCT)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PantriesListUI.GET_BARCODE_PRODUCT && resultCode == AppCompatActivity.RESULT_OK) {
+            if (data !== null) {
+                val barcode = data.getStringExtra(BarcodeScannerActivity.BARCODE)
+                shoppingListItem.product.barcode = barcode
+                val globalData = activity?.applicationContext as ShopIST
+                globalData.savePersistent()
+                // FIXME: Stringify this text
+                Toast.makeText(context, "Barcode read: $barcode.", Toast.LENGTH_SHORT).show()
+            }
+        } else if (requestCode == PantriesListUI.GET_BARCODE_PRODUCT && resultCode == AppCompatActivity.RESULT_CANCELED) {
+            Log.d(ShopIST.TAG, "Couldn't find barcode")
+        }
+    }
+
+    //--
 
     inner class ShoppingListItemListAdapter(
         var shoppingListItem: ShoppingListItem

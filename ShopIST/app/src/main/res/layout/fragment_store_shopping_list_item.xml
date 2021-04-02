@@ -34,38 +34,47 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/shoppingListItemList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false" android:gravity="center"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:orientation="horizontal">
+
         <LinearLayout
             android:paddingTop="20dp"
             android:layout_width="0dp"
             android:layout_weight="0.75"
-
             android:layout_height="wrap_content"
 
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/okButton"
-                android:layout_width="0dp"
+                android:id="@+id/scanBarcodeButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
-                android:text="Ok" />
+                android:text="@string/product_add_barcode" />
+
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="@string/ok" />
 
             <Button
                 android:id="@+id/cancelButton"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:text="Cancelar" />
+                android:text="@string/cancel" />
 
         </LinearLayout>
     </LinearLayout>

@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -14,6 +16,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
+import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
+import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
@@ -27,8 +32,11 @@ class PantriesListUI : Fragment() {
     // TODO: Don't show cart quantities
 
     private lateinit var recyclerAdapter: PantriesListAdapter
-
     private var currentlySelectedItem: PantryList? = null
+
+    companion object {
+        const val GET_BARCODE_PRODUCT = 2
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +71,8 @@ class PantriesListUI : Fragment() {
         recyclerView.adapter = recyclerAdapter
 
         root.findViewById<Button>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
-        root.findViewById<Button>(R.id.readBarcodeButton).setOnClickListener{ readBarcode() }
 
         return root
-    }
-
-    private fun readBarcode() {
-        TODO("dani pls")
     }
 
     override fun onResume() {

@@ -3,6 +3,8 @@
     package="pt.ulisboa.tecnico.cmov.shopist">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".domain.ShopIST"
@@ -12,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST">
-        <activity android:name=".ReadBarcodeActivity"></activity>
+        <activity android:name=".BarcodeScannerActivity" />
         <activity
             android:name=".SideMenuNavigation"
             android:label="@string/title_activity_side_menu_navigation"
