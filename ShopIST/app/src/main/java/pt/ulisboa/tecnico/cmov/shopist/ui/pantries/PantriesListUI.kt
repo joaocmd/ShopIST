@@ -132,20 +132,26 @@ class PantriesListUI : Fragment() {
 
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {
-                    view.findNavController().navigate(
-                        R.id.action_nav_list_pantries_to_nav_pantry,
-                        bundleOf(
-                            PantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
+                    if (listItem.isSelected) {
+                        listItem.isSelected = false
+                        currentlySelectedItem = null
+                        notifyDataSetChanged()
+                        requireActivity().invalidateOptionsMenu()
+                    } else {
+                        view.findNavController().navigate(
+                            R.id.action_nav_list_pantries_to_nav_pantry,
+                            bundleOf(
+                                PantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
+                            )
                         )
-                    )
+                    }
                 }
 
                 cardView.setOnLongClickListener {
                     currentlySelectedItem = pantryList
-                    val result = !listItem.isSelected
 
                     list.forEach { it.isSelected = false }
-                    listItem.isSelected = result
+                    listItem.isSelected = true
                     notifyDataSetChanged()
                     requireActivity().invalidateOptionsMenu()
                     true
