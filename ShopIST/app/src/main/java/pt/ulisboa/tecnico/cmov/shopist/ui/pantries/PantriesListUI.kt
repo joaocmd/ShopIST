@@ -142,9 +142,10 @@ class PantriesListUI : Fragment() {
 
                 cardView.setOnLongClickListener {
                     currentlySelectedItem = pantryList
+                    val result = !listItem.isSelected
 
                     list.forEach { it.isSelected = false }
-                    listItem.isSelected = true
+                    listItem.isSelected = result
                     notifyDataSetChanged()
                     requireActivity().invalidateOptionsMenu()
                     true
