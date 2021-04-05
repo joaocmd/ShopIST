@@ -22,6 +22,7 @@ import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.domain.TopBarController
 
 /**
  * A simple [Fragment] subclass.
@@ -83,11 +84,7 @@ class PantriesListUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.action_see_more).isVisible = false
-        menu.findItem(R.id.action_delete_current).isVisible = false
-        menu.findItem(R.id.action_edit_current).isVisible = false
-        menu.findItem(R.id.action_delete_selected).isVisible = currentlySelectedItem != null
-        menu.findItem(R.id.action_edit_selected).isVisible = currentlySelectedItem != null
+        TopBarController.noOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -156,12 +153,30 @@ class PantriesListUI : Fragment() {
                 }
 
                 cardView.setOnLongClickListener {
+
+                    view.findNavController().navigate(
+                        R.id.action_nav_list_pantries_to_edit_pantry,
+                        bundleOf(
+                            CreatePantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
+                        )
+                    )
+                    /*
+                    view.findNavController().navigate(
+                        R.id.action_nav_list_pantries_to_nav_pantry,
+                        bundleOf(
+                            PantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
+                        )
+                    )
+                    */
+
+                    /*
                     currentlySelectedItem = pantryList
 
                     list.forEach { it.isSelected = false }
                     listItem.isSelected = true
                     notifyDataSetChanged()
                     requireActivity().invalidateOptionsMenu()
+                    */
                     true
                 }
             }

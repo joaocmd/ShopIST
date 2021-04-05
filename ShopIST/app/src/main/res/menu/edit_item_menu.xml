@@ -13,6 +13,11 @@
         app:showAsAction="ifRoom"
         android:title="@string/action_delete" />
     <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_baseline_share_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/action_share" />
+    <item
         android:id="@+id/action_see_more"
         android:icon="@drawable/ic_baseline_delete_24"
         app:showAsAction="never"

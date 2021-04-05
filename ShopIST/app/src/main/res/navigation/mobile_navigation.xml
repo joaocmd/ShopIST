@@ -14,6 +14,9 @@
             android:id="@+id/action_nav_list_pantries_to_nav_pantry"
             app:destination="@id/nav_pantry" />
         <action
+            android:id="@+id/action_nav_list_pantries_to_edit_pantry"
+            app:destination="@id/nav_create_pantry" />
+        <action
             android:id="@+id/action_nav_pantries_list_to_nav_create_pantry"
             app:destination="@id/nav_create_pantry" />
     </fragment>

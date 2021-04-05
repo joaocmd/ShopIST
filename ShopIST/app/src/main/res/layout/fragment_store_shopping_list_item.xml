@@ -12,15 +12,19 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="left"
+        android:layout_marginLeft="10dp"
+        >
 
         <TextView
             android:id="@+id/productTitleView"
-            android:layout_width="271dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/product_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            />
 
         <!-- TextView
             android:id="@+id/pantryTitleView"
@@ -38,6 +42,7 @@
 
 
     <LinearLayout
+        android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false" android:gravity="center"
@@ -55,26 +60,26 @@
             <Button
                 android:id="@+id/scanBarcodeButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/product_add_barcode" />
+                android:text="@string/product_add_barcode"
+                android:layout_marginRight="10dp" />
 
             <Button
                 android:id="@+id/okButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/ok" />
+                android:text="@string/ok"
+                android:layout_marginRight="10dp" />
 
             <Button
                 android:id="@+id/cancelButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/cancel" />
+                android:text="@string/cancel"
+                android:layout_marginLeft="10dp" />
 
         </LinearLayout>
     </LinearLayout>

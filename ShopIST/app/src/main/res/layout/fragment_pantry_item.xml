@@ -54,8 +54,8 @@
 
                 <Button
                     android:id="@+id/incrementPantry"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/add_button_width"
+                    android:layout_height="@dimen/add_button_height"
                     android:layout_marginBottom="5dp"
                     android:text="+" />
 
@@ -71,8 +71,8 @@
 
                 <Button
                     android:id="@+id/decrementPantry"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/add_button_width"
+                    android:layout_height="@dimen/add_button_height"
                     android:layout_marginTop="5dp"
                     android:text="-" />
             </LinearLayout>
@@ -87,8 +87,8 @@
 
                 <Button
                     android:id="@+id/incrementNeeding"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/add_button_width"
+                    android:layout_height="@dimen/add_button_height"
                     android:layout_marginBottom="5dp"
                     android:text="+" />
 
@@ -104,8 +104,8 @@
 
                 <Button
                     android:id="@+id/decrementNeeding"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/add_button_width"
+                    android:layout_height="@dimen/add_button_height"
                     android:layout_marginTop="5dp"
                     android:text="-" />
             </LinearLayout>
@@ -120,8 +120,8 @@
 
                 <Button
                     android:id="@+id/incrementCart"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/add_button_width"
+                    android:layout_height="@dimen/add_button_height"
                     android:layout_marginBottom="5dp"
                     android:text="+" />
 
@@ -137,8 +137,8 @@
 
                 <Button
                     android:id="@+id/decrementCart"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/add_button_width"
+                    android:layout_height="@dimen/add_button_height"
                     android:layout_marginTop="5dp"
                     android:text="-" />
             </LinearLayout>

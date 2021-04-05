@@ -71,4 +71,5 @@
     <string name="share_pantry">Share</string>
     <string name="share_pantry_message">Hi! Here\'s the link for our pantry list \"%s\":%n %s</string>
     <string name="unable_open_pantry">Unable to open pantry from URI</string>
+    <string name="action_share">Share</string>
 </resources>

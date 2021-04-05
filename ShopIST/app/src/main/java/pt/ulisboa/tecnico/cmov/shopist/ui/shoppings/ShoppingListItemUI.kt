@@ -80,7 +80,7 @@ class ShoppingListItemUI : Fragment() {
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryView: TextView = view.findViewById(R.id.pantryViewLocal)
             private val needingView: TextView = view.findViewById(R.id.needingViewLocal)
-            private val cartView: TextView = view.findViewById(R.id.cartViewLocal)
+            //private val cartView: TextView = view.findViewById(R.id.cartViewLocal)
             private val currentQuantity: TextView = view.findViewById(R.id.currentQuantity)
 
             fun bind(item: Item) {
@@ -90,19 +90,19 @@ class ShoppingListItemUI : Fragment() {
                 val quantities = shoppingListItem.quantities[pantryList]!!
                 pantryView.text = quantities.pantry.toString()
                 needingView.text = quantities.needing.toString()
-                cartView.text = quantities.cart.toString()
+                //cartView.text = quantities.cart.toString()
                 currentQuantity.text = quantities.cart.toString()
 
                 view.findViewById<View>(R.id.moreButton).setOnClickListener {
                     // Add and update view
                     shoppingListItem.add(item.pantryList)
-                    cartView.text = quantities.cart.toString()
+                    //cartView.text = quantities.cart.toString()
                     currentQuantity.text = quantities.cart.toString()
                 }
                 view.findViewById<View>(R.id.lessButton).setOnClickListener {
                     // Subtract and update view
                     shoppingListItem.remove(item.pantryList)
-                    cartView.text = quantities.cart.toString()
+                    //cartView.text = quantities.cart.toString()
                     currentQuantity.text = quantities.cart.toString()
                 }
             }
