@@ -11,9 +11,14 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import kotlin.NoSuchElementException
 
 class ShopIST : Application() {
     companion object {
+        fun createUri(pantryList: PantryList): String {
+            return "https://shopist/${pantryList.uuid}"
+        }
+
         const val TAG = "shopist.domain.ShopIST"
         const val FILENAME_DATA = "data.json"
         const val OPEN_AUTO_MAX_DISTANCE = 50
@@ -38,6 +43,14 @@ class ShopIST : Application() {
 
     fun getPantryList(uuid: UUID): PantryList {
         return allPantries[uuid]!!
+    }
+
+    fun loadPantryList(uuid: UUID) {
+        if (allPantries.containsKey(uuid)) {
+            return
+        }
+        // TODO: GET FROM SERVER
+        throw NoSuchElementException(uuid.toString())
     }
 
     fun addProduct(product: Product) {

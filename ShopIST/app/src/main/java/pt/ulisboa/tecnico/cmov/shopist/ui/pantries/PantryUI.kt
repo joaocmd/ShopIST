@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,7 +17,6 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingListUI
 import java.util.*
 
 /**
@@ -60,6 +60,17 @@ class PantryUI : Fragment() {
                     CreatePantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
                 )
             )
+        }
+        root.findViewById<Button>(R.id.sharePantryButton).setOnClickListener {
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.share_pantry_message).format(
+                    pantryList.title, ShopIST.createUri(pantryList)
+                ))
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
         }
 
         return root

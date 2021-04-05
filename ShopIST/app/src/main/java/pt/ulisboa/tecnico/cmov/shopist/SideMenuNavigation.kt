@@ -1,12 +1,13 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.Menu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -20,14 +21,15 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
+import java.lang.IllegalArgumentException
+import java.util.*
+import kotlin.NoSuchElementException
 
 
 class SideMenuNavigation : AppCompatActivity() {
@@ -49,11 +51,6 @@ class SideMenuNavigation : AppCompatActivity() {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         navController = findNavController(R.id.nav_host_fragment)
@@ -68,8 +65,7 @@ class SideMenuNavigation : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        // If can get location, get list with location
-        if (ContextCompat.checkSelfPermission(
+        if (!receivedUriIntent() && ContextCompat.checkSelfPermission(
                 this.applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
@@ -79,6 +75,28 @@ class SideMenuNavigation : AppCompatActivity() {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             getDeviceLocation()
         }
+    }
+
+    private fun receivedUriIntent(): Boolean {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            try {
+                val shopIst = (applicationContext as ShopIST)
+                val uuid = UUID.fromString(intent.data.toString().split("/").last())
+                shopIst.loadPantryList(uuid)
+                navController.navigate(
+                    R.id.nav_pantry,
+                    bundleOf(
+                        PantryUI.ARG_PANTRY_ID to uuid.toString()
+                    )
+                )
+                return true
+            } catch (e: NoSuchElementException) {
+                Toast.makeText(applicationContext, getString(R.string.unable_open_pantry), Toast.LENGTH_SHORT).show()
+            } catch (e: IllegalArgumentException) {
+                Toast.makeText(applicationContext, getString(R.string.unable_open_pantry), Toast.LENGTH_SHORT).show()
+            }
+        }
+        return false
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
