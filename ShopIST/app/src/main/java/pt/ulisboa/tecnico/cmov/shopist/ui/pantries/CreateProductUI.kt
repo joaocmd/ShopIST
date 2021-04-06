@@ -3,14 +3,17 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
@@ -36,6 +39,7 @@ class CreateProductUI: Fragment() {
 
             product = globalData.getProduct(productId)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -64,6 +68,13 @@ class CreateProductUI: Fragment() {
         }
 
         return root
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.noOptionsMenu(menu)
+        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
+            getString(R.string.create_product_title)
     }
 
     private fun onCreateProduct() {

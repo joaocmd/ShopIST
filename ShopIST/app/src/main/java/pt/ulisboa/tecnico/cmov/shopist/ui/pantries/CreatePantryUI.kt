@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.LatLng
 import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingListUI
@@ -40,6 +42,7 @@ class CreatePantryUI : Fragment() {
             val globalData = requireActivity().applicationContext as ShopIST
             editPantry = globalData.getPantryList(pantryId)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -65,6 +68,13 @@ class CreatePantryUI : Fragment() {
         }
 
         return root
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.noOptionsMenu(menu)
+        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
+            getString(R.string.create_pantry)
     }
 
     private fun createPantry() {

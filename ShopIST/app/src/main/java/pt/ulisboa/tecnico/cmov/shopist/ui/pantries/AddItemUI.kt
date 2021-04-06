@@ -3,13 +3,16 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.RadioGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
@@ -36,6 +39,7 @@ class AddItemUI : Fragment() {
             val id = UUID.fromString(it.getString(ARG_PANTRY_ID))
             pantryList = (requireActivity().applicationContext as ShopIST).getPantryList(id)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -57,6 +61,14 @@ class AddItemUI : Fragment() {
         root.findViewById<View>(R.id.addNewProduct).setOnClickListener { onCreateNewProduct() }
 
         return root
+    }
+
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.noOptionsMenu(menu)
+        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
+            getString(R.string.add_item_title)
     }
 
     override fun onResume() {
