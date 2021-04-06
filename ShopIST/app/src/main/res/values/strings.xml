@@ -40,7 +40,7 @@
 
     <!-- Navigation -->
     <string name="pantries_list">My Pantries</string>
-    <string name="shoppings_list">Shopping Lists</string>
+    <string name="shopping_lists_title">Shopping Lists</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_side_menu_navigation">SideMenuNavigation</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -73,4 +73,5 @@
     <string name="unable_open_pantry">Unable to open pantry from URI</string>
     <string name="action_share">Share</string>
     <string name="create_pantry">Create Pantry</string>
+    <string name="edit_product_title">Edit product</string>
 </resources>

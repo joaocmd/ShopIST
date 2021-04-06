@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
@@ -26,6 +29,11 @@ class ShoppingListItemUI : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var shoppingListItem: ShoppingListItem
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +53,12 @@ class ShoppingListItemUI : Fragment() {
         recyclerView.adapter = ShoppingListItemListAdapter(shoppingListItem)
 
         return root
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.optionsMenu(menu, requireActivity(),
+            shoppingListItem.product.name, listOf(TopBarItems.Edit))
     }
 
     // Barcode getter

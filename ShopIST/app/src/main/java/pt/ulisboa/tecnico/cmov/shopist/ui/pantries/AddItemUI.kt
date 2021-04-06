@@ -66,9 +66,7 @@ class AddItemUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu)
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
-            getString(R.string.add_item_title)
+        TopBarController.noOptionsMenu(menu, requireActivity(), getString(R.string.add_item_title))
     }
 
     override fun onResume() {

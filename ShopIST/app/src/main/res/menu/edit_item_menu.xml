@@ -9,13 +9,12 @@
         android:title="@string/action_share" />
     <item
         android:id="@+id/action_see_more"
-        android:icon="@drawable/ic_baseline_delete_24"
         app:showAsAction="never"
         android:title="@string/action_see_more" />
     <item
         android:id="@+id/action_edit"
-        android:icon="@drawable/ic_baseline_delete_24"
-        app:showAsAction="never"
+        android:icon="@drawable/ic_baseline_edit_24"
+        app:showAsAction="ifRoom"
         android:title="@string/action_edit" />
     <item
         android:id="@+id/action_delete"

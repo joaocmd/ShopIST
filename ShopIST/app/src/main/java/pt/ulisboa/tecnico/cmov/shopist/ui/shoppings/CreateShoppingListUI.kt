@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -13,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.LatLng
 import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import java.util.*
@@ -41,6 +44,7 @@ class CreateShoppingListUI : Fragment() {
             val globalData = requireActivity().applicationContext as ShopIST
             editStore = globalData.getStore(storeId)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -71,6 +75,15 @@ class CreateShoppingListUI : Fragment() {
             root.findViewById<Button>(R.id.okButton).text = getString(R.string.edit_shopping_complete)
         }
         return root
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        var name : String = getString(R.string.new_shopping_list)
+        if (editStore != null) name = getString(R.string.edit_shopping)
+
+        TopBarController.noOptionsMenu(menu, requireActivity(),
+            name)
     }
 
     private fun saveAndReturn() {

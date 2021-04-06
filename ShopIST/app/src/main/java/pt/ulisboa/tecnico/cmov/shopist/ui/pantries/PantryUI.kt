@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
@@ -63,17 +64,14 @@ class PantryUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.allOptionsMenu(menu)
-        menu.findItem(R.id.action_see_more).isVisible = false
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
-            pantryList.title
+        TopBarController.optionsMenu(menu, requireActivity(),
+            pantryList.title, listOf(TopBarItems.Share, TopBarItems.Edit))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_share -> sharePantryList()
             R.id.action_edit -> editPantryList()
-            R.id.action_delete -> {} // TODO
             else -> return super.onOptionsItemSelected(item)
         }
         return true

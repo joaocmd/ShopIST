@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
@@ -85,12 +86,9 @@ class PantryItemUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu)
-        menu.findItem(R.id.action_delete).isVisible = true
-        menu.findItem(R.id.action_see_more).isVisible = true
-        menu.findItem(R.id.action_edit).isVisible = true
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
-            item.product.name
+
+        TopBarController.optionsMenu(menu, requireActivity(), item.product.name,
+            listOf(TopBarItems.Edit))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -103,8 +101,6 @@ class PantryItemUI : Fragment() {
                     )
                 )
             }
-            R.id.action_see_more -> {} // TODO
-            R.id.action_delete -> {} // TODO
             else -> return super.onOptionsItemSelected(item)
         }
         return true

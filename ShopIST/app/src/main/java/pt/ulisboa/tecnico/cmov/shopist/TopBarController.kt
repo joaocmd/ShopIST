@@ -1,16 +1,31 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
 import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 
 class TopBarController {
     companion object {
-
-        fun noOptionsMenu(menu: Menu) {
-            setOptionsMenu(menu, false)
+        fun optionsMenu(menu: Menu, app: FragmentActivity, title: String, topBarItems: List<TopBarItems>) {
+            menu.findItem(R.id.action_see_more).isVisible = topBarItems.contains(TopBarItems.SeeMore)
+            menu.findItem(R.id.action_delete).isVisible = topBarItems.contains(TopBarItems.Delete)
+            menu.findItem(R.id.action_edit).isVisible = topBarItems.contains(TopBarItems.Edit)
+            menu.findItem(R.id.action_share).isVisible = topBarItems.contains(TopBarItems.Share)
+            setTitle(app, title)
         }
 
-        fun allOptionsMenu(menu: Menu) {
+        fun noOptionsMenu(menu: Menu, app: FragmentActivity, title: String) {
+            setOptionsMenu(menu, false)
+            setTitle(app, title)
+        }
+
+        fun allOptionsMenu(menu: Menu, app: FragmentActivity, title: String) {
             setOptionsMenu(menu, true)
+            setTitle(app, title)
+        }
+
+        private fun setTitle(app: FragmentActivity, title: String) {
+            (app as AppCompatActivity).supportActionBar!!.title = title;
         }
 
         private fun setOptionsMenu(menu: Menu, value: Boolean) {
@@ -20,4 +35,11 @@ class TopBarController {
             menu.findItem(R.id.action_share).isVisible = value
         }
     }
+}
+
+enum class TopBarItems {
+    SeeMore,
+    Delete,
+    Edit,
+    Share
 }

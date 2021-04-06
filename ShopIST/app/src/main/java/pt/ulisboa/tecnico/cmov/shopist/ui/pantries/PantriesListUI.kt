@@ -63,9 +63,8 @@ class PantriesListUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu)
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
-            getString(R.string.pantries_list)
+        TopBarController.noOptionsMenu(menu, requireActivity(),
+            getString(R.string.pantries_list))
     }
 
     private fun updateData() {

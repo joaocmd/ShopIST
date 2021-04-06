@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -14,6 +15,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import java.util.*
@@ -26,6 +29,11 @@ import java.util.*
 class StoresListUI : Fragment() {
 
     private lateinit var recyclerAdapter: StoreListAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +58,12 @@ class StoresListUI : Fragment() {
         updateData()
         super.onResume()
     }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.noOptionsMenu(menu, requireActivity(), getString(R.string.shopping_lists_title))
+    }
+
 
     private fun updateData() {
         val globalData = activity?.applicationContext as ShopIST

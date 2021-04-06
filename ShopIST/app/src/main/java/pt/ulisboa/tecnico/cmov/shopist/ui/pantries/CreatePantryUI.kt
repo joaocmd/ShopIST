@@ -72,9 +72,7 @@ class CreatePantryUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu)
-        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
-            getString(R.string.create_pantry)
+        TopBarController.noOptionsMenu(menu, requireActivity(), getString(R.string.create_pantry))
     }
 
     private fun createPantry() {

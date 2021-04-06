@@ -11,6 +11,6 @@
         <item
             android:id="@+id/nav_stores_list"
             android:icon="@drawable/ic_baseline_add_shopping_cart_24"
-            android:title="@string/shoppings_list" />
+            android:title="@string/shopping_lists_title" />
     </group>
 </menu>
