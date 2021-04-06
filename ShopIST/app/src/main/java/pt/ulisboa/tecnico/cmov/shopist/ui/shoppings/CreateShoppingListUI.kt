@@ -60,7 +60,7 @@ class CreateShoppingListUI : Fragment() {
         if (editStore != null) {
             coords = editStore!!.location
 
-            root.findViewById<EditText>(R.id.titleInput).setText(editStore!!.title)
+            root.findViewById<EditText>(R.id.titleInput).setText(editStore!!.name)
             if (editStore!!.location != null) {
                 root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_set)
             }
@@ -103,7 +103,7 @@ class CreateShoppingListUI : Fragment() {
                 globalData.setDefaultStore(newShoppingList)
             }
         } else {
-            editStore!!.title = title
+            editStore!!.name = title
             editStore!!.location = coords
             if (isDefaultStore) {
                 globalData.setDefaultStore(editStore!!)

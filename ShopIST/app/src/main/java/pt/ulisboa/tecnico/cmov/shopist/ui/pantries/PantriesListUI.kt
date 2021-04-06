@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -87,7 +86,7 @@ class PantriesListUI : Fragment() {
             private val textView: TextView = view.findViewById(R.id.rowText)
 
             fun bind(pantryList: PantryList) {
-                textView.text = pantryList.title
+                textView.text = pantryList.name
 
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {

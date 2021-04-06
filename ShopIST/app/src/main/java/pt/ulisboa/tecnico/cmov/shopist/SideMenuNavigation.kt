@@ -27,6 +27,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.lang.IllegalArgumentException
 import java.util.*
 import kotlin.NoSuchElementException
@@ -75,6 +76,10 @@ class SideMenuNavigation : AppCompatActivity() {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             getDeviceLocation()
         }
+
+        // FIXME: Remove this shit
+        // API.getInstance(applicationContext).postNewPantry(globalData.pantries[0])
+        API.getInstance(applicationContext).getPantry(globalData.pantries[0].uuid)
     }
 
     private fun receivedUriIntent(): Boolean {

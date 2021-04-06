@@ -85,7 +85,7 @@ class StoresListUI : Fragment() {
             private val textView: TextView = view.findViewById(R.id.rowText)
 
             fun bind(store: Store) {
-                textView.text = store.title
+                textView.text = store.name
 
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {

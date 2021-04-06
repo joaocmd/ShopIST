@@ -3,7 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-class PantryList(var title: String) : Distanceable {
+class PantryList(var name: String) : Distanceable {
 
     var uuid: UUID = UUID.randomUUID()
     private var _items: MutableList<Item> = mutableListOf()
@@ -17,7 +17,7 @@ class PantryList(var title: String) : Distanceable {
         this.location = location
     }
 
-    constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.title, p.location) {
+    constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.name, p.location) {
         uuid = p.uuid
         _items = p.items.map { i -> Item(i, products, this) }.toMutableList()
     }

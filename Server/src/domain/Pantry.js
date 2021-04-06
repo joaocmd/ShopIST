@@ -1,15 +1,25 @@
 import Pantry from '@/model/Pantry'
-import Item from '@/domain/Item'
+import Product from '@/domain/Product'
+import Store from '@/domain/Store'
 
 var pantries = {}
 
 export default class {
 
-    static create(id, name) {
-        if (pantries[id]) {
-            throw 'pantry-already-exists'
-        }
-        pantries[id] = new Pantry(id, name)
+    static create(list, products, stores) {
+        // if (pantries[id]) {
+        //     throw 'pantry-already-exists'
+        // }
+        const pantry = new Pantry(list.uuid, list.name, list.location, list.items)
+        products.forEach((p) => {
+            Product.create(p)
+        })
+		
+        stores.forEach((s) => {
+            Store.create(s)
+        })
+		
+        pantries[list.uuid] = pantry
     }
 
     static addItem(id, itemId) {
@@ -24,6 +34,6 @@ export default class {
         if (!pantries[id]) {
             throw 'no-such-pantry'
         }
-        return pantries[id]
+        return pantries[id].toObject()
     }
 }

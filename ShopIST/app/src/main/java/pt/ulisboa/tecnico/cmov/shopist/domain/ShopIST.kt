@@ -32,10 +32,10 @@ class ShopIST : Application() {
     var currentShoppingListItem: ShoppingListItem? = null
 
     val pantries: Array<PantryList>
-        get() = this.allPantries.values.sortedBy { it.title }.toTypedArray()
+        get() = this.allPantries.values.sortedBy { it.name }.toTypedArray()
 
     val stores: Array<Store>
-        get() = this.allStores.values.sortedBy { it.title }.toTypedArray()
+        get() = this.allStores.values.sortedBy { it.name }.toTypedArray()
 
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList

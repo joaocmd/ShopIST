@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -116,7 +115,7 @@ class CreateProductUI: Fragment() {
             private val textView: TextView = view.findViewById(R.id.rowText)
 
             fun bind(store: Store) {
-                textView.text = store.title
+                textView.text = store.name
 
                 val checkBox: CheckBox = view.findViewById(R.id.checkBox)
 

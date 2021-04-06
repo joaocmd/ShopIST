@@ -65,7 +65,7 @@ class PantryUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.optionsMenu(menu, requireActivity(),
-            pantryList.title, listOf(TopBarItems.Share, TopBarItems.Edit))
+            pantryList.name, listOf(TopBarItems.Share, TopBarItems.Edit))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -91,7 +91,7 @@ class PantryUI : Fragment() {
             action = Intent.ACTION_SEND
             putExtra(
                 Intent.EXTRA_TEXT, getString(R.string.share_pantry_message).format(
-                    pantryList.title, ShopIST.createUri(pantryList)
+                    pantryList.name, ShopIST.createUri(pantryList)
                 )
             )
             type = "text/plain"

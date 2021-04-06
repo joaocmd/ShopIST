@@ -1,7 +1,8 @@
 export default class {
-    constructor(id, name) {
-        this.id = id
+    constructor(id, name, stores) {
+        this.uuid = id
         this.name = name
+        this.stores = stores
         this.barcode = null
         this.images = []
     }
@@ -22,13 +23,14 @@ export default class {
     }
 
     hashString() {
-        return this.id
+        return this.uuid
     }
 
     toObject() {
         return {
-            id: this.id,
+            id: this.uuid,
             name: this.name,
+			stores: this.stores,
             barcode: this.barcode,
             images: this.images
         }

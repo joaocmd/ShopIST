@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -55,7 +54,7 @@ class PantryItemUI : Fragment() {
 
         // Set product and pantry titles
         root.findViewById<TextView>(R.id.productTitleView).text = item.product.name
-        root.findViewById<TextView>(R.id.pantryTitleView).text = item.pantryList.title
+        root.findViewById<TextView>(R.id.pantryTitleView).text = item.pantryList.name
 
         pantryView = root.findViewById(R.id.pantryView)
         pantry = item.pantryQuantity

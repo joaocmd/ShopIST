@@ -3,7 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
-class Store(var title: String) : Distanceable {
+class Store(var name: String) : Distanceable {
     var uuid: UUID = UUID.randomUUID()
     var items: Map<Product, Item> = mapOf()
     override var location: LatLng? = null
@@ -14,7 +14,7 @@ class Store(var title: String) : Distanceable {
 
     companion object {
         fun createStore(s: StoreDto): Store {
-            val store = Store(s.title)
+            val store = Store(s.name)
             store.location = s.location
             store.uuid = s.uuid
             return store

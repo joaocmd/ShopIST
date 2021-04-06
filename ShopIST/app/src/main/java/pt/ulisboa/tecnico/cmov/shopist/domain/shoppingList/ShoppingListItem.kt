@@ -15,7 +15,7 @@ class ShoppingListItem(val product: Product) {
          this.items.add(it)
          this.quantities[it.pantryList] = Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
       }
-      this.items = items.sortedBy { it.pantryList.title }.toMutableList()
+      this.items = items.sortedBy { it.pantryList.name }.toMutableList()
    }
 
    fun getAllQuantities(): Quantity {

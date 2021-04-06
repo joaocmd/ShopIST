@@ -12,7 +12,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
@@ -99,7 +98,7 @@ class ShoppingListItemUI : Fragment() {
 
             fun bind(item: Item) {
                 val pantryList = item.pantryList
-                textView.text = pantryList.title
+                textView.text = pantryList.name
 
                 val quantities = shoppingListItem.quantities[pantryList]!!
                 pantryView.text = quantities.pantry.toString()

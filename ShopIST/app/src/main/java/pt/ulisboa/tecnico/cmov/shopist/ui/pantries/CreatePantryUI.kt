@@ -20,7 +20,6 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.CreateShoppingListUI
 import java.util.*
 
 class CreatePantryUI : Fragment() {
@@ -59,7 +58,7 @@ class CreatePantryUI : Fragment() {
             root.findViewById<Button>(R.id.okButton).text = getString(R.string.edit_pantry_complete)
             root.findViewById<TextView>(R.id.textView).text = getString(R.string.edit_pantry)
 
-            root.findViewById<EditText>(R.id.pantryName).setText(editPantry!!.title)
+            root.findViewById<EditText>(R.id.pantryName).setText(editPantry!!.name)
 
             if (editPantry!!.location != null) {
                 root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_set)
@@ -90,7 +89,7 @@ class CreatePantryUI : Fragment() {
             newPantry.location = coords
             globalData.addPantryList(newPantry)
         } else {
-            editPantry!!.title = title
+            editPantry!!.name = title
             editPantry!!.location = coords
         }
 
