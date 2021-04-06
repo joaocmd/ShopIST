@@ -1,15 +1,15 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
@@ -42,6 +42,7 @@ class PantryItemUI : Fragment() {
             val pantryList = globalData.getPantryList(pantryId)
             item = pantryList.getItem(productId)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -78,17 +79,35 @@ class PantryItemUI : Fragment() {
         // Navigation Buttons
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
-        // FIXME: Remove this
-        root.findViewById<View>(R.id.editProductButton).setOnClickListener {
-            it.findNavController().navigate(
-                R.id.action_nav_pantry_item_to_nav_create_product,
-                bundleOf(
-                    CreateProductUI.ARG_PRODUCT_ID to item.product.uuid.toString()
-                )
-            )
-        }
 
         return root
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.noOptionsMenu(menu)
+        menu.findItem(R.id.action_delete).isVisible = true
+        menu.findItem(R.id.action_see_more).isVisible = true
+        menu.findItem(R.id.action_edit).isVisible = true
+        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
+            item.product.name
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_edit -> {
+                findNavController().navigate(
+                    R.id.action_nav_pantry_item_to_nav_create_product,
+                    bundleOf(
+                        CreateProductUI.ARG_PRODUCT_ID to this.item.product.uuid.toString()
+                    )
+                )
+            }
+            R.id.action_see_more -> {} // TODO
+            R.id.action_delete -> {} // TODO
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     private fun changePantry(v: Int) {

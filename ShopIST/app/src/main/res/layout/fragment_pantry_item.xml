@@ -178,13 +178,4 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <!-- FIXME: Remove this -->
-    <Button
-        android:id="@+id/editProductButton"
-        android:layout_width="113dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_weight="1"
-        android:text="@string/edit_product" />
 </LinearLayout>
