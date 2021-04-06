@@ -2,18 +2,18 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
@@ -36,6 +36,7 @@ class PantryUI : Fragment() {
             val globalData = requireActivity().applicationContext as ShopIST
             pantryList = globalData.getPantryList(pantryId)
         }
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -52,27 +53,6 @@ class PantryUI : Fragment() {
         listView.adapter = recyclerAdapter
 
         root.findViewById<Button>(R.id.newItemButton).setOnClickListener { onNewItem() }
-        // TODO: Improve location of this button
-        root.findViewById<Button>(R.id.editPantryButton).setOnClickListener {
-            it.findNavController().navigate(
-                R.id.action_nav_pantry_to_nav_create_pantry,
-                bundleOf(
-                    CreatePantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
-                )
-            )
-        }
-        root.findViewById<Button>(R.id.sharePantryButton).setOnClickListener {
-            val sendIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.share_pantry_message).format(
-                    pantryList.title, ShopIST.createUri(pantryList)
-                ))
-                type = "text/plain"
-            }
-            val shareIntent = Intent.createChooser(sendIntent, null)
-            startActivity(shareIntent)
-        }
-
         return root
     }
 
@@ -80,6 +60,48 @@ class PantryUI : Fragment() {
         recyclerAdapter.notifyDataSetChanged();
         super.onResume()
     }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        TopBarController.allOptionsMenu(menu)
+        menu.findItem(R.id.action_see_more).isVisible = false
+        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
+            pantryList.title
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_share -> sharePantryList()
+            R.id.action_edit -> editPantryList()
+            R.id.action_delete -> {} // TODO
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    private fun editPantryList() {
+        findNavController().navigate(
+            R.id.action_nav_pantry_to_nav_create_pantry,
+            bundleOf(
+                CreatePantryUI.ARG_PANTRY_ID to pantryList.uuid.toString()
+            )
+        )
+    }
+
+    private fun sharePantryList() {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT, getString(R.string.share_pantry_message).format(
+                    pantryList.title, ShopIST.createUri(pantryList)
+                )
+            )
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
 
     private fun onNewItem() {
         findNavController().navigate(

@@ -20,18 +20,6 @@
             android:layout_height="wrap_content"
             android:text="@string/add_item_title" />
 
-        <Button
-            android:id="@+id/editPantryButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_pantry" />
-
-        <Button
-            android:id="@+id/sharePantryButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/share_pantry" />
-
     </LinearLayout>
 
 

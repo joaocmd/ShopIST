@@ -5,6 +5,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -26,7 +27,6 @@ class PantriesListUI : Fragment() {
     // TODO: Don't show cart quantities
 
     private lateinit var recyclerAdapter: PantriesListAdapter
-    private var currentlySelectedItem: PantryList? = null
 
     companion object {
         const val GET_BARCODE_PRODUCT = 2
@@ -58,13 +58,14 @@ class PantriesListUI : Fragment() {
 
     override fun onResume() {
         updateData()
-        currentlySelectedItem = null
         super.onResume()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.noOptionsMenu(menu)
+        (requireActivity() as AppCompatActivity).supportActionBar!!.title =
+            getString(R.string.pantries_list)
     }
 
     private fun updateData() {
