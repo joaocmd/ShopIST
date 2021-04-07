@@ -43,12 +43,16 @@ export default class {
         this.#regressionData.push(record)
     }
 
-    estimateCurrentTime() {
+    estimateCurrentTime(): number | null {
         const peopleInLine = Object.keys(this.#currentPeople).length
         // converts to { peopleAhead: x, timeTaken: y} => [x, y]
         const formattedData = this.#regressionData.map(r => [r.peopleAhead, r.timeTaken] as DataPoint)
 
         const result = regression.linear(formattedData)
-        return result.predict(peopleInLine)[1]
+        if (result.equation[1] == NaN) {
+            return null
+        } else {
+            return result.predict(peopleInLine)[1]
+        }
     }
 }
