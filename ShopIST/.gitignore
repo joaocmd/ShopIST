@@ -10,6 +10,7 @@
 /.idea/sonarlint
 .DS_Store
 /build
+Termite-WifiP2P-API/build
 /captures
 .externalNativeBuild
 .cxx
