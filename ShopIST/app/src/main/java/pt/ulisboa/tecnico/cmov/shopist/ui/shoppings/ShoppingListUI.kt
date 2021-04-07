@@ -90,7 +90,7 @@ class ShoppingListUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.optionsMenu(menu, requireActivity(),
-            store.title, listOf(TopBarItems.Edit))
+            store.name, listOf(TopBarItems.Edit))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

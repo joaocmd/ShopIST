@@ -1,12 +1,18 @@
-export default class {
+import { Location } from "./Location"
+import Product from "./Product"
 
-    constructor(uuid, name, location) {
+export default class {
+	uuid: string
+	name: string
+	location: Location
+
+    constructor(uuid: string, name: string, location: Location) {
         this.uuid = uuid
         this.name = name
         this.location = location
     }
 
-    addProduct(uuid, product) {
+    addProduct(uuid: string, product: Product) {
     }
 
     toObject() {

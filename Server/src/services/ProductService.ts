@@ -1,31 +1,32 @@
-import Product from '@/model/Product'
+import Product from '../model/Product'
+import { StoreItemService } from './StoreItemService'
 
-var products = {}
+var products: Record<string, Product> = {}
 
-export default class {
-    static create(product) {
+export class ProductService {
+    static create(product: Product) {
         products[product.uuid] = new Product(product.uuid, product.name, product.stores)
     }
 
-    static addImage(id, blob) {
+    static addImage(id: string, blob: any) {
         if (!products[id]) {
             throw 'no-such-product'
         }
         products[id].addImage(blob)
         if (products[id].barcode) {
-            StoreItem.addImage(products[id].barcode, blob)
+            StoreItemService.addImage(products[id].barcode, blob)
         }
     }
 
-    static setBarcode(id, barcode) {
+    static setBarcode(id: string, barcode: string) {
         if (!products[id]) {
             throw 'no-such-product'
         }
         products[id].setBarcode(barcode)
-        StoreItem.barcodeSet(products[id], barcode)
+        StoreItemService.barcodeSet(products[id], barcode)
     }
 
-    static get(id) {
+    static get(id: string) {
         if (!products[id]) {
             throw 'no-such-product'
         }

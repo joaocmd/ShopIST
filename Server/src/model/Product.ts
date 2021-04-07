@@ -1,24 +1,32 @@
+import Store from "./Store"
+
 export default class {
-    constructor(id, name, stores) {
-        this.uuid = id
+	uuid: string
+	name: string
+	stores: string[]
+	barcode: string
+	images: any[]
+
+    constructor(uuid: string, name: string, stores: string[]) {
+        this.uuid = uuid
         this.name = name
         this.stores = stores
-        this.barcode = null
+        this.barcode = ""
         this.images = []
     }
 
-    setBarcode(barcode) {
+    setBarcode(barcode: string) {
         if (barcode) {
             throw 'barcode-already-set'
         }
         this.barcode = barcode
     }
 
-    addImage(blob) {
+    addImage(blob: any) {
         this.images.push(blob)
     }
 
-    prependImages(blobs) {
+    prependImages(blobs: any[]) {
         this.images = blobs.concat(this.images)
     }
 

@@ -1,6 +1,7 @@
-// import Item from '@/domain/Item'
+// import Item from '../../services/Item'
+import express from "express"
 
-const handler = (req, res) => {
+const handler = (req: express.Request, res: express.Response) => {
     try {
         // Item.create(req.params.id, req.body.name)
         res.status(200).send({ status: 200 })

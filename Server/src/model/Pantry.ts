@@ -1,22 +1,23 @@
-export default class {
+import Item from "./Item"
 
-    constructor(id, name, location, items) {
-        this.uuid = id
+export default class {
+	uuid: string
+	name: string
+	location: string
+	items: Record<string, Item>
+
+    constructor(uuid: string, name: string, location: string, items: Record<string, Item>) {
+        this.uuid = uuid
         this.name = name
         this.location = location
         this.items = items
     }
 
-    addItem(id, item) {
-        if (this.items[item.id]) {
+    addItem(id: string, item: Item) {
+        if (this.items[item.productUUID]) {
             throw 'item-already-present'
         }
-        this.items[id] = {
-            name: item.name,
-            pantry: 0,
-            need: 0,
-            cart: 0
-        }
+        this.items[id] = item
     }
 
     toObject() {

@@ -1,14 +1,14 @@
-import Store from '@/model/Store'
+import Store from '../model/Store'
 
-var stores = {}
+var stores: Record<string, Store> = {}
 
-export default class {
+export class StoreService {
 
-    static create(store) {
+    static create(store: Store) {
         stores[store.uuid] = new Store(store.uuid, store.name, store.location)
     }
 
-    static get(id) {
+    static get(id: string) {
         if (!stores[id]) {
             throw 'no-such-store'
         }

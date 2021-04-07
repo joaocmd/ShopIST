@@ -1,6 +1,7 @@
 // import Item from '@/domain/Item'
+import express from "express"
 
-const handler = (req, res) => {
+const handler = (req: express.Request, res: express.Response) => {
     try {
         // res.send(Item.get(req.params.id))
     } catch (error) {
