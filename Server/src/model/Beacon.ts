@@ -1,12 +1,12 @@
 import Location from './Location'
 import regression, { DataPoint } from 'regression'
 
-type EnterRecord {
+type EnterRecord = {
     peopleAhead: number,
     enterTime: Date
 }
 
-type RegressionData {
+type RegressionData = {
     peopleAhead: number,
     timeTaken: number
 }
