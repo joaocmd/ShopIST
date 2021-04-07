@@ -4,7 +4,7 @@ import Store from '../model/Store'
 import { ProductService } from './ProductService'
 import { StoreService } from './StoreService'
 
-var pantries: Record<string, Pantry> = {}
+const pantries: Record<string, Pantry> = {}
 
 export class PantryService {
 

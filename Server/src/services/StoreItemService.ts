@@ -2,7 +2,7 @@ import Item from '../model/Item';
 import Product from '../model/Product';
 import StoreItem from '../model/StoreItem';
 
-var products: Record<string, Product> = {}
+const products: Record<string, Product> = {}
 
 export class StoreItemService {
 

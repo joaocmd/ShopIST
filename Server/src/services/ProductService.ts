@@ -1,7 +1,7 @@
 import Product from '../model/Product'
 import { StoreItemService } from './StoreItemService'
 
-var products: Record<string, Product> = {}
+const products: Record<string, Product> = {}
 
 export class ProductService {
     static create(product: Product) {
