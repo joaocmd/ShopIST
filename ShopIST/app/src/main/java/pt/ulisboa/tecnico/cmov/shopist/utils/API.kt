@@ -1,22 +1,23 @@
 package pt.ulisboa.tecnico.cmov.shopist.utils
 
 import android.content.Context
-import android.provider.Settings.Global.getString
 import android.util.Log
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
+import com.android.volley.toolbox.RequestFuture
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.BigBoyDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
-import pt.ulisboa.tecnico.cmov.shopist.domain.PantryListDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
-class API constructor (context: Context) {
+
+class API constructor(context: Context) {
     private val queue: RequestQueue = Volley.newRequestQueue(context.applicationContext)
     private val baseURL = context.resources.getString(R.string.api_base_url)
 
@@ -31,26 +32,29 @@ class API constructor (context: Context) {
             }
     }
 
-    fun getPantry(pantryId: UUID) {
+    fun getPantry(
+        pantryId: UUID,
+        onSuccessListener: (response: BigBoyDto) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
         val url = "$baseURL/pantries/$pantryId"
 
         // Request a string response from the provided URL.
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-                // Display the first 500 characters of the response string.
                 val receivedDto = Gson().fromJson(response, BigBoyDto::class.java)
 
-                // TODO: Update ShopIST with these data (when a new pantry from sharing / when a pantry updated
-                // val recPantry = PantryList(recPantryDto, mutableMapOf())
-                Log.d(ShopIST.TAG, receivedDto.toString())
+                onSuccessListener(receivedDto)
+                // Log.d(ShopIST.TAG, receivedDto.toString())
             },
             {
-                when (it.networkResponse.statusCode) {
-                    404 -> {
-                        Log.d(ShopIST.TAG, "Pantry not found")
-                    }
-                }
+                onErrorListener(it)
+                // when (it.networkResponse.statusCode) {
+                //     404 -> {
+                //         Log.d(ShopIST.TAG, "Pantry not found")
+                //     }
+                // }
                 // Log.d(ShopIST.TAG, it.toString())
             })
 
@@ -58,7 +62,11 @@ class API constructor (context: Context) {
         queue.add(stringRequest)
     }
 
-    fun postNewPantry(pantry: PantryList) {
+    fun postNewPantry(
+        pantry: PantryList,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
         val url = "$baseURL/pantries/" + pantry.uuid.toString()
 
         // Prepare the dto
@@ -68,14 +76,16 @@ class API constructor (context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                onSuccessListener(response)
                 Log.d(ShopIST.TAG, response)
             },
             {
-                when (it.networkResponse.statusCode) {
-                    400 -> {
-                        Log.d(ShopIST.TAG, "Error sending pantry")
-                    }
-                }
+                onErrorListener(it)
+                // when (it.networkResponse.statusCode) {
+                //     400 -> {
+                //         Log.d(ShopIST.TAG, "Error sending pantry")
+                //     }
+                // }
                 Log.d(ShopIST.TAG, it.toString())
             }) {
                 override fun getBody(): ByteArray {

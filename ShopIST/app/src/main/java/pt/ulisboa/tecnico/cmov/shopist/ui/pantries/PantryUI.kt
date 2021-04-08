@@ -6,6 +6,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
@@ -18,6 +19,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 /**
@@ -87,17 +89,28 @@ class PantryUI : Fragment() {
     }
 
     private fun sharePantryList() {
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT, getString(R.string.share_pantry_message).format(
-                    pantryList.name, ShopIST.createUri(pantryList)
+        // Send pantry to server
+        val context = requireActivity().applicationContext
+        val globalData = context as ShopIST
+
+        // TODO: Block until success or error
+        API.getInstance(context).postNewPantry(pantryList, {
+            // Share code to user
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(
+                    Intent.EXTRA_TEXT, getString(R.string.share_pantry_message).format(
+                        pantryList.name, ShopIST.createUri(pantryList)
+                    )
                 )
-            )
-            type = "text/plain"
-        }
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        startActivity(shareIntent)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }, {
+            // TODO: Resource the string
+            Toast.makeText(context, "Cannot get link.", Toast.LENGTH_SHORT).show()
+        })
     }
 
 

@@ -78,8 +78,10 @@ class SideMenuNavigation : AppCompatActivity() {
         }
 
         // FIXME: Remove this shit
-        // API.getInstance(applicationContext).postNewPantry(globalData.pantries[0])
-        API.getInstance(applicationContext).getPantry(globalData.pantries[0].uuid)
+        // API.getInstance(applicationContext).postNewPantry(globalData.pantries[0], {
+        // }, {
+        // })
+        // API.getInstance(applicationContext).getPantry(globalData.pantries[0].uuid)
     }
 
     private fun receivedUriIntent(): Boolean {
@@ -87,13 +89,21 @@ class SideMenuNavigation : AppCompatActivity() {
             try {
                 val shopIst = (applicationContext as ShopIST)
                 val uuid = UUID.fromString(intent.data.toString().split("/").last())
-                shopIst.loadPantryList(uuid)
-                navController.navigate(
-                    R.id.nav_pantry,
-                    bundleOf(
-                        PantryUI.ARG_PANTRY_ID to uuid.toString()
+
+                // TODO: Set a load activity to do this
+                shopIst.loadPantryList(uuid, {
+                    Log.d(ShopIST.TAG, uuid.toString())
+                    findNavController(R.id.nav_host_fragment).navigate(
+                        R.id.nav_pantry,
+                        bundleOf(
+                            PantryUI.ARG_PANTRY_ID to uuid.toString()
+                        )
                     )
-                )
+                }, {
+                    // TODO: Resource this string
+                    Toast.makeText(applicationContext, "Cannot get pantry list.", Toast.LENGTH_SHORT).show()
+                })
+
                 return true
             } catch (e: NoSuchElementException) {
                 Toast.makeText(applicationContext, getString(R.string.unable_open_pantry), Toast.LENGTH_SHORT).show()

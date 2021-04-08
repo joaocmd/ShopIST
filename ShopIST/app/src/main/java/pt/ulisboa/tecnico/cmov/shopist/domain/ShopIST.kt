@@ -2,10 +2,12 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import android.app.Application
 import android.util.Log
+import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -45,12 +47,31 @@ class ShopIST : Application() {
         return allPantries[uuid]!!
     }
 
-    fun loadPantryList(uuid: UUID) {
+    fun loadPantryList(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
+                       onErrorListener: (error: Exception) -> Unit) {
         if (allPantries.containsKey(uuid)) {
+            onSuccessListener(uuid)
             return
+        } else {
+            API.getInstance(applicationContext).getPantry(uuid, {
+                populateFromServer(it)
+                onSuccessListener(it.pantry.uuid)
+            }, onErrorListener)
         }
-        // TODO: GET FROM SERVER
-        throw NoSuchElementException(uuid.toString())
+    }
+
+    private fun populateFromServer(dto: BigBoyDto) {
+        // Set stores
+        dto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
+
+        // Set products
+        dto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allStores)}
+
+        // Set pantry
+        allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
+
+        Log.d(TAG, dto.pantry.name)
+        savePersistent()
     }
 
     fun addProduct(product: Product) {
@@ -209,6 +230,8 @@ class ShopIST : Application() {
                 } catch (e: IOException) {
                     Log.d(TAG, "Close error.")
                 }
+            } else {
+                return false
             }
         }
         // Try to build file

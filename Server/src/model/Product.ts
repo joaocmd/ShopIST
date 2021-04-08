@@ -36,7 +36,7 @@ export default class {
 
     toObject() {
         return {
-            id: this.uuid,
+            uuid: this.uuid,
             name: this.name,
 			stores: this.stores,
             barcode: this.barcode,
