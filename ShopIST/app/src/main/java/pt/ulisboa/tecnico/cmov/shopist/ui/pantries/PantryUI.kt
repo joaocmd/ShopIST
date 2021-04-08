@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -60,8 +59,20 @@ class PantryUI : Fragment() {
     }
 
     override fun onResume() {
-        recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged()
         super.onResume()
+        val globalData = (requireActivity().applicationContext as ShopIST)
+        globalData.callbackDataSetChanged = {
+            pantryList = globalData.getPantryList(pantryList.uuid)
+            recyclerAdapter.pantryList = pantryList
+            recyclerAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val globalData = (requireActivity().applicationContext as ShopIST)
+        globalData.callbackDataSetChanged = null
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -93,8 +104,9 @@ class PantryUI : Fragment() {
         val context = requireActivity().applicationContext
         val globalData = context as ShopIST
 
-        // TODO: Block until success or error
         API.getInstance(context).postNewPantry(pantryList, {
+            pantryList.isShared = true
+            globalData.addPantryList(pantryList)
             // Share code to user
             val sendIntent = Intent().apply {
                 action = Intent.ACTION_SEND
@@ -123,7 +135,7 @@ class PantryUI : Fragment() {
         )
     }
 
-    inner class PantryAdapter(private val pantryList: PantryList) :
+    inner class PantryAdapter(var pantryList: PantryList) :
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
 

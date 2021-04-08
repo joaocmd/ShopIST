@@ -27,10 +27,8 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
-import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import java.lang.IllegalArgumentException
+import pt.ulisboa.tecnico.cmov.shopist.utils.SyncService
 import java.util.*
-import kotlin.NoSuchElementException
 
 
 class SideMenuNavigation : AppCompatActivity() {
@@ -76,12 +74,19 @@ class SideMenuNavigation : AppCompatActivity() {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
             getDeviceLocation()
         }
+    }
 
-        // FIXME: Remove this shit
-        // API.getInstance(applicationContext).postNewPantry(globalData.pantries[0], {
-        // }, {
-        // })
-        // API.getInstance(applicationContext).getPantry(globalData.pantries[0].uuid)
+    override fun onResume() {
+        super.onResume()
+        // Sync calling
+        val syncIntent = Intent(applicationContext, SyncService::class.java)
+        startService(syncIntent)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        val syncIntent = Intent(applicationContext, SyncService::class.java)
+        stopService(syncIntent)
     }
 
     private fun receivedUriIntent(): Boolean {
@@ -101,14 +106,26 @@ class SideMenuNavigation : AppCompatActivity() {
                     )
                 }, {
                     // TODO: Resource this string
-                    Toast.makeText(applicationContext, "Cannot get pantry list.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        applicationContext,
+                        "Cannot get pantry list.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 })
 
                 return true
             } catch (e: NoSuchElementException) {
-                Toast.makeText(applicationContext, getString(R.string.unable_open_pantry), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.unable_open_pantry),
+                    Toast.LENGTH_SHORT
+                ).show()
             } catch (e: IllegalArgumentException) {
-                Toast.makeText(applicationContext, getString(R.string.unable_open_pantry), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.unable_open_pantry),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         return false

@@ -25,7 +25,8 @@ export default class {
             uuid: this.uuid,
             name: this.name,
             location: this.location,
-            items: this.items
+            items: this.items,
+			isShared: true
         }
     }
 }

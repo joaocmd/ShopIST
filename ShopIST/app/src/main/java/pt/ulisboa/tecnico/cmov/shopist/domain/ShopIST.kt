@@ -2,7 +2,6 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import android.app.Application
 import android.util.Log
-import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
@@ -39,6 +38,8 @@ class ShopIST : Application() {
     val stores: Array<Store>
         get() = this.allStores.values.sortedBy { it.name }.toTypedArray()
 
+    var callbackDataSetChanged: (() -> Unit)? = null
+
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList
     }
@@ -60,7 +61,7 @@ class ShopIST : Application() {
         }
     }
 
-    private fun populateFromServer(dto: BigBoyDto) {
+    fun populateFromServer(dto: BigBoyDto) {
         // Set stores
         dto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
 
@@ -70,7 +71,6 @@ class ShopIST : Application() {
         // Set pantry
         allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
 
-        Log.d(TAG, dto.pantry.name)
         savePersistent()
     }
 

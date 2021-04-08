@@ -13,6 +13,8 @@ class PantryList(var name: String) : Distanceable {
 
     override var location: LatLng? = null
 
+    var isShared: Boolean = false
+
     constructor(title: String, location: LatLng?): this(title) {
         this.location = location
     }
@@ -20,6 +22,7 @@ class PantryList(var name: String) : Distanceable {
     constructor(p: PantryListDto, products: Map<UUID, Product>) : this(p.name, p.location) {
         uuid = p.uuid
         _items = p.items.map { i -> Item(i, products, this) }.toMutableList()
+        isShared = p.isShared
     }
 
     fun addItem(item: Item) {
