@@ -8,7 +8,7 @@ const handler = (req: express.Request, res: express.Response) => {
     try {
         const pantry = PantryService.get(req.params.id)
         const products = Object.values(pantry.items).map(it => ProductService.get(it.productUUID))
-		const storeIds = Array.from(new Set(([] as string[]).concat(...products.map(p => p.stores))))
+		const storeIds = Array.from(new Set(products.map(p => p.stores).flat()))
         const stores = storeIds.map(id => StoreService.get(id))
         res.send({ pantry, products, stores })
     } catch (error) {

@@ -1,4 +1,4 @@
-import { Location } from "./Location"
+import Location from "./Location"
 import Product from "./Product"
 
 export default class {
