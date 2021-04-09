@@ -18,7 +18,8 @@ import java.util.*
 class API constructor(context: Context) {
     private val queue: RequestQueue = Volley.newRequestQueue(context.applicationContext)
     private val baseURL = context.resources.getString(R.string.api_base_url)
-    private val directionsURL = context.resources.getString(R.string.direcitons_api_url)
+    private val directionsURL = context.resources.getString(R.string.directions_api_url)
+    private val bingKey = context.resources.getString(R.string.bing_maps_key)
 
     companion object {
         @Volatile
@@ -111,7 +112,7 @@ class API constructor(context: Context) {
         onSuccessListener: (response: Long) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
-        val url = "${directionsURL}/Driving?wp.0=${orig.toApiString()}&wp.1=${dest.toApiString()}&key=${getString(METE A CHAVE AQUI ALGUEM)}"
+        val url = "${directionsURL}/Driving?wp.0=${orig.toApiString()}&wp.1=${dest.toApiString()}&key=$bingKey"
 
         val stringRequest = StringRequest(
             Request.Method.GET, url,

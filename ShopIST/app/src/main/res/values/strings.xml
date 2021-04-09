@@ -75,5 +75,5 @@
     <string name="create_pantry">Create Pantry</string>
     <string name="edit_product_title">Edit product</string>
     <string name="get_directions">Get Directions</string>
-    <string name="direcitons_api_url">https://dev.virtualearth.net/REST/V1/Routes</string>
+    <string name="directions_api_url">https://dev.virtualearth.net/REST/V1/Routes</string>
 </resources>
