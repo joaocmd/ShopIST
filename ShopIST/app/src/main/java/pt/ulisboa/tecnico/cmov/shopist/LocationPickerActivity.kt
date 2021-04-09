@@ -1,18 +1,13 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener
@@ -22,6 +17,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
+import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils
 
 
 class LocationPickerActivity : AppCompatActivity(),
@@ -38,8 +35,8 @@ class LocationPickerActivity : AppCompatActivity(),
     }
 
     private lateinit var map: GoogleMap
+    private lateinit var locationUtils: LocationUtils
     private var locationPermissionGranted = false
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
     // TODO: Try to make the default location somewhere according to the country?
     private val defaultLocation = LatLng(38.73795412879115, -9.137816238437372)
     private var lastKnownLocation: Location? = null
@@ -53,7 +50,8 @@ class LocationPickerActivity : AppCompatActivity(),
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        // fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        locationUtils = LocationUtils(this)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -91,47 +89,20 @@ class LocationPickerActivity : AppCompatActivity(),
     /**
      * Prompts the user for permission to use the device location.
      */
+    @SuppressLint("MissingPermission")
     private fun getLocationPermission() {
         /*
          * Request location permission, so that we can get the location of the
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
          */
-        locationPermissionGranted = false
-        if (ContextCompat.checkSelfPermission(
-                this.applicationContext,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            locationPermissionGranted = true
+        if (locationUtils.hasPermissions()) {
             getDeviceLocation()
             map.isMyLocationEnabled = true
         } else {
-            ActivityCompat.requestPermissions(
-                this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
-            )
+            locationUtils.requestPermissions()
         }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
         locationPermissionGranted = false
-        when (requestCode) {
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty()
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                ) {
-                    locationPermissionGranted = true
-                }
-            }
-        }
     }
 
     private fun getDeviceLocation() {
@@ -140,24 +111,20 @@ class LocationPickerActivity : AppCompatActivity(),
          * cases when a location is not available.
          */
         try {
-            if (locationPermissionGranted) {
-                fusedLocationClient.lastLocation
-                    .addOnSuccessListener { location: Location? ->
-                        // Got last known location. In some rare situations this can be null.
-                        if (location !== null) {
-                            lastKnownLocation = location
-                            val lat = location.latitude
-                            val lon = location.longitude
-
-                            map.moveCamera(
-                                CameraUpdateFactory.newLatLngZoom(
-                                    LatLng(lat, lon), DEFAULT_ZOOM.toFloat()
-                                )
+            if (locationUtils.hasPermissions()) {
+                locationUtils.getLastLocation { location: Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location !== null) {
+                        lastKnownLocation = location
+                        map.moveCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                location.toLatLng(), DEFAULT_ZOOM.toFloat()
                             )
-                        } else {
-                            Log.d(ShopIST.TAG, "Null location")
-                        }
+                        )
+                    } else {
+                        Log.d(ShopIST.TAG, "Null location")
                     }
+                }
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)

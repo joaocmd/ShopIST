@@ -1,16 +1,12 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -27,6 +23,8 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
+import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
+import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils
 import pt.ulisboa.tecnico.cmov.shopist.utils.SyncService
 import java.util.*
 
@@ -36,7 +34,7 @@ class SideMenuNavigation : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var locationPermissionGranted: Boolean = false
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationUtils: LocationUtils
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,16 +61,12 @@ class SideMenuNavigation : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        locationUtils = LocationUtils(this)
 
-        if (!receivedUriIntent() && ContextCompat.checkSelfPermission(
-                this.applicationContext,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            locationPermissionGranted = true
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        if (locationUtils.hasPermissions()) {
             getDeviceLocation()
+        } else {
+            locationUtils.requestPermissions()
         }
     }
 
@@ -147,24 +141,17 @@ class SideMenuNavigation : AppCompatActivity() {
          * cases when a location is not available.
          */
         try {
-            if (locationPermissionGranted) {
-                val locationRequest = LocationRequest.create().apply {
-                    interval = 250
-                    fastestInterval = 0
-                    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-                }
-                // TODO: Set a load activity to do this
-                val locationCallback = object : LocationCallback() {
-                    override fun onLocationResult(locationResult: LocationResult?) {
-                        locationResult ?: return
-                        for (location in locationResult.locations){
+            locationUtils.getLocationPolling(
+                250, 0, LocationRequest.PRIORITY_HIGH_ACCURACY,
+                object : LocationCallback() {
+                    override fun onLocationResult(result: LocationResult?) {
+                        result ?: return
+                        for (location in result.locations){
                             // Got last known location. In some rare situations this can be null.
                             if (location !== null) {
-                                val lat = location.latitude
-                                val lon = location.longitude
-                                Log.d(ShopIST.TAG, "Selected location - Lat: $lat, Lon: $lon")
-                                openCorrespondingList(LatLng(lat, lon))
-                                fusedLocationClient.removeLocationUpdates(this)
+                                Log.d(ShopIST.TAG, "Selected location - ${location.toLatLng()}")
+                                openCorrespondingList(location.toLatLng())
+                                locationUtils.fusedLocationClient.removeLocationUpdates(this)
                                 return
                             } else {
                                 Log.d(ShopIST.TAG, "Null location")
@@ -172,12 +159,7 @@ class SideMenuNavigation : AppCompatActivity() {
                         }
                     }
                 }
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper()
-                )
-            }
+            )
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)
         }
