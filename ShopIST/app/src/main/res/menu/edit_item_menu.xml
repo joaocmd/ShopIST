@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_get_directions"
+        android:icon="@drawable/ic_baseline_directions_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/get_directions"
+        />
+    <item
         android:id="@+id/action_share"
         android:icon="@drawable/ic_baseline_share_24"
         app:showAsAction="ifRoom"

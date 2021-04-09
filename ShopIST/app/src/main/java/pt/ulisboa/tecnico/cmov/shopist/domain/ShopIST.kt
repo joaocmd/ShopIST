@@ -12,7 +12,6 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import kotlin.NoSuchElementException
 
 class ShopIST : Application() {
     companion object {
@@ -106,8 +105,8 @@ class ShopIST : Application() {
         return defaultStore
     }
 
-    fun getAllLists(): List<Distanceable> {
-        val res = mutableListOf<Distanceable>()
+    fun getAllLists(): List<Locatable> {
+        val res = mutableListOf<Locatable>()
         allPantries.forEach {
             res.add(it.value)
         }

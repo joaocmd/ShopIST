@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -89,13 +91,23 @@ class ShoppingListUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.optionsMenu(menu, requireActivity(),
-            store.name, listOf(TopBarItems.Edit))
+        val items = mutableListOf(TopBarItems.Edit)
+        if (store.location != null) {
+            items.add(TopBarItems.Directions)
+        }
+        TopBarController.optionsMenu(menu, requireActivity(), store.name, items)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> editStore()
+            R.id.action_get_directions -> {
+                val location = store.location!!
+                val gmmIntentUri = Uri.parse("google.navigation:q=${location.latitude},${location.longitude}")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                startActivity(mapIntent)
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true

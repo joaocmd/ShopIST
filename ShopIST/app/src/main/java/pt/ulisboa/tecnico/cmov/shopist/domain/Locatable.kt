@@ -4,8 +4,9 @@ import android.location.Location
 import android.location.LocationManager
 import com.google.android.gms.maps.model.LatLng
 
-interface Distanceable {
+interface Locatable {
     val location: LatLng?
+    var drivingTime: Long?
 
     fun getDistance(initialLoc: LatLng): Float {
         val loc1 = Location(LocationManager.GPS_PROVIDER)

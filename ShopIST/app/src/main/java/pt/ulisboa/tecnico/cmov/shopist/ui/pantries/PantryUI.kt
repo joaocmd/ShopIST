@@ -1,13 +1,14 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,14 +78,24 @@ class PantryUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.optionsMenu(menu, requireActivity(),
-            pantryList.name, listOf(TopBarItems.Share, TopBarItems.Edit))
+        val items = mutableListOf(TopBarItems.Share, TopBarItems.Edit)
+        if (pantryList.location != null) {
+            items.add(TopBarItems.Directions)
+        }
+        TopBarController.optionsMenu(menu, requireActivity(), pantryList.name, items)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_share -> sharePantryList()
             R.id.action_edit -> editPantryList()
+            R.id.action_get_directions -> {
+                val location = pantryList.location!!
+                val gmmIntentUri = Uri.parse("google.navigation:q=${location.latitude},${location.longitude}")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                startActivity(mapIntent)
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true

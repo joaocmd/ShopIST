@@ -36,6 +36,23 @@ class SyncService : Service() {
                             // FIXME: wut
                         })
                     }
+                    if (it.location != null ) {
+                        API.getInstance(applicationContext).getRouteTime(
+                            // FIXME: put our current location here, add it to the if condition
+                            it.location!!,
+                            it.location!!,
+                            { time ->
+                                // TODO: implement callback for updating the PantriesListUI
+                                it.drivingTime = time
+                                if (shopIst.callbackDataSetChanged !== null) {
+                                    shopIst.callbackDataSetChanged!!()
+                                }
+                            },
+                            {
+                                // FIXME: handle gracefully
+                            }
+                        )
+                    }
                 }
             }, 0, SYNC_INTERVAL, TimeUnit.SECONDS) // or .MINUTES, .HOURS etc.
         }

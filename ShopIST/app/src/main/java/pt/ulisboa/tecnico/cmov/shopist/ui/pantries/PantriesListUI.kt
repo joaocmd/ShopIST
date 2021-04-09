@@ -1,10 +1,12 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
+import android.opengl.Visibility
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -84,9 +86,16 @@ class PantriesListUI : Fragment() {
 
         inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
             private val textView: TextView = view.findViewById(R.id.rowText)
+            private val drivingTimeImage: ImageView = view.findViewById(R.id.drivingTimeImage)
+            private val drivingTimeText: TextView = view.findViewById(R.id.drivingTime)
 
             fun bind(pantryList: PantryList) {
                 textView.text = pantryList.name
+                if (pantryList.drivingTime != null) {
+                    drivingTimeImage.visibility = View.VISIBLE
+                    drivingTimeText.visibility = View.VISIBLE
+                    drivingTimeText.text = DateUtils.formatElapsedTime(pantryList.drivingTime!!)
+                }
 
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {

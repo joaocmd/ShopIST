@@ -11,6 +11,7 @@ class TopBarController {
             menu.findItem(R.id.action_delete).isVisible = topBarItems.contains(TopBarItems.Delete)
             menu.findItem(R.id.action_edit).isVisible = topBarItems.contains(TopBarItems.Edit)
             menu.findItem(R.id.action_share).isVisible = topBarItems.contains(TopBarItems.Share)
+            menu.findItem(R.id.action_get_directions).isVisible = topBarItems.contains(TopBarItems.Directions)
             setTitle(app, title)
         }
 
@@ -33,6 +34,7 @@ class TopBarController {
             menu.findItem(R.id.action_delete).isVisible = value
             menu.findItem(R.id.action_edit).isVisible = value
             menu.findItem(R.id.action_share).isVisible = value
+            menu.findItem(R.id.action_get_directions).isVisible = value
         }
     }
 }
@@ -41,5 +43,6 @@ enum class TopBarItems {
     SeeMore,
     Delete,
     Edit,
+    Directions,
     Share
 }
