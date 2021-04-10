@@ -36,10 +36,11 @@ class SyncService : Service() {
                             // FIXME: wut
                         })
                     }
-                    if (it.location != null ) {
+                    val shopIST = applicationContext as ShopIST
+                    if (it.location != null && shopIST.currentLocation != null) {
                         API.getInstance(applicationContext).getRouteTime(
                             // FIXME: put our current location here, add it to the if condition
-                            it.location!!,
+                            shopIST.currentLocation!!,
                             it.location!!,
                             { time ->
                                 // TODO: implement callback for updating the PantriesListUI

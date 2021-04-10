@@ -150,6 +150,7 @@ class SideMenuNavigation : AppCompatActivity() {
                             // Got last known location. In some rare situations this can be null.
                             if (location !== null) {
                                 Log.d(ShopIST.TAG, "Selected location - ${location.toLatLng()}")
+                                (applicationContext as ShopIST).currentLocation = location.toLatLng()
                                 openCorrespondingList(location.toLatLng())
                                 locationUtils.fusedLocationClient.removeLocationUpdates(this)
                                 return

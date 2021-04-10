@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import android.app.Application
+import android.location.Location
 import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
@@ -24,6 +25,7 @@ class ShopIST : Application() {
         const val OPEN_AUTO_MAX_DISTANCE = 50
     }
 
+    var currentLocation: LatLng? = null
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
     private var allStores: MutableMap<UUID, Store> = mutableMapOf()
