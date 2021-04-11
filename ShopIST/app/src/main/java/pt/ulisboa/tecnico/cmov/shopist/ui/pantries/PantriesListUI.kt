@@ -14,6 +14,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
@@ -52,7 +54,7 @@ class PantriesListUI : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
 
-        root.findViewById<Button>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
+        root.findViewById<FloatingActionButton>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
 
         return root
     }
@@ -86,16 +88,39 @@ class PantriesListUI : Fragment() {
 
         inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
             private val textView: TextView = view.findViewById(R.id.rowText)
-            private val drivingTimeImage: ImageView = view.findViewById(R.id.drivingTimeImage)
+            //private val drivingTimeImage: ImageView = view.findViewById(R.id.drivingTimeImage)
             private val drivingTimeText: TextView = view.findViewById(R.id.drivingTime)
+            private val itemsAtHouseText: TextView = view.findViewById(R.id.itemQuantityDisplay)
+            private val missingItemsText: TextView = view.findViewById(R.id.itemsMissingDisplay)
+
+            private fun calculateItemsAtHouse(pantryList: PantryList): Number {
+                var total = 0
+                for(item in pantryList.items) {
+                    total += item.pantryQuantity
+                }
+                return total
+            }
+
+            private fun calculateMissingItems(pantryList: PantryList): Number {
+                var total = 0
+                for(item in pantryList.items) {
+                    total += item.needingQuantity
+                }
+                return total
+            }
 
             fun bind(pantryList: PantryList) {
                 textView.text = pantryList.name
                 if (pantryList.drivingTime != null) {
-                    drivingTimeImage.visibility = View.VISIBLE
-                    drivingTimeText.visibility = View.VISIBLE
                     drivingTimeText.text = DateUtils.formatElapsedTime(pantryList.drivingTime!!)
                 }
+                else {
+                    drivingTimeText.text = "---"
+                }
+
+                itemsAtHouseText.text = calculateItemsAtHouse(pantryList).toString();
+                missingItemsText.text = calculateMissingItems(pantryList).toString();
+
 
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {
@@ -121,7 +146,7 @@ class PantriesListUI : Fragment() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.recycler_view_row, viewGroup, false)
+                .inflate(R.layout.pantry_list_row, viewGroup, false)
 
             return ViewHolder(view, activity)
         }

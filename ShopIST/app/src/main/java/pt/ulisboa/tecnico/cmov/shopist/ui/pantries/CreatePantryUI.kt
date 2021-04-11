@@ -71,7 +71,21 @@ class CreatePantryUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu, requireActivity(), getString(R.string.create_pantry))
+        if(editPantry != null) {
+
+            TopBarController.noOptionsMenu(
+                menu,
+                requireActivity(),
+                getString(R.string.edit_pantry)
+            )
+        }
+        else {
+            TopBarController.noOptionsMenu(
+                menu,
+                requireActivity(),
+                getString(R.string.create_pantry)
+            )
+        }
     }
 
     private fun createPantry() {

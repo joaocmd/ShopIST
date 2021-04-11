@@ -4,76 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.pantries.AddItemUI">
+    tools:context=".ui.pantries.AddItemUI"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        >
-        <LinearLayout
-            android:id="@+id/layout1"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/addNewProduct"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="@string/add_item_title"
-                />
-        </LinearLayout>
+            android:text="@string/create_product_item_complete" />
 
-        <ScrollView
+        <View
+            android:id="@+id/section_divider"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/layout1"
-            android:layout_above="@id/layout2">
+            android:layout_height="@dimen/section_divider_height"
+            android:background="@color/section_divider"
+            android:layout_marginBottom="@dimen/section_divider_margin"
+            android:layout_marginTop="@dimen/section_divider_margin" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
             <LinearLayout
+                android:id="@+id/layout1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <RadioGroup
-                    android:id="@+id/productsList"
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/add_item_title"
+                    />
             </LinearLayout>
-        </ScrollView>
-        <LinearLayout
-            android:id="@+id/layout2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="vertical">
-        <EditText
-            android:id="@+id/productQuantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="numberSigned"
-            android:hint="@string/add_item_quantity"
-            android:autofillHints="@string/add_item_quantity_hint"
-            />
 
-            <Button
-                android:id="@+id/okButton"
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_below="@id/layout1"
+                android:layout_above="@id/layout2">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RadioGroup
+                        android:id="@+id/productsList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+            </ScrollView>
+            <LinearLayout
+                android:id="@+id/layout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_item_button" />
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/addNewProduct"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create_product_item_complete" />
+                <EditText
+                    android:id="@+id/productQuantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="numberSigned"
+                    android:hint="@string/add_item_quantity"
+                    android:autofillHints="@string/add_item_quantity_hint"
+                    />
+                <Button
+                    android:id="@+id/okButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_item_button" />
 
-        </LinearLayout>
-    </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

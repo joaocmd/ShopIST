@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.pantries.CreateProductUI">
+    tools:context=".ui.pantries.CreateProductUI"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1"
-        android:baselineAligned="false" android:gravity="center_horizontal"
-        >
+        android:layout_height="match_parent">
+
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.9"
-            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -55,6 +55,21 @@
 
                 </androidx.recyclerview.widget.RecyclerView>
             </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/section_divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/section_divider_height"
+                android:background="@color/section_divider"
+                android:layout_marginBottom="@dimen/section_divider_margin"
+                android:layout_marginTop="@dimen/section_divider_margin" />
 
             <Button
                 android:id="@+id/okButton"
@@ -62,5 +77,5 @@
                 android:layout_height="wrap_content"
                 android:text="@string/create_product_item_complete" />
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

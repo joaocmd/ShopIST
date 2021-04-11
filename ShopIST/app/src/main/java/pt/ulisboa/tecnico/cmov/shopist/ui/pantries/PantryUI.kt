@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
@@ -55,7 +56,7 @@ class PantryUI : Fragment() {
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = recyclerAdapter
 
-        root.findViewById<Button>(R.id.newItemButton).setOnClickListener { onNewItem() }
+        root.findViewById<FloatingActionButton>(R.id.newItemButton).setOnClickListener { onNewItem() }
         return root
     }
 

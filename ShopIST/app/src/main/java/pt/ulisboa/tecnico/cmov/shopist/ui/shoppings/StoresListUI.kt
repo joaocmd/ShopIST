@@ -1,22 +1,29 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
+import android.animation.ArgbEvaluator
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_stores_list.*
+import kotlinx.android.synthetic.main.stores_list_row.view.*
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
-import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import java.util.*
@@ -49,7 +56,7 @@ class StoresListUI : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
 
-        root.findViewById<Button>(R.id.newShoppingListButton).setOnClickListener { onNewShoppingList() }
+        root.findViewById<FloatingActionButton>(R.id.newShoppingListButton).setOnClickListener { onNewShoppingList() }
 
         return root
     }
@@ -61,7 +68,11 @@ class StoresListUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu, requireActivity(), getString(R.string.shopping_lists_title))
+        TopBarController.noOptionsMenu(
+            menu,
+            requireActivity(),
+            getString(R.string.shopping_lists_title)
+        )
     }
 
 
@@ -81,12 +92,48 @@ class StoresListUI : Fragment() {
     ) :
         RecyclerView.Adapter<StoreListAdapter.ViewHolder>() {
 
-        inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(view) {
+        inner class ViewHolder(val view: View, val activity: FragmentActivity) : RecyclerView.ViewHolder(
+            view
+        ) {
             private val textView: TextView = view.findViewById(R.id.rowText)
+            //private val drivingTimeImage: ImageView = view.findViewById(R.id.drivingTimeImage)
+            private val drivingTimeText: TextView = view.findViewById(R.id.drivingTime)
+            private val checkoutTime: TextView = view.findViewById(R.id.checkoutTime)
+            private val itemPercentage: TextView = view.findViewById(R.id.itemPercentage)
 
             fun bind(store: Store) {
                 textView.text = store.name
 
+                if (store.drivingTime != null) {
+                    drivingTimeText.text = DateUtils.formatElapsedTime(store.drivingTime!!)
+                }
+                else {
+                    drivingTimeText.text = "---"
+                }
+
+                //use store.checkouttime
+                if ( store.drivingTime != null) {
+                    checkoutTime.text = DateUtils.formatElapsedTime(store.drivingTime!!)
+                }
+                else {
+                    checkoutTime.text = "---"
+                }
+
+                val globalData = activity?.applicationContext as ShopIST
+                val percentage = store.itemPercentage(globalData.pantries.toList())
+                itemPercentage.text = (percentage * 100).toInt().toString() + "%"
+
+                /* TODO FIX THIS! */
+                val startColor = Color.parseColor("#821e1e")
+                val endColor = Color.parseColor("#67a327")
+                Log.i("Error", startColor.toString())
+                Log.i("Error", endColor.toString())
+
+                val color = ColorUtils.blendARGB(startColor!!, endColor, percentage)
+
+                itemPercentage.setTextColor(
+                    color
+                )
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {
                     view.findNavController().navigate(
@@ -99,7 +146,7 @@ class StoresListUI : Fragment() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(viewGroup.context)
-                .inflate(R.layout.recycler_view_row, viewGroup, false)
+                .inflate(R.layout.stores_list_row, viewGroup, false)
 
             return ViewHolder(view, activity)
         }

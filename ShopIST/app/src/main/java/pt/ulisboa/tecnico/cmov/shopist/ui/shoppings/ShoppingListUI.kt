@@ -67,10 +67,12 @@ class ShoppingListUI : Fragment() {
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
 
+        /*
         // TODO: Improve the location of this button
         root.findViewById<View>(R.id.editStoreButton).setOnClickListener {
             editStore()
         }
+        */
 
         return root
     }

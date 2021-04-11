@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.pantries.CreatePantryUI">
+    tools:context=".ui.pantries.CreatePantryUI"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="1"
-        android:baselineAligned="false" android:gravity="center_horizontal"
-        >
+        android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="0.9"
-            android:layout_marginTop="40dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -34,12 +33,14 @@
                 android:hint="@string/create_pantry_item_title"
                 android:inputType="none|textCapWords" />
 
+
             <Button
                 android:id="@+id/chooseLocationButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0dp"
-                android:text="@string/choose_location" />
+                android:text="@string/choose_location"
+                android:layout_marginTop="20dp"/>
 
             <TextView
                 android:id="@+id/locationMessage"
@@ -47,18 +48,33 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:text="@string/location_not_set" />
-
-            <Button
-                android:id="@+id/okButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create_pantry_item_complete" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/create_pantry_warning"/>
         </LinearLayout>
-    </LinearLayout>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <View
+            android:id="@+id/section_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/section_divider_height"
+            android:background="@color/section_divider"
+            android:layout_marginBottom="@dimen/section_divider_margin"
+            android:layout_marginTop="@dimen/section_divider_margin" />
+
+        <Button
+            android:id="@+id/okButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_pantry_item_complete" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_pantry_warning"/>
+        </LinearLayout>
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
