@@ -43,6 +43,7 @@
         </activity>
 
         <service android:name=".utils.SyncService" android:enabled="true" android:stopWithTask="true" />
+        <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

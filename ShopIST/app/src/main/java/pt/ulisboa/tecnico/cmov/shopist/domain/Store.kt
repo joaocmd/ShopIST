@@ -10,6 +10,7 @@ class Store(var name: String) : Locatable {
 
     override var location: LatLng? = null
     override var drivingTime: Long? = null
+    var queueTime: Long? = null
 
     constructor(title: String, location: LatLng): this(title) {
         this.location = location

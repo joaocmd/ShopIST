@@ -1,0 +1,33 @@
+newdevice Android1
+list devices
+newdevice ShopIST-001
+newdevice ShopIST-002
+newdevice ShopIST-003
+newdevice ShopIST-004
+list emus
+assignaddr e1
+binddevice Android1 e1
+wait
+move Android1 (ShopIST-001)
+commit
+wait 50
+move Android1 ()
+commit
+wait 1
+move Android1 (ShopIST-002)
+commit
+wait 60
+move Android1 ()
+commit
+wait 1
+move Android1 (ShopIST-003)
+commit
+wait 15
+move Android1 ()
+commit
+wait 1
+move Android1 (ShopIST-004)
+commit
+wait 20
+move Android1 ()
+commit

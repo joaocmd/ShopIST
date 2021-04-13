@@ -12,6 +12,9 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.BigBoyDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.BeaconEventDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.RequestEstimateDto
 import java.util.*
 
 
@@ -30,6 +33,8 @@ class API constructor(context: Context) {
                     INSTANCE = it
                 }
             }
+
+        const val TAG = "${ShopIST.TAG}.api"
     }
 
     fun getUpdateDto(received: String): BigBoyDto {
@@ -50,16 +55,9 @@ class API constructor(context: Context) {
                 val receivedDto = Gson().fromJson(response, BigBoyDto::class.java)
 
                 onSuccessListener(receivedDto)
-                // Log.d(ShopIST.TAG, receivedDto.toString())
             },
             {
                 onErrorListener(it)
-                // when (it.networkResponse.statusCode) {
-                //     404 -> {
-                //         Log.d(ShopIST.TAG, "Pantry not found")
-                //     }
-                // }
-                // Log.d(ShopIST.TAG, it.toString())
             })
 
         // Add the request to the RequestQueue.
@@ -81,16 +79,9 @@ class API constructor(context: Context) {
             Method.POST, url,
             { response ->
                 onSuccessListener(response)
-                Log.d(ShopIST.TAG, response)
             },
             {
                 onErrorListener(it)
-                // when (it.networkResponse.statusCode) {
-                //     400 -> {
-                //         Log.d(ShopIST.TAG, "Error sending pantry")
-                //     }
-                // }
-                Log.d(ShopIST.TAG, it.toString())
             }) {
                 override fun getBody(): ByteArray {
                     super.getBody()
@@ -131,15 +122,118 @@ class API constructor(context: Context) {
             },
             {
                 onErrorListener(it)
-                // when (it.networkResponse.statusCode) {
-                //     404 -> {
-                //         Log.d(ShopIST.TAG, "Pantry not found")
-                //     }
-                // }
-                // Log.d(ShopIST.TAG, it.toString())
             })
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest)
+    }
+
+    fun beaconEnter(
+        beaconName: String,
+        nItems: Int,
+        token: UUID,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/beacons/enter/$beaconName"
+
+        val sentDto = BeaconEventDto(token.toString(), nItems)
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                onSuccessListener(response)
+                Log.d(TAG, response)
+            },
+            {
+                onErrorListener(it)
+                Log.d(TAG, it.toString())
+            }) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    fun beaconLeave(
+        beaconName: String,
+        token: UUID,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/beacons/leave/$beaconName"
+
+        val sentDto = BeaconEventDto(token.toString(), null)
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                onSuccessListener(response)
+                Log.d(TAG, response)
+            },
+            {
+                onErrorListener(it)
+                Log.d(TAG, it.toString())
+            }) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
+    }
+
+    fun beaconEstimates(
+        stores: List<Store>,
+        onSuccessListener: (response: Map<String, Double>) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/beacons/estimates"
+
+        val storesMap = stores.filter { it.location != null }.map { it.uuid.toString() to it.location!! }.toMap()
+        val sentDto = RequestEstimateDto(storesMap)
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                val result = Gson().fromJson(response, Map::class.java) as Map<String, Double>
+                onSuccessListener(result)
+            },
+            {
+                onErrorListener(it)
+                Log.d(TAG, it.toString())
+            }) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+
     }
 }

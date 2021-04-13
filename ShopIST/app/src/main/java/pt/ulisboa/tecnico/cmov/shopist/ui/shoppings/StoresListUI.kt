@@ -106,16 +106,14 @@ class StoresListUI : Fragment() {
 
                 if (store.drivingTime != null) {
                     drivingTimeText.text = DateUtils.formatElapsedTime(store.drivingTime!!)
-                }
-                else {
+                } else {
                     drivingTimeText.text = "---"
                 }
 
                 //use store.checkouttime
-                if ( store.drivingTime != null) {
-                    checkoutTime.text = DateUtils.formatElapsedTime(store.drivingTime!!)
-                }
-                else {
+                if ( store.queueTime != null) {
+                    checkoutTime.text = DateUtils.formatElapsedTime(store.queueTime!!)
+                } else {
                     checkoutTime.text = "---"
                 }
 
@@ -129,7 +127,7 @@ class StoresListUI : Fragment() {
                 Log.i("Error", startColor.toString())
                 Log.i("Error", endColor.toString())
 
-                val color = ColorUtils.blendARGB(startColor!!, endColor, percentage)
+                val color = ColorUtils.blendARGB(startColor, endColor, percentage)
 
                 itemPercentage.setTextColor(
                     color

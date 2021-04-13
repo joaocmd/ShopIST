@@ -8,6 +8,7 @@ import android.util.Log
 import com.neovisionaries.ws.client.*
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -45,7 +46,7 @@ class SyncService : Service() {
                         shopIst.callbackDataSetChanged!!()
                     }
                 }, {
-                    // FIXME: wut
+                    // FIXME: handle gracefully
                 })
             }
         }
@@ -53,16 +54,12 @@ class SyncService : Service() {
         tLogic = Runnable {
             //Schedule a task to run every 5 seconds (or however long you want)
             scheduleTaskExecutor.scheduleAtFixedRate({
-                val shopIst = (applicationContext as ShopIST)
-                shopIst.pantries.forEach {
-                    val shopIST = applicationContext as ShopIST
-                    if (it.location != null && shopIST.currentLocation != null) {
+                shopIst.getAllLists().forEach {
+                    if (it.location != null && shopIst.currentLocation != null) {
                         API.getInstance(applicationContext).getRouteTime(
-                            // FIXME: put our current location here, add it to the if condition
-                            shopIST.currentLocation!!,
+                            shopIst.currentLocation!!,
                             it.location!!,
                             { time ->
-                                // TODO: implement callback for updating the PantriesListUI
                                 it.drivingTime = time
                                 if (shopIst.callbackDataSetChanged !== null) {
                                     shopIst.callbackDataSetChanged!!()
@@ -74,6 +71,19 @@ class SyncService : Service() {
                         )
                     }
                 }
+
+                API.getInstance(applicationContext).beaconEstimates(shopIst.stores.toList(), {
+                    it.forEach { s ->
+                        val store = shopIst.getStore(UUID.fromString(s.key))
+                        store.queueTime = (s.value / 1000).toLong() // comes in milliseconds
+
+                        if (shopIst.callbackDataSetChanged !== null) {
+                            shopIst.callbackDataSetChanged!!()
+                        }
+                    }
+                }, {
+                    // FIXME: handle gracefully
+                })
             }, 0, SYNC_INTERVAL, TimeUnit.SECONDS) // or .MINUTES, .HOURS etc.
         }
 
