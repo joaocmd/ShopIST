@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
@@ -61,13 +62,27 @@ class PantryUI : Fragment() {
     }
 
     override fun onResume() {
-        recyclerAdapter.notifyDataSetChanged()
         super.onResume()
         val globalData = (requireActivity().applicationContext as ShopIST)
+        pantryList = globalData.getPantryList(pantryList.uuid)
+        recyclerAdapter.notifyDataSetChanged()
         globalData.callbackDataSetChanged = {
             pantryList = globalData.getPantryList(pantryList.uuid)
             recyclerAdapter.pantryList = pantryList
             recyclerAdapter.notifyDataSetChanged()
+        }
+
+        if (pantryList.isShared) {
+            API.getInstance(requireContext()).getPantry(pantryList.uuid, { result ->
+                globalData.populateFromServer(result)
+                pantryList = globalData.getPantryList(pantryList.uuid)
+                if (globalData.callbackDataSetChanged !== null) {
+                    globalData.callbackDataSetChanged!!()
+                }
+            }, {
+                // FIXME: wut
+                Log.e(ShopIST.TAG, it.toString())
+            })
         }
     }
 
@@ -119,6 +134,7 @@ class PantryUI : Fragment() {
         API.getInstance(context).postNewPantry(pantryList, {
             pantryList.isShared = true
             globalData.addPantryList(pantryList)
+            globalData.savePersistent()
             // Share code to user
             val sendIntent = Intent().apply {
                 action = Intent.ACTION_SEND

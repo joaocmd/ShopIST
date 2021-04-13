@@ -32,6 +32,10 @@ class API constructor(context: Context) {
             }
     }
 
+    fun getUpdateDto(received: String): BigBoyDto {
+        return Gson().fromJson(received, BigBoyDto::class.java)
+    }
+
     fun getPantry(
         pantryId: UUID,
         onSuccessListener: (response: BigBoyDto) -> Unit,

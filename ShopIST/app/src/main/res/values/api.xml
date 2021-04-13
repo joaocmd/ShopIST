@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.29.63.193:3000</string>
+    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.18.13.116:3000</string>
+    <string name="ws_url" templateMergeStrategy="preserve" translatable="false">"ws://172.18.13.116:3000</string>
 </resources>

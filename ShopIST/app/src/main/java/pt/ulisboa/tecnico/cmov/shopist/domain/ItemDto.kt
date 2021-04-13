@@ -7,10 +7,15 @@ data class ItemDto(val productUUID: UUID,
                    val needingQuantity: Int,
                    val cartQuantity: Int) {
 
-    constructor(item: Item): this(
+    // 1 -> Add, -1 -> Remove
+    var opType: Int = 1
+
+    constructor(item: Item, opType: Int): this(
         item.product.uuid,
         item.pantryQuantity,
         item.needingQuantity,
-        item.cartQuantity
-    )
+        item.cartQuantity,
+    ) {
+        this.opType = opType
+    }
 }

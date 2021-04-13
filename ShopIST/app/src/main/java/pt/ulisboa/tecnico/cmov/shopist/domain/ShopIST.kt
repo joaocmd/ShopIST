@@ -65,12 +65,25 @@ class ShopIST : Application() {
     fun populateFromServer(dto: BigBoyDto) {
         // Set stores
         dto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
+        // dto.stores.forEach { s ->
+        //     run {
+        //         val s1 = allStores[s.uuid]
+        //         allStores[s.uuid] = Store.updateStore(s1, s)
+        //     }
+        // }
 
         // Set products
         dto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allStores)}
+        // dto.products.forEach { p ->
+        //     run {
+        //         val p1 = allProducts[p.uuid]
+        //         allProducts[p.uuid] = Product.updateProduct(p1, p, allStores)
+        // }}
 
         // Set pantry
         allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
+        // val pantry = allPantries[dto.pantry.uuid]
+        // allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
 
         savePersistent()
     }
@@ -221,7 +234,7 @@ class ShopIST : Application() {
             }
             // Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show()
         } catch (e: FileNotFoundException) {
-            Log.e(TAG, "File not found", e)
+            Log.e(TAG, "File not found")
             result = false
         } finally {
             if (fis != null) {

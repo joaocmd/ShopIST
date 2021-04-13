@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "pt.ulisboa.tecnico.cmov.shopist"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -65,4 +65,5 @@ dependencies {
     implementation 'com.google.mlkit:barcode-scanning:16.1.1'
 
     implementation project(':Termite-WifiP2P-API')
+    implementation 'com.neovisionaries:nv-websocket-client:2.14'
 }

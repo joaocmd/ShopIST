@@ -19,4 +19,17 @@ class Item(val product: Product,
         i.needingQuantity,
         i.cartQuantity
     )
+
+    companion object {
+        fun updateItem(i: Item?, itemDto: ItemDto, products: Map<UUID, Product>,
+                       pantryList: PantryList): Item {
+            if (i == null) {
+                return Item(itemDto, products, pantryList)
+            }
+            i.pantryQuantity = itemDto.pantryQuantity
+            i.cartQuantity = itemDto.cartQuantity
+            i.needingQuantity = itemDto.pantryQuantity
+            return i
+        }
+    }
 }

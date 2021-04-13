@@ -3,7 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import java.util.*
 
 class Product(name: String) {
-    // TODO: Save image, etc.
+    // TODO: Save image
     var uuid: UUID = UUID.randomUUID()
     var name: String = name
     var barcode: String? = null
@@ -17,6 +17,16 @@ class Product(name: String) {
             product.stores = p.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             product.barcode = p.barcode
             return product
+        }
+
+        fun updateProduct(p1: Product?, update: ProductDto, stores: MutableMap<UUID, Store>): Product {
+            if (p1 === null) {
+                return createProduct(update, stores)
+            }
+            p1.name = update.name
+            p1.barcode = update.barcode
+            p1.stores = update.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
+            return p1
         }
     }
 }

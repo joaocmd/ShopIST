@@ -89,6 +89,8 @@ class ShoppingListUI : Fragment() {
     override fun onResume() {
         recyclerAdapter.notifyDataSetChanged();
         super.onResume()
+
+        // TODO: Should we update all shopping lists?
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

@@ -22,6 +22,15 @@ class Store(var name: String) : Locatable {
             store.uuid = s.uuid
             return store
         }
+
+        fun updateStore(s1: Store?, update: StoreDto): Store {
+            if (s1 == null) {
+                return createStore(update)
+            }
+            s1.name = update.name
+            s1.location = update.location
+            return s1
+        }
     }
 
     fun itemPercentage(allPantries: Collection<PantryList>): Float {
