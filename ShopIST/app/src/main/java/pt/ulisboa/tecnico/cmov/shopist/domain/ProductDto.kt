@@ -6,9 +6,11 @@ data class ProductDto(val uuid: UUID, val name: String) {
     var barcode: String? = null
     var image: String? = null
     var stores: MutableSet<UUID> = mutableSetOf()
+    var isShared = false
 
     constructor(p: Product) : this(p.uuid, p.name) {
         stores = p.stores.map { s -> s.uuid }.toMutableSet()
         barcode = p.barcode
+        isShared = p.isShared
     }
 }

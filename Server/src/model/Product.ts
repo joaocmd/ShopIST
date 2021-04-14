@@ -1,11 +1,11 @@
 import Store from "./Store"
 
 export default class {
-	uuid: string
-	name: string
-	stores: string[]
-	barcode: string
-	images: any[]
+    uuid: string
+    name: string
+    stores: string[]
+    barcode: string
+    images: any[]
 
     constructor(uuid: string, name: string, stores: string[]) {
         this.uuid = uuid
@@ -38,9 +38,10 @@ export default class {
         return {
             uuid: this.uuid,
             name: this.name,
-			stores: this.stores,
+            stores: this.stores,
             barcode: this.barcode,
-            images: this.images
+            images: this.images,
+            isShared: true
         }
     }
 }

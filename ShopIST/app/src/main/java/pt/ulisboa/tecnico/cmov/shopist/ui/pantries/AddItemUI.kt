@@ -17,6 +17,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 
@@ -121,6 +122,11 @@ class AddItemUI : Fragment() {
         // Check if product is already in pantry
         if (!pantryList.hasProduct(selectedProduct!!)) {
             pantryList.addItem(Item(selectedProduct!!, pantryList, pantryQuantity, 0, 0))
+
+            if (pantryList.isShared) {
+                selectedProduct!!.isShared = true
+                API.getInstance(requireContext()).updatePantry(pantryList)
+            }
         } else {
             // FIXME: disable this
             Toast.makeText(context, "The item is already in your pantry list", Toast.LENGTH_LONG).show()

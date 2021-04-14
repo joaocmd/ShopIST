@@ -13,19 +13,19 @@ commit
 wait 50
 move Android1 ()
 commit
-wait 1
+wait
 move Android1 (ShopIST-002)
 commit
 wait 60
 move Android1 ()
 commit
-wait 1
+wait
 move Android1 (ShopIST-003)
 commit
 wait 15
 move Android1 ()
 commit
-wait 1
+wait
 move Android1 (ShopIST-004)
 commit
 wait 20

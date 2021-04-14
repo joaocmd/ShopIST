@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -16,6 +17,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 class CreateProductUI: Fragment() {
@@ -99,6 +101,17 @@ class CreateProductUI: Fragment() {
         } else {
             product!!.name = title
             product!!.stores = selectedStores
+
+            if (product!!.isShared) {
+                selectedStores.forEach {
+                    it.isShared = true
+                }
+                API.getInstance(requireContext()).postProduct(product!!, {
+                    Log.d(ShopIST.TAG, "Product sent for update")
+                }, {
+                    Log.d(ShopIST.TAG, "Could not send product")
+                })
+            }
         }
 
         // Save data in file

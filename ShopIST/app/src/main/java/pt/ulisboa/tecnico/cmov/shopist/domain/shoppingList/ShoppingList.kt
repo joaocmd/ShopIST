@@ -34,4 +34,8 @@ class ShoppingList() {
     fun saveChanges() {
         items.forEach { it.save() }
     }
+
+    fun getPantries(): List<PantryList> {
+        return items.map { it.items.map { i -> i.pantryList } }.flatten().toSet().toList()
+    }
 }

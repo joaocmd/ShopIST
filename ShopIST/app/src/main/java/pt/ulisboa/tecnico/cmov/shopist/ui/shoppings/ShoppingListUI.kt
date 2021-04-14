@@ -19,6 +19,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 /**
@@ -125,6 +126,12 @@ class ShoppingListUI : Fragment() {
 
     private fun saveAndReturn() {
         shoppingList.saveChanges()
+        val pantriesToUpdate = shoppingList.getPantries().filter { p -> p.isShared }
+
+        pantriesToUpdate.forEach {
+            API.getInstance(requireContext()).updatePantry(it)
+        }
+
         (requireActivity().applicationContext as ShopIST).savePersistent()
         cancel()
     }

@@ -9,6 +9,7 @@ class Product(name: String) {
     var barcode: String? = null
     var image: String? = null
     var stores: MutableSet<Store> = mutableSetOf()
+    var isShared = false
 
     companion object {
         fun createProduct(p: ProductDto, stores: MutableMap<UUID, Store>): Product {
@@ -16,6 +17,7 @@ class Product(name: String) {
             product.uuid = p.uuid
             product.stores = p.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             product.barcode = p.barcode
+            product.isShared = p.isShared
             return product
         }
 
@@ -26,6 +28,7 @@ class Product(name: String) {
             p1.name = update.name
             p1.barcode = update.barcode
             p1.stores = update.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
+            p1.isShared = update.isShared
             return p1
         }
     }

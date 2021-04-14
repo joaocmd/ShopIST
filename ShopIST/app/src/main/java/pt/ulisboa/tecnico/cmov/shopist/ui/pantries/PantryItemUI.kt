@@ -1,6 +1,7 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.TextView
@@ -11,11 +12,14 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
+import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 class PantryItemUI : Fragment() {
 
+    private lateinit var pantryList: PantryList
     private lateinit var item: Item
 
     private var pantry = 0
@@ -39,7 +43,7 @@ class PantryItemUI : Fragment() {
             val productId = UUID.fromString(it.getString(ARG_PRODUCT_ID))
             val globalData = requireActivity().applicationContext as ShopIST
 
-            val pantryList = globalData.getPantryList(pantryId)
+            pantryList = globalData.getPantryList(pantryId)
             item = pantryList.getItem(productId)
         }
         setHasOptionsMenu(true)
@@ -134,6 +138,11 @@ class PantryItemUI : Fragment() {
         item.pantryQuantity = pantry
         item.needingQuantity = needing
         item.cartQuantity = cart
+
+        if (pantryList.isShared) {
+            API.getInstance(requireContext()).updatePantry(pantryList)
+        }
+
         (requireActivity().applicationContext as ShopIST).savePersistent()
         cancel()
     }

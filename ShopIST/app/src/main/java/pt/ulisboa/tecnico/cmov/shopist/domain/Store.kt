@@ -11,6 +11,7 @@ class Store(var name: String) : Locatable {
     override var location: LatLng? = null
     override var drivingTime: Long? = null
     var queueTime: Long? = null
+    var isShared = false
 
     constructor(title: String, location: LatLng): this(title) {
         this.location = location
@@ -21,6 +22,7 @@ class Store(var name: String) : Locatable {
             val store = Store(s.name)
             store.location = s.location
             store.uuid = s.uuid
+            store.isShared = s.isShared
             return store
         }
 
@@ -30,6 +32,7 @@ class Store(var name: String) : Locatable {
             }
             s1.name = update.name
             s1.location = update.location
+            s1.isShared = update.isShared
             return s1
         }
     }

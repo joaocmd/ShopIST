@@ -9,10 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import pt.ulisboa.tecnico.cmov.shopist.R
-import pt.ulisboa.tecnico.cmov.shopist.domain.BigBoyDto
-import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
-import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.domain.*
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.BeaconEventDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.RequestEstimateDto
 import java.util.*
@@ -41,6 +38,70 @@ class API constructor(context: Context) {
         return Gson().fromJson(received, BigBoyDto::class.java)
     }
 
+    fun postProduct(product: Product,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/products/${product.uuid}"
+
+        // Prepare the dto
+        val sentDto = ProductDto(product)
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                onSuccessListener(response)
+            },
+            {
+                onErrorListener(it)
+            }) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+    }
+
+    fun postStore(store: Store,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/stores/${store.uuid}"
+
+        // Prepare the dto
+        val sentDto = StoreDto(store)
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                onSuccessListener(response)
+            },
+            {
+                onErrorListener(it)
+            }) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest)
+    }
+
     fun getPantry(
         pantryId: UUID,
         onSuccessListener: (response: BigBoyDto) -> Unit,
@@ -62,6 +123,17 @@ class API constructor(context: Context) {
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest)
+    }
+
+    fun updatePantry(pantry: PantryList) {
+        if (!pantry.isShared) {
+            return
+        }
+        postNewPantry(pantry, {
+            Log.d(ShopIST.TAG, "Pantry sent for update")
+        }, {
+            Log.d(ShopIST.TAG, "Could not send pantry")
+        })
     }
 
     fun postNewPantry(

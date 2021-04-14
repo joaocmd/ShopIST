@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 class CreatePantryUI : Fragment() {
@@ -105,6 +106,11 @@ class CreatePantryUI : Fragment() {
         } else {
             editPantry!!.name = title
             editPantry!!.location = coords
+
+
+            if (editPantry!!.isShared) {
+                API.getInstance(requireContext()).updatePantry(editPantry!!)
+            }
         }
 
         // Save data in file

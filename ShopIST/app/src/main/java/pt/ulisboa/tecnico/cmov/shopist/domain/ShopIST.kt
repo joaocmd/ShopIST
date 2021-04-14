@@ -174,6 +174,8 @@ class ShopIST : Application() {
             pantry1.location = LatLng(38.73783576632948, -9.137839190661907)
             pantry1.addItem(Item(product1, pantry1, 10, 0, 0))
             pantry1.addItem(Item(product2, pantry1, 2, 0, 0))
+            pantry1.isShared = true
+            API.getInstance(applicationContext).updatePantry(pantry1)
             addPantryList(pantry1)
 
             val pantry2 = PantryList("Joca's Pantry")

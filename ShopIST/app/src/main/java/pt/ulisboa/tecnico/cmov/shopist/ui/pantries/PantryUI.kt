@@ -80,7 +80,7 @@ class PantryUI : Fragment() {
                     globalData.callbackDataSetChanged!!()
                 }
             }, {
-                // FIXME: wut
+                // FIXME: Handle gracefully
                 Log.e(ShopIST.TAG, it.toString())
             })
         }
@@ -132,7 +132,7 @@ class PantryUI : Fragment() {
         val globalData = context as ShopIST
 
         API.getInstance(context).postNewPantry(pantryList, {
-            pantryList.isShared = true
+            pantryList.share()
             globalData.addPantryList(pantryList)
             globalData.savePersistent()
             // Share code to user

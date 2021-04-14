@@ -18,6 +18,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 /**
@@ -107,6 +108,14 @@ class CreateShoppingListUI : Fragment() {
             editStore!!.location = coords
             if (isDefaultStore) {
                 globalData.setDefaultStore(editStore!!)
+            }
+
+            if (editStore!!.isShared) {
+                API.getInstance(requireContext()).postStore(editStore!!, {
+                    Log.d(ShopIST.TAG, "Store sent for update")
+                }, {
+                    Log.d(ShopIST.TAG, "Could not send store")
+                })
             }
         }
         globalData.savePersistent()
