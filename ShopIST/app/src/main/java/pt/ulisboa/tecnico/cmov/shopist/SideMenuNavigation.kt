@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentFilter
@@ -21,9 +20,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast
@@ -189,27 +185,10 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
          * cases when a location is not available.
          */
         try {
-            locationUtils.getLocationPolling(
-                250, 0, LocationRequest.PRIORITY_HIGH_ACCURACY,
-                object : LocationCallback() {
-                    override fun onLocationResult(result: LocationResult?) {
-                        result ?: return
-                        for (location in result.locations) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location !== null) {
-                                Log.d(ShopIST.TAG, "Selected location - ${location.toLatLng()}")
-                                (applicationContext as ShopIST).currentLocation =
-                                    location.toLatLng()
-                                openCorrespondingList(location.toLatLng())
-                                locationUtils.fusedLocationClient.removeLocationUpdates(this)
-                                return
-                            } else {
-                                Log.d(ShopIST.TAG, "Null location")
-                            }
-                        }
-                    }
-                }
-            )
+            locationUtils.getNewLocation { location ->
+                (applicationContext as ShopIST).currentLocation = location!!.toLatLng()
+                openCorrespondingList(location.toLatLng())
+            }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)
         }

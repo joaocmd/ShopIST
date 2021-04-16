@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -25,7 +26,33 @@ class ShopIST : Application() {
         const val OPEN_AUTO_MAX_DISTANCE = 50
     }
 
-    var currentLocation: LatLng? = null
+    private var _currentLocation: LatLng? = null
+    var currentLocation: LatLng?
+        get() {
+            return _currentLocation
+        }
+        set(value) {
+            _currentLocation = value
+            updateDrivingTimes()
+        }
+
+    fun updateDrivingTimes() {
+        _currentLocation ?: return
+        getAllLists().forEach {
+            if (it.location != null) {
+                API.getInstance(applicationContext).getRouteTime(
+                    currentLocation!!,
+                    it.location!!,
+                    { time -> it.drivingTime = time },
+                    {
+                        // FIXME: handle gracefully
+                    }
+                )
+            }
+        }
+        callbackDataSetChanged?.invoke()
+    }
+
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
     private var allStores: MutableMap<UUID, Store> = mutableMapOf()

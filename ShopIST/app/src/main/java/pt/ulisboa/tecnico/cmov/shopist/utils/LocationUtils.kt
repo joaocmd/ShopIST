@@ -13,6 +13,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.CancellationTokenSource
 
 fun Location.toLatLng(): LatLng {
     return LatLng(this.latitude, this.longitude)
@@ -32,6 +33,16 @@ class LocationUtils(val activity: Activity) {
         if (hasPermissions()) {
             fusedLocationClient.lastLocation.addOnSuccessListener(successListener)
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun getNewLocation(successListener: (Location?) -> Unit) {
+        if (!hasPermissions())  {
+            return
+        }
+
+        val cts = CancellationTokenSource().token
+        fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, cts).addOnSuccessListener(successListener)
     }
 
     @SuppressLint("MissingPermission")
