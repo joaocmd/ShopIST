@@ -86,12 +86,6 @@ class PantryUI : Fragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        val globalData = (requireActivity().applicationContext as ShopIST)
-        globalData.callbackDataSetChanged = null
-    }
-
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         val items = mutableListOf(TopBarItems.Share, TopBarItems.Edit)

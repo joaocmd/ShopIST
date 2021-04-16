@@ -26,6 +26,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
 /**
@@ -75,11 +76,45 @@ class StoresListUI : Fragment() {
         )
     }
 
-
     private fun updateData() {
         val globalData = activity?.applicationContext as ShopIST
         recyclerAdapter.list = globalData.stores
         recyclerAdapter.notifyDataSetChanged()
+
+        globalData.callbackDataSetChanged = {
+            recyclerAdapter.list = globalData.stores
+            recyclerAdapter.notifyDataSetChanged()
+        }
+
+        globalData.stores.forEach {
+            if (it.location != null && globalData.currentLocation != null) {
+                API.getInstance(requireContext()).getRouteTime(
+                    globalData.currentLocation!!,
+                    it.location!!,
+                    { time ->
+                        it.drivingTime = time
+                        if (globalData.callbackDataSetChanged !== null) {
+                            globalData.callbackDataSetChanged!!()
+                        }
+                    },
+                    {
+                        // FIXME: handle gracefully
+                    }
+                )
+            }
+        }
+
+        API.getInstance(requireContext()).beaconEstimates(globalData.stores.toList(), {
+            it.forEach { s ->
+                val store = globalData.getStore(UUID.fromString(s.key))
+                store.queueTime = (s.value / 1000).toLong() // comes in milliseconds
+            }
+            if (globalData.callbackDataSetChanged !== null) {
+                globalData.callbackDataSetChanged!!()
+            }
+        }, {
+            // FIXME: handle gracefully
+        })
     }
 
     private fun onNewShoppingList() {

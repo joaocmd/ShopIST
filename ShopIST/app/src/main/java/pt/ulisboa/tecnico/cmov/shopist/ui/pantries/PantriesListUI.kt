@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
 /**
  * A simple [Fragment] subclass.
@@ -60,8 +61,8 @@ class PantriesListUI : Fragment() {
     }
 
     override fun onResume() {
-        updateData()
         super.onResume()
+        updateData()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -71,9 +72,33 @@ class PantriesListUI : Fragment() {
     }
 
     private fun updateData() {
-        val globalData = activity?.applicationContext as ShopIST
+        val globalData = requireContext().applicationContext as ShopIST
         recyclerAdapter.list = globalData.pantries.toList()
         recyclerAdapter.notifyDataSetChanged()
+
+        globalData.callbackDataSetChanged = {
+            recyclerAdapter.list = globalData.pantries.toList()
+            recyclerAdapter.notifyDataSetChanged()
+        }
+
+        globalData.pantries.forEach {
+            if (it.location != null && globalData.currentLocation != null) {
+                API.getInstance(requireContext()).getRouteTime(
+                    globalData.currentLocation!!,
+                    it.location!!,
+                    { time ->
+                        it.drivingTime = time
+                        val shopIST = requireContext().applicationContext as ShopIST
+                        if (shopIST.callbackDataSetChanged !== null) {
+                            shopIST.callbackDataSetChanged!!()
+                        }
+                    },
+                    {
+                        // FIXME: handle gracefully
+                    }
+                )
+            }
+        }
     }
 
     private fun onNewPantry() {
