@@ -104,7 +104,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
                     this, cameraSelector, preview, imageCapture, imageAnalyzer)
 
             } catch(exc: Exception) {
-                Log.e(ShopIST.TAG, "Use case binding failed", exc)
+                Log.e(TAG, "Use case binding failed", exc)
             }
 
         }, ContextCompat.getMainExecutor(this))
@@ -121,7 +121,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
         }
 
         previousNumber++
-        Log.d(ShopIST.TAG, "Code $code with $previousNumber tries")
+        Log.d(TAG, "Code $code with $previousNumber tries")
 
         if (hasCode && (previousNumber ) >= MIN_TRIES) {
             // Return this to activity who started this one
@@ -190,7 +190,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
                     }
                 }
                 .addOnFailureListener {
-                    Log.e(ShopIST.TAG, "Can't use barcode scanner: $it")
+                    Log.e(TAG, "Can't use barcode scanner: $it")
                 }
                 .addOnCompleteListener {
                     image.close()

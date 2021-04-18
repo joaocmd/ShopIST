@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.RadioGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import pt.ulisboa.tecnico.cmov.shopist.R
@@ -97,8 +96,11 @@ class AddItemUI : Fragment() {
 
     private fun onAddItem() {
         if (selectedProduct === null) {
-            // FIXME: Stringify this text
-            Toast.makeText(context, "First select a product.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                getString(R.string.product_needed),
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
@@ -106,13 +108,17 @@ class AddItemUI : Fragment() {
         val pantryQuantityText = pantryQuantityView.text.toString()
         try {
             if (pantryQuantityText.isEmpty() || pantryQuantityText.toInt() < 0) {
-                // FIXME: Stringify this text
-                Toast.makeText(context, "Select a quantity equal or above 0.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    getString(R.string.quantity_equal_or_above_zero),
+                    Toast.LENGTH_SHORT
+                ).show()
                 return
             }
         } catch (e: NumberFormatException) {
-            // FIXME: Stringify this text
-            Toast.makeText(context, "Select a quantity equal or above 0.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                getString(R.string.quantity_equal_or_above_zero),
+                Toast.LENGTH_SHORT
+            ).show()
             Log.d(ShopIST.TAG, "Invalid number inserted: \'$pantryQuantityText\'")
             return
         }
@@ -129,7 +135,10 @@ class AddItemUI : Fragment() {
             }
         } else {
             // FIXME: disable this
-            Toast.makeText(context, "The item is already in your pantry list", Toast.LENGTH_LONG).show()
+            Toast.makeText(context,
+                getString(R.string.product_already_in_pantry),
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         // Save data in file

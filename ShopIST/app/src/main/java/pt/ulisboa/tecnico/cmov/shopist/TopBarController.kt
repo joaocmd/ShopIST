@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity
 class TopBarController {
     companion object {
         fun optionsMenu(menu: Menu, app: FragmentActivity, title: String, topBarItems: List<TopBarItems>) {
+            menu.findItem(R.id.action_scan_barcode).isVisible = topBarItems.contains(TopBarItems.ScanBarcode)
             menu.findItem(R.id.action_see_more).isVisible = topBarItems.contains(TopBarItems.SeeMore)
             menu.findItem(R.id.action_delete).isVisible = topBarItems.contains(TopBarItems.Delete)
             menu.findItem(R.id.action_edit).isVisible = topBarItems.contains(TopBarItems.Edit)
@@ -30,6 +31,7 @@ class TopBarController {
         }
 
         private fun setOptionsMenu(menu: Menu, value: Boolean) {
+            menu.findItem(R.id.action_scan_barcode).isVisible = value
             menu.findItem(R.id.action_see_more).isVisible = value
             menu.findItem(R.id.action_delete).isVisible = value
             menu.findItem(R.id.action_edit).isVisible = value
@@ -40,6 +42,7 @@ class TopBarController {
 }
 
 enum class TopBarItems {
+    ScanBarcode,
     SeeMore,
     Delete,
     Edit,

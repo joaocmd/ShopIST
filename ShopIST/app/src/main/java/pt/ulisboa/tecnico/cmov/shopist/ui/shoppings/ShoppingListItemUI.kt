@@ -74,8 +74,10 @@ class ShoppingListItemUI : Fragment() {
                 shoppingListItem.product.barcode = barcode
                 val globalData = activity?.applicationContext as ShopIST
                 globalData.savePersistent()
-                // FIXME: Stringify this text
-                Toast.makeText(context, "Barcode read: $barcode.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, String.format(
+                    getString(R.string.barcode_read),
+                    barcode
+                ), Toast.LENGTH_SHORT).show()
             }
         } else if (requestCode == PantriesListUI.GET_BARCODE_PRODUCT && resultCode == AppCompatActivity.RESULT_CANCELED) {
             Log.d(ShopIST.TAG, "Couldn't find barcode")

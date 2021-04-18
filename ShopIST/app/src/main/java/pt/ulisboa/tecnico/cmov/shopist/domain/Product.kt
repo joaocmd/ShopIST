@@ -3,11 +3,11 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import java.util.*
 
 class Product(name: String) {
-    // TODO: Save image
     var uuid: UUID = UUID.randomUUID()
     var name: String = name
     var barcode: String? = null
-    var image: String? = null
+    // TODO: Construct images from dto
+    var images: MutableList<String> = mutableListOf()
     var stores: MutableSet<Store> = mutableSetOf()
     var isShared = false
 
@@ -18,6 +18,7 @@ class Product(name: String) {
             product.stores = p.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             product.barcode = p.barcode
             product.isShared = p.isShared
+            product.images = p.images
             return product
         }
 
@@ -29,7 +30,16 @@ class Product(name: String) {
             p1.barcode = update.barcode
             p1.stores = update.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             p1.isShared = update.isShared
+            p1.images = update.images
             return p1
         }
+    }
+
+    fun addImage(name: String) {
+        images.add(name)
+    }
+
+    fun getLastImageIndex(): Int {
+        return images.size - 1
     }
 }

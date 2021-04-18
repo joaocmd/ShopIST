@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.pantries.CreateProductUI"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/productImage"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:srcCompat="@drawable/ic_image_add"
+                tools:src="@tools:sample/avatars" />
+
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_image_add" />
+
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:ems="10"
+                android:hint="@string/create_product_item_name"
+                android:layout_marginBottom="20dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/section_divider"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/section_divider_height"
+                android:background="@color/section_divider"
+                android:layout_marginBottom="@dimen/section_divider_margin"
+                android:layout_marginTop="@dimen/section_divider_margin" />
+
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_product_item_complete" />
+        </LinearLayout>
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

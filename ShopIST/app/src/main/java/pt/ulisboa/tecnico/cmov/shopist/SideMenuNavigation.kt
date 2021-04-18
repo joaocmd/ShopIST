@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentFilter
@@ -147,10 +146,8 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
                         )
                     )
                 }, {
-                    // TODO: Resource this string
-                    Toast.makeText(
-                        applicationContext,
-                        "Cannot get pantry list.",
+                    Toast.makeText(applicationContext,
+                        getString(R.string.cannot_get_pantry),
                         Toast.LENGTH_SHORT
                     ).show()
                 })
@@ -262,7 +259,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
      * Termite listeners
      */
     override fun onPeersAvailable(peers: SimWifiP2pDeviceList) {
-        // TODO: Ask teacher if there is a possibility of moving from a beacon to another, like ShopIST-001 and then ShopIST-002, without going without any beacon
         peers.deviceList.find { it.deviceName.startsWith("ShopIST-") }.let {
             if (it != null) {
                 // enter beacon range

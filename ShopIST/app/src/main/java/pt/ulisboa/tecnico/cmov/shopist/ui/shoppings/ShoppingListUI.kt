@@ -57,8 +57,6 @@ class ShoppingListUI : Fragment() {
         val root = inflater.inflate(R.layout.fragment_store_shopping_list, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)
 
-        // TODO: Change title bar to have store name
-
         recyclerAdapter = ShoppingListAdapter(shoppingList)
 
         listView.layoutManager = LinearLayoutManager(context)
@@ -90,8 +88,6 @@ class ShoppingListUI : Fragment() {
     override fun onResume() {
         recyclerAdapter.notifyDataSetChanged();
         super.onResume()
-
-        // TODO: Should we update all shopping lists?
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

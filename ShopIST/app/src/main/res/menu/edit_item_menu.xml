@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_scan_barcode"
+        android:icon="@drawable/ic_baseline_barcode"
+        app:showAsAction="ifRoom"
+        android:title="@string/product_add_barcode"
+        />
+
+    <item
         android:id="@+id/action_get_directions"
         android:icon="@drawable/ic_baseline_directions_24"
         app:showAsAction="ifRoom"

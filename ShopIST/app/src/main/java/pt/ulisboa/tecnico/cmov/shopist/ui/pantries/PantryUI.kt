@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -160,11 +161,6 @@ class PantryUI : Fragment() {
     inner class PantryAdapter(var pantryList: PantryList) :
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
-
-        /**
-         * Provide a reference to the type of views that you are using
-         * (custom ViewHolder).
-         */
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
@@ -177,7 +173,19 @@ class PantryUI : Fragment() {
                 needingQuantityView.text = item.needingQuantity.toString()
                 cartQuantityView.text = item.cartQuantity.toString()
 
-                view.setOnClickListener {
+                val productView: LinearLayout = view.findViewById(R.id.firstLayout)
+                val quantityView: LinearLayout = view.findViewById(R.id.thirdLayout)
+
+                productView.setOnClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_pantry_to_nav_view_product,
+                        bundleOf(
+                            PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                        )
+                    )
+                }
+
+                quantityView.setOnClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_pantry_to_pantryItem,
                         bundleOf(

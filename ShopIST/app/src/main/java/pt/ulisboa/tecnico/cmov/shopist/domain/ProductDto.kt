@@ -4,7 +4,7 @@ import java.util.*
 
 data class ProductDto(val uuid: UUID, val name: String) {
     var barcode: String? = null
-    var image: String? = null
+    var images: MutableList<String> = mutableListOf()
     var stores: MutableSet<UUID> = mutableSetOf()
     var isShared = false
 
@@ -12,5 +12,6 @@ data class ProductDto(val uuid: UUID, val name: String) {
         stores = p.stores.map { s -> s.uuid }.toMutableSet()
         barcode = p.barcode
         isShared = p.isShared
+        images = p.images
     }
 }

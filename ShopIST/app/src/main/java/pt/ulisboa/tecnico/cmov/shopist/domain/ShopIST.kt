@@ -23,6 +23,7 @@ class ShopIST : Application() {
         const val TAG = "shopist.domain.ShopIST"
         const val FILENAME_DATA = "data.json"
         const val OPEN_AUTO_MAX_DISTANCE = 50
+        const val IMAGE_EXTENSION = ".jpg"
     }
 
     var currentLocation: LatLng? = null
