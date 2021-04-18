@@ -45,9 +45,9 @@ class ProductUI : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val globalData = requireActivity().applicationContext as ShopIST
         arguments?.let {
             val productId = UUID.fromString(it.getString(ARG_PRODUCT_ID))
-            val globalData = requireActivity().applicationContext as ShopIST
 
             globalData.getProduct(productId)?.let { p ->
                 product = p
@@ -55,11 +55,7 @@ class ProductUI : Fragment() {
         }
         setHasOptionsMenu(true)
 
-        val cw = ContextWrapper(requireContext().applicationContext)
-        folder = cw.getDir("photos", Context.MODE_PRIVATE)
-        if (!folder.exists()) {
-            folder.mkdir()
-        }
+        folder = globalData.getImageFolder()
     }
 
     override fun onCreateView(

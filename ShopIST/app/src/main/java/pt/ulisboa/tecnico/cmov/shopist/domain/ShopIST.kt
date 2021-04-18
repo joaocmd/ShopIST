@@ -1,17 +1,17 @@
 package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import android.app.Application
+import android.content.Context
+import android.content.ContextWrapper
 import android.location.Location
 import android.util.Log
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 import java.util.*
 
 class ShopIST : Application() {
@@ -24,6 +24,7 @@ class ShopIST : Application() {
         const val FILENAME_DATA = "data.json"
         const val OPEN_AUTO_MAX_DISTANCE = 50
         const val IMAGE_EXTENSION = ".jpg"
+        const val IMAGE_FOLDER = "photos"
     }
 
     var currentLocation: LatLng? = null
@@ -130,6 +131,15 @@ class ShopIST : Application() {
             res.add(it.value)
         }
         return res
+    }
+
+    fun getImageFolder(): File {
+        val cw = ContextWrapper(applicationContext)
+        val folder = cw.getDir(IMAGE_FOLDER, Context.MODE_PRIVATE)
+        if (!folder.exists()) {
+            folder.mkdir()
+        }
+        return folder
     }
 
     //--------------

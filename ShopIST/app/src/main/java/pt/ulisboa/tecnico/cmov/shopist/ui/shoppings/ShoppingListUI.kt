@@ -1,9 +1,12 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.core.os.bundleOf
@@ -19,7 +22,9 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import java.io.File
 import java.util.*
 
 /**
@@ -154,10 +159,35 @@ class ShoppingListUI : Fragment() {
                 needingQuantityView.text = quantities.needing.toString()
                 cartQuantityView.text = quantities.cart.toString()
 
-                view.setOnClickListener {
+                val productView: LinearLayout = view.findViewById(R.id.firstLayout)
+                val quantityView: LinearLayout = view.findViewById(R.id.thirdLayout)
+
+                productView.setOnClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_store_shopping_list_to_nav_view_product,
+                        bundleOf(
+                            PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                        )
+                    )
+                }
+
+                quantityView.setOnClickListener {
                     // set current item because we can't pass object references in bundles
                     (activity?.applicationContext as ShopIST).currentShoppingListItem = item
                     findNavController().navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
+                }
+
+                // Set last image
+                if (item.product.images.size > 0) {
+                    val globalData = requireActivity().applicationContext as ShopIST
+
+                    val index = item.product.getLastImageIndex()
+                    val imageFileName = "${item.product.uuid}_$index${ShopIST.IMAGE_EXTENSION}"
+                    val imagePath = File(globalData.getImageFolder(), imageFileName)
+
+                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+
+                    view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
                 }
             }
         }

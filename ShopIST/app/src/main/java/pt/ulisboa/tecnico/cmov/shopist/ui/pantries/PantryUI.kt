@@ -1,14 +1,12 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -23,6 +21,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import java.io.File
 import java.util.*
 
 /**
@@ -200,6 +199,19 @@ class PantryUI : Fragment() {
                 //     // it can also simply appear on the menu, though
                 //     true
                 // }
+
+                // Set last image
+                if (item.product.images.size > 0) {
+                    val globalData = requireActivity().applicationContext as ShopIST
+
+                    val index = item.product.getLastImageIndex()
+                    val imageFileName = "${item.product.uuid}_$index${ShopIST.IMAGE_EXTENSION}"
+                    val imagePath = File(globalData.getImageFolder(), imageFileName)
+
+                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+
+                    view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
+                }
             }
         }
 
