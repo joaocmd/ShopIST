@@ -110,6 +110,14 @@ class ShopIST : Application() {
         return allStores[uuid]!!
     }
 
+    fun getClosestStore(currLocation: LatLng): Store? {
+        val closestStore = stores
+            .filter { it.location != null }
+            .minByOrNull { it.getDistance(currLocation) }
+        return if (closestStore === null || closestStore.getDistance(currLocation) > OPEN_AUTO_MAX_DISTANCE) null
+        else closestStore
+    }
+
     fun getShoppingList(uuid: UUID): ShoppingList {
         return ShoppingList(allStores[uuid]!!, allPantries.values)
     }

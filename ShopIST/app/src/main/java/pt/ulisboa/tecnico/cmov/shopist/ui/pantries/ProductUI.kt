@@ -1,8 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,9 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -23,6 +19,8 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
@@ -32,6 +30,8 @@ class ProductUI : Fragment() {
 
     private lateinit var root: View
     private lateinit var product: Product
+    private lateinit var stores: List<Store>
+    private var priceStore: Store? = null
 
     private lateinit var folder: File
 
@@ -51,6 +51,7 @@ class ProductUI : Fragment() {
 
             globalData.getProduct(productId)?.let { p ->
                 product = p
+                stores = p.stores.toList()
             }
         }
         setHasOptionsMenu(true)
@@ -65,10 +66,13 @@ class ProductUI : Fragment() {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_product, container, false)
 
-        // Set product titles
+        // Set product titles and buttons
         root.findViewById<TextView>(R.id.productName).text = product.name
         root.findViewById<ImageView>(R.id.imageButton).setOnClickListener {
             selectImage()
+        }
+        root.findViewById<Button>(R.id.addPriceButton).setOnClickListener {
+            showDialogPrice()
         }
 
         // Set images
@@ -90,21 +94,24 @@ class ProductUI : Fragment() {
     }
 
     private fun selectImage() {
-        val options = arrayOf<CharSequence>(getString(R.string.take_photo), getString(R.string.choose_from_gallery), getString(R.string.cancel))
+        val options = arrayOf<CharSequence>(
+            getString(R.string.take_photo),
+            getString(R.string.choose_from_gallery)
+        )
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.add_new_photo))
-        builder.setItems(options) { dialog, item ->
+        builder.setItems(options) { _, item ->
             when (options[item]) {
                 getString(R.string.take_photo) -> {
                     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     startActivityForResult(intent, IMAGE_CAMERA)
                 }
                 getString(R.string.choose_from_gallery) -> {
-                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    val intent = Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    )
                     startActivityForResult(intent, IMAGE_PICK_GALLERY)
-                }
-                getString(R.string.cancel) -> {
-                    dialog.dismiss()
                 }
             }
         }
@@ -114,6 +121,102 @@ class ProductUI : Fragment() {
     private fun readBarcode() {
         val intent = Intent(activity?.applicationContext, BarcodeScannerActivity::class.java)
         startActivityForResult(intent, GET_BARCODE_PRODUCT)
+    }
+
+    private fun showDialogPrice() {
+        // Inflate layout for dialog
+        val inflater = requireActivity().layoutInflater
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle(getString(R.string.product_add_price))
+
+        val alertRoot = inflater.inflate(R.layout.dialog_price_product, null)
+        alert.setView(alertRoot)
+        alert.setPositiveButton(getString(R.string.ok), null)
+        alert.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        // Create spinner
+        val spinner: Spinner = alertRoot.findViewById(R.id.store_spinner)
+
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            stores.map { s -> s.name }
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = adapter
+        }
+
+        val globalData = requireActivity().applicationContext as ShopIST
+
+        // Set current store if has location
+        globalData.currentLocation?.let {
+            globalData.getClosestStore(it)?.let { s ->
+                val idx = stores.indexOf(s)
+                if (idx >= 0) {
+                    spinner.setSelection(idx)
+                }
+            }
+        }
+
+        // On store selected
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                priceStore = stores[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
+        // Override Success button to make sure the user meets the conditions
+        val dialog = alert.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val priceText = alertRoot.findViewById<EditText>(R.id.productPrice).text.toString()
+                try {
+                    if (priceText.isEmpty() || priceText.toDouble() <= 0) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.price_above_zero),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.price_above_zero),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d(ShopIST.TAG, "Invalid number inserted: \'$priceText\'")
+                    return
+                }
+
+                val price = priceText.toDouble()
+                if (priceStore !== null) {
+                    // Set price and send to server
+                    product.setPrice(priceStore!!, price)
+
+                    API.getInstance(requireContext()).submitPriceProduct(price, product,
+                        priceStore!!, {
+                        Log.d(ShopIST.TAG, "Product price sent")
+                    }, {
+                        Log.d(ShopIST.TAG, "Could not send price")
+                    })
+
+                    (requireActivity().applicationContext as ShopIST).savePersistent()
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.first_choose_store),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        })
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -204,10 +307,12 @@ class ProductUI : Fragment() {
                         val globalData = activity?.applicationContext as ShopIST
                         globalData.savePersistent()
 
-                        Toast.makeText(context, String.format(
-                            getString(R.string.barcode_read),
-                            barcode
-                        ), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context, String.format(
+                                getString(R.string.barcode_read),
+                                barcode
+                            ), Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }

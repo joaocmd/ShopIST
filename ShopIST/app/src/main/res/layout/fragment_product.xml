@@ -58,10 +58,10 @@
                 android:layout_marginTop="@dimen/section_divider_margin" />
 
             <Button
-                android:id="@+id/okButton"
+                android:id="@+id/addPriceButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/create_product_item_complete" />
+                android:text="@string/product_add_price" />
         </LinearLayout>
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

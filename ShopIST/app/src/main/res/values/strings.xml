@@ -11,6 +11,8 @@
     <string name="product_name">Product Name</string>
     <string name="product">Product</string>
     <string name="product_add_barcode">Scan Barcode</string>
+    <string name="product_add_price">Add Price</string>
+    <string name="price_above_zero">Type a price above 0.</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Title </string>
@@ -76,6 +78,9 @@
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="barcode_read">Barcode read: %1$s.</string>
+    <string name="price">Price (i.e.: 1.23)</string>
+    <string name="choose_store">Choose a store</string>
+    <string name="first_choose_store">First you need to choose a store</string>
 
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>

@@ -91,8 +91,16 @@ class ShoppingListUI : Fragment() {
     }
 
     override fun onResume() {
-        recyclerAdapter.notifyDataSetChanged();
+        getPrices()
         super.onResume()
+        recyclerAdapter.notifyDataSetChanged()
+
+        val globalData = requireActivity().applicationContext as ShopIST
+        globalData.callbackDataSetChanged = {
+            shoppingList = globalData.getShoppingList(storeId)
+            recyclerAdapter.shoppingList = shoppingList
+            recyclerAdapter.notifyDataSetChanged()
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -137,8 +145,32 @@ class ShoppingListUI : Fragment() {
         cancel()
     }
 
+    private fun getPrices() {
+        if (store.location === null) {
+            return
+        }
+        val products = shoppingList.items.map { i -> i.product }.filter { p -> p.barcode !== null }.toSet().toList()
+        val barcodeProducts = products.map { p -> p.barcode!! to p }.toMap()
+        API.getInstance(requireContext()).getListPrices(
+            products,
+            store.location!!,
+            { res ->
+                res.forEach { entry ->
+                    barcodeProducts[entry.key]?.setPrice(store, entry.value)
+                }
+                val globalData = requireActivity().applicationContext as ShopIST
+                if (globalData.callbackDataSetChanged !== null) {
+                    globalData.callbackDataSetChanged!!()
+                }
+            },
+            {
+                // FIXME: handle gracefully
+            }
+        )
+    }
 
-    inner class ShoppingListAdapter(private val shoppingList: ShoppingList) :
+
+    inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
 

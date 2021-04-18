@@ -6,9 +6,9 @@ class Product(name: String) {
     var uuid: UUID = UUID.randomUUID()
     var name: String = name
     var barcode: String? = null
-    // TODO: Construct images from dto
     var images: MutableList<String> = mutableListOf()
     var stores: MutableSet<Store> = mutableSetOf()
+    var prices: MutableMap<Store, Number> = mutableMapOf()
     var isShared = false
 
     companion object {
@@ -19,6 +19,11 @@ class Product(name: String) {
             product.barcode = p.barcode
             product.isShared = p.isShared
             product.images = p.images
+            p.prices.forEach {
+                stores[it.key]?.let { s ->
+                    product.prices[s] = it.value
+                }
+            }
             return product
         }
 
@@ -31,6 +36,11 @@ class Product(name: String) {
             p1.stores = update.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             p1.isShared = update.isShared
             p1.images = update.images
+            update.prices.forEach {
+                stores[it.key]?.let { s ->
+                    p1.prices[s] = it.value
+                }
+            }
             return p1
         }
     }
@@ -41,5 +51,13 @@ class Product(name: String) {
 
     fun getLastImageIndex(): Int {
         return images.size - 1
+    }
+
+    fun setPrice(store: Store, price: Number) {
+        prices[store] = price
+    }
+
+    fun getPrice(store: Store): Number? {
+        return prices[store]
     }
 }

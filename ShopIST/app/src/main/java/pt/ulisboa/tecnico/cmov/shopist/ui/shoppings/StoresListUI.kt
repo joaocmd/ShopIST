@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
-import android.animation.ArgbEvaluator
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -10,7 +9,6 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -87,6 +85,7 @@ class StoresListUI : Fragment() {
         }
 
         globalData.stores.forEach {
+            // Route time
             if (it.location != null && globalData.currentLocation != null) {
                 API.getInstance(requireContext()).getRouteTime(
                     globalData.currentLocation!!,
@@ -152,7 +151,7 @@ class StoresListUI : Fragment() {
                     checkoutTime.text = "---"
                 }
 
-                val globalData = activity?.applicationContext as ShopIST
+                val globalData = activity.applicationContext as ShopIST
                 val percentage = store.itemPercentage(globalData.pantries.toList())
                 itemPercentage.text = (percentage * 100).toInt().toString() + "%"
 

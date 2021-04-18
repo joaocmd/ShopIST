@@ -3,9 +3,7 @@ import Location from '../model/Location'
 
 const beacons: Record<string, Beacon> = {}
 beacons["ShopIST-001"] = new Beacon("ShopIST-001", new Location({latitude: 38.73361076643277, longitude: -9.142712429165842}))
-beacons["ShopIST-002"] = new Beacon("ShopIST-002", new Location({latitude: 38.73361076643277, longitude: -9.142712429165843}))
-beacons["ShopIST-003"] = new Beacon("ShopIST-003", new Location({latitude: 38.73595121972168, longitude: -9.141665026545525}))
-beacons["ShopIST-004"] = new Beacon("ShopIST-004", new Location({latitude: 38.73595121972168, longitude: -9.141665026545526}))
+beacons["ShopIST-002"] = new Beacon("ShopIST-003", new Location({latitude: 38.73595121972168, longitude: -9.141665026545525}))
 
 const MAX_DISTANCE = 100
 
