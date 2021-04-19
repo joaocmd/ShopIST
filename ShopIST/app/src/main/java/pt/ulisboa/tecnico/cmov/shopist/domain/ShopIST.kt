@@ -3,10 +3,8 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
-import android.location.Location
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
@@ -33,7 +31,33 @@ class ShopIST : Application() {
 
     private var firstTime = true
 
-    var currentLocation: LatLng? = null
+    private var _currentLocation: LatLng? = null
+    var currentLocation: LatLng?
+        get() {
+            return _currentLocation
+        }
+        set(value) {
+            _currentLocation = value
+            updateDrivingTimes()
+        }
+
+    fun updateDrivingTimes() {
+        _currentLocation ?: return
+        getAllLists().forEach {
+            if (it.location != null) {
+                API.getInstance(applicationContext).getRouteTime(
+                    currentLocation!!,
+                    it.location!!,
+                    { time -> it.drivingTime = time },
+                    {
+                        // FIXME: handle gracefully
+                    }
+                )
+            }
+        }
+        callbackDataSetChanged?.invoke()
+    }
+
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
     private var allStores: MutableMap<UUID, Store> = mutableMapOf()

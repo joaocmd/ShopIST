@@ -5,7 +5,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -35,6 +38,7 @@ class PantryUI : Fragment() {
     private lateinit var menuRoot: Menu
     private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
+    private lateinit var globalData: ShopIST
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +47,7 @@ class PantryUI : Fragment() {
             val globalData = requireActivity().applicationContext as ShopIST
             pantryList = globalData.getPantryList(pantryId)
         }
+        globalData = (requireActivity().applicationContext as ShopIST)
         setHasOptionsMenu(true)
     }
 
@@ -65,7 +70,6 @@ class PantryUI : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        val globalData = (requireActivity().applicationContext as ShopIST)
         pantryList = globalData.getPantryList(pantryList.uuid)
         recyclerAdapter.notifyDataSetChanged()
         globalData.callbackDataSetChanged = {
@@ -153,7 +157,6 @@ class PantryUI : Fragment() {
     private fun sharePantryList() {
         // Send pantry to server
         val context = requireActivity().applicationContext
-        val globalData = context as ShopIST
 
         API.getInstance(context).postNewPantry(pantryList, {
             pantryList.share()

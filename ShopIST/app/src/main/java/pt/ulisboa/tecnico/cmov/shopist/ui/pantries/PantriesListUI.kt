@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import pt.ulisboa.tecnico.cmov.shopist.R
+import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
 /**
@@ -28,6 +28,7 @@ class PantriesListUI : Fragment() {
     // TODO: Don't show cart quantities
 
     private lateinit var recyclerAdapter: PantriesListAdapter
+    private lateinit var globalData: ShopIST
 
     companion object {
         const val GET_BARCODE_PRODUCT = 2
@@ -47,7 +48,7 @@ class PantriesListUI : Fragment() {
         val root = inflater.inflate(R.layout.fragment_pantries_list, container, false)
         val recyclerView: RecyclerView = root.findViewById(R.id.pantriesList)
 
-        val globalData = activity?.applicationContext as ShopIST
+        globalData = requireActivity().applicationContext as ShopIST
         recyclerAdapter = PantriesListAdapter(globalData.pantries.toList(), requireActivity())
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = recyclerAdapter
@@ -69,7 +70,6 @@ class PantriesListUI : Fragment() {
     }
 
     private fun updateData() {
-        val globalData = requireContext().applicationContext as ShopIST
         recyclerAdapter.list = globalData.pantries.toList()
         recyclerAdapter.notifyDataSetChanged()
 

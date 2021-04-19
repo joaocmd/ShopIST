@@ -63,28 +63,10 @@ class SplashScreenActivity : AppCompatActivity() {
          * cases when a location is not available.
          */
         try {
-            locationUtils.getLocationPolling(
-                250, 0, LocationRequest.PRIORITY_HIGH_ACCURACY,
-                object : LocationCallback() {
-                    override fun onLocationResult(result: LocationResult?) {
-                        result ?: return
-                        for (location in result.locations) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location !== null) {
-                                Log.d(ShopIST.TAG, "Selected location - ${location.toLatLng()}")
-
-                                val globalData = applicationContext as ShopIST
-                                globalData.currentLocation = location.toLatLng()
-                                locationUtils.fusedLocationClient.removeLocationUpdates(this)
-                                if (!hasPantryToOpen) dismiss()
-                                return
-                            } else {
-                                Log.d(ShopIST.TAG, "Null location")
-                            }
-                        }
-                    }
-                }
-            )
+            locationUtils.getNewLocation { location ->
+                (applicationContext as ShopIST).currentLocation = location!!.toLatLng()
+                if (!hasPantryToOpen) dismiss()
+            }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)
         }
