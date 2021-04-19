@@ -12,6 +12,7 @@
     <string name="product">Product</string>
     <string name="product_add_barcode">Scan Barcode</string>
     <string name="product_add_price">Add Price</string>
+    <string name="product_see_prices">See Prices by Store</string>
     <string name="price_above_zero">Type a price above 0.</string>
 
     <!-- Pantry Items -->
@@ -85,6 +86,7 @@
     <string name="price">Price (i.e.: 1.23)</string>
     <string name="choose_store">Choose a store</string>
     <string name="first_choose_store">First you need to choose a store</string>
+    <string name="prices_by_stores">Prices by Store</string>
 
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>

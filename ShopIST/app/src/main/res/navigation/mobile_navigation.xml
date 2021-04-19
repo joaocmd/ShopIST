@@ -62,7 +62,6 @@
     <fragment
         android:id="@+id/nav_store_shopping_list"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI"
-        android:label="@string/shopping_lists_title"
         tools:layout="@layout/fragment_store_shopping_list">
         <action
             android:id="@+id/action_nav_store_shopping_list_to_nav_store_shopping_list_item"
@@ -77,7 +76,6 @@
     <fragment
         android:id="@+id/nav_store_shopping_list_item"
         android:name="pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListItemUI"
-        android:label="@string/shopping_lists_title"
         tools:layout="@layout/fragment_store_shopping_list_item">
         <action
             android:id="@+id/action_nav_store_shopping_list_item_to_nav_view_product"

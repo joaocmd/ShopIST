@@ -3,15 +3,14 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
@@ -21,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 
 class ShoppingListItemUI : Fragment() {
@@ -42,7 +42,8 @@ class ShoppingListItemUI : Fragment() {
         val root = inflater.inflate(R.layout.fragment_store_shopping_list_item, container, false)
         shoppingListItem = (activity?.applicationContext as ShopIST).currentShoppingListItem!!
 
-        root.findViewById<Button>(R.id.scanBarcodeButton).setOnClickListener{ readBarcode() }
+        root.findViewById<Button>(R.id.cancelButton).setOnClickListener{ cancel() }
+        root.findViewById<Button>(R.id.okButton).setOnClickListener{ saveReturn() }
 
         // Set product title
         root.findViewById<TextView>(R.id.productTitleView).text = shoppingListItem.product.name
@@ -57,7 +58,25 @@ class ShoppingListItemUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.optionsMenu(menu, requireActivity(),
-            shoppingListItem.product.name, listOf(TopBarItems.Edit))
+            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.ScanBarcode))
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_scan_barcode -> {
+                readBarcode()
+            }
+            R.id.action_edit -> {
+                findNavController().navigate(
+                    R.id.action_nav_store_shopping_list_item_to_nav_view_product,
+                    bundleOf(
+                        CreateProductUI.ARG_PRODUCT_ID to shoppingListItem.product.uuid.toString()
+                    )
+                )
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     // Barcode getter
@@ -82,6 +101,15 @@ class ShoppingListItemUI : Fragment() {
         } else if (requestCode == PantriesListUI.GET_BARCODE_PRODUCT && resultCode == AppCompatActivity.RESULT_CANCELED) {
             Log.d(ShopIST.TAG, "Couldn't find barcode")
         }
+    }
+
+    private fun saveReturn() {
+        (requireContext().applicationContext as ShopIST).savePersistent()
+        findNavController().popBackStack()
+    }
+
+    private fun cancel() {
+        findNavController().popBackStack()
     }
 
     //--

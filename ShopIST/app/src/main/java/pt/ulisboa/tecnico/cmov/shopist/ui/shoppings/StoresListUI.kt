@@ -3,7 +3,6 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -159,8 +158,8 @@ class StoresListUI : Fragment() {
                 /* TODO FIX THIS! */
                 val startColor = Color.parseColor("#821e1e")
                 val endColor = Color.parseColor("#67a327")
-                Log.i("Error", startColor.toString())
-                Log.i("Error", endColor.toString())
+                // Log.i("Error", startColor.toString())
+                // Log.i("Error", endColor.toString())
 
                 val color = ColorUtils.blendARGB(startColor, endColor, 1f)
 

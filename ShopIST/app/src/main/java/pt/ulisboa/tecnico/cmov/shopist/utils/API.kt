@@ -12,8 +12,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.*
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.BeaconEventDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.RequestEstimateDto
-import pt.ulisboa.tecnico.cmov.shopist.domain.prices.AddPriceDto
-import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesListDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.prices.*
 import java.util.*
 
 
@@ -319,6 +318,7 @@ class API constructor(context: Context) {
 
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun beaconEstimates(
         stores: List<Store>,
         onSuccessListener: (response: Map<String, Double>) -> Unit,
@@ -395,16 +395,17 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
-    fun getListPrices(
+    @Suppress("UNCHECKED_CAST")
+    fun getPricesForStore(
         products: List<Product>,
         location: LatLng,
         onSuccessListener: (response: Map<String, Double>) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
-        val url = "$baseURL/prices/get/"
+        val url = "$baseURL/prices/location/"
 
         val productBarcodes = products.mapNotNull { it.barcode }
-        val sentDto = RequestPricesListDto(productBarcodes, location)
+        val sentDto = RequestPricesByLocationDto(productBarcodes, location)
 
         // Request a string response from the provided URL.
         val stringRequest = object : StringRequest(
@@ -412,6 +413,48 @@ class API constructor(context: Context) {
             { response ->
                 setConnection(null)
                 val result = Gson().fromJson(response, Map::class.java) as Map<String, Double>
+                onSuccessListener(result)
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            }) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        // Add the request to the RequestQueue.
+        queue.add(setRetryPolicy(stringRequest))
+
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getPricesForProduct(
+        product: Product,
+        location: List<LatLng>,
+        onSuccessListener: (response: List<PriceLocationDto>) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        if (product.barcode === null) {
+            return
+        }
+
+        val url = "$baseURL/prices/barcode/"
+
+        val sentDto = RequestPricesByProductDto(product.barcode!!, location)
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                setConnection(null)
+                val result = Gson().fromJson(response, List::class.java) as List<PriceLocationDto>
                 onSuccessListener(result)
             },
             {

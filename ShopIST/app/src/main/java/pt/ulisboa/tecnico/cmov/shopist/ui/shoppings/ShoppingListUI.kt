@@ -192,7 +192,7 @@ class ShoppingListUI : Fragment() {
         }
         val products = shoppingList.items.map { i -> i.product }.filter { p -> p.barcode !== null }.toSet().toList()
         val barcodeProducts = products.map { p -> p.barcode!! to p }.toMap()
-        API.getInstance(requireContext()).getListPrices(
+        API.getInstance(requireContext()).getPricesForStore(
             products,
             store.location!!,
             { res ->

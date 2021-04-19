@@ -45,6 +45,17 @@ export default class ProductPriceService {
 		return res
 	}
 
+	static getProductPriceStore(barcode: string, locations: Location[]): ProductPrice[] {
+		let res: ProductPrice[] = []
+		locations.forEach( (location) => {
+			let price = this.getProductPrice(barcode, location)
+			if (price !== null) {
+				res.push(price)
+			}
+		})
+		return res
+	}
+
 	static removeProduct(barcode: string) {
         delete products[barcode]
     }

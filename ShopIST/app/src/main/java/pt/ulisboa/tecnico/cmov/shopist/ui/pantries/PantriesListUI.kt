@@ -1,11 +1,8 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment

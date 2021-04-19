@@ -4,8 +4,8 @@ import Location from "../../model/Location"
 
 const handler = (req: express.Request, res: express.Response) => {
     try {
-        let body = req.body as PriceRequest
-        let price = ProductPriceService.getProductsPrice(body.barcodes, body.location)
+        let body = req.body as PriceRequestByBarcode
+        let price = ProductPriceService.getProductPriceStore(body.barcode, body.locations)
 		if (price === null) {
 			res.status(400).send({ status: 400 })
 		} else {
@@ -18,7 +18,7 @@ const handler = (req: express.Request, res: express.Response) => {
 
 const config = {
     method: 'POST',
-    path: '/get/'
+    path: '/barcode/'
 }
 
 export default {
@@ -26,7 +26,7 @@ export default {
     config
 }
 
-type PriceRequest = {
-	barcodes: string[],
-	location: Location
+type PriceRequestByBarcode = {
+	barcode: string,
+	locations: Location[]
 }

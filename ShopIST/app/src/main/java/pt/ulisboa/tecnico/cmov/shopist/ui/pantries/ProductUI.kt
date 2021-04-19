@@ -11,10 +11,8 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -22,10 +20,12 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PriceByStoreDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ProductUI : Fragment() {
@@ -75,7 +75,10 @@ class ProductUI : Fragment() {
             selectImage()
         }
         root.findViewById<Button>(R.id.addPriceButton).setOnClickListener {
-            showDialogPrice()
+            showDialogAddPrice()
+        }
+        root.findViewById<Button>(R.id.seePricesButton).setOnClickListener {
+            showDialogPrices()
         }
 
         // Set images
@@ -90,6 +93,19 @@ class ProductUI : Fragment() {
 
         val globalData = requireActivity().applicationContext as ShopIST
         setEnableButtons(globalData.isAPIConnected)
+
+        // Update prices from server for all stores, for this product in specific
+        API.getInstance(requireContext()).getPricesForProduct(product, product.stores.mapNotNull { it.location }, { res ->
+            // TODO: Show these prices
+            res.forEach {
+                globalData.getClosestStore(it.location)?.let { s ->
+                    product.setPrice(s, it.price)
+                }
+            }
+            globalData.savePersistent()
+        }, {
+
+        })
     }
 
     private fun setEnableButtons(enabled: Boolean) {
@@ -152,7 +168,7 @@ class ProductUI : Fragment() {
         startActivityForResult(intent, GET_BARCODE_PRODUCT)
     }
 
-    private fun showDialogPrice() {
+    private fun showDialogAddPrice() {
         // Inflate layout for dialog
         val inflater = requireActivity().layoutInflater
         val alert = AlertDialog.Builder(requireContext())
@@ -246,6 +262,11 @@ class ProductUI : Fragment() {
                 }
             }
         })
+    }
+
+    private fun showDialogPrices() {
+        val dialog = PriceByStoreDialog(this, product)
+        dialog.show()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
