@@ -1,14 +1,13 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.fragment.app.Fragment
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -21,7 +20,6 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
-import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
@@ -34,10 +32,13 @@ import java.util.*
  */
 class ShoppingListUI : Fragment() {
 
+    private lateinit var root: View
     private lateinit var shoppingList: ShoppingList
     private lateinit var store: Store
     private lateinit var storeId: UUID
     private lateinit var recyclerAdapter: ShoppingListAdapter
+
+    private lateinit var menuRoot: Menu
 
     companion object {
         const val ARG_STORE_ID = "pantryId"
@@ -59,7 +60,7 @@ class ShoppingListUI : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_store_shopping_list, container, false)
+        root = inflater.inflate(R.layout.fragment_store_shopping_list, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)
 
         recyclerAdapter = ShoppingListAdapter(shoppingList)
@@ -69,7 +70,9 @@ class ShoppingListUI : Fragment() {
 
         // Navigation Buttons
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
-        root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }
+
+        // Checkout button
+        root.findViewById<View>(R.id.okButton).setOnClickListener { confirmCheckout() }
 
         /*
         // TODO: Improve the location of this button
@@ -79,6 +82,21 @@ class ShoppingListUI : Fragment() {
         */
 
         return root
+    }
+
+    private fun setEnableButtons(enabled: Boolean) {
+        if (store.isShared) {
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, enabled)
+            }
+        } else {
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, true)
+            }
+        }
+        if (this::menuRoot.isInitialized) {
+            TopBarController.setOnlineOptions(menuRoot, enabled)
+        }
     }
 
     fun editStore() {
@@ -101,15 +119,21 @@ class ShoppingListUI : Fragment() {
             recyclerAdapter.shoppingList = shoppingList
             recyclerAdapter.notifyDataSetChanged()
         }
+
+        setEnableButtons(globalData.isAPIConnected)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
+        menuRoot = menu
         val items = mutableListOf(TopBarItems.Edit)
         if (store.location != null) {
             items.add(TopBarItems.Directions)
         }
         TopBarController.optionsMenu(menu, requireActivity(), store.name, items)
+
+        val globalData = requireActivity().applicationContext as ShopIST
+        setEnableButtons(globalData.isAPIConnected)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -133,6 +157,20 @@ class ShoppingListUI : Fragment() {
         findNavController().popBackStack()
     }
 
+    private fun confirmCheckout() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.confirm_checkout))
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+                saveAndReturn()
+                dialog.dismiss()
+            }
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun saveAndReturn() {
         shoppingList.saveChanges()
         val pantriesToUpdate = shoppingList.getPantries().filter { p -> p.isShared }
@@ -142,6 +180,9 @@ class ShoppingListUI : Fragment() {
         }
 
         (requireActivity().applicationContext as ShopIST).savePersistent()
+
+        Toast.makeText(context, getString(R.string.checkout_complete), Toast.LENGTH_SHORT).show()
+
         cancel()
     }
 

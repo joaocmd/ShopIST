@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.os.Messenger
 import android.util.Log
 import android.view.Menu
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -20,9 +19,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast
@@ -34,7 +30,9 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
-import pt.ulisboa.tecnico.cmov.shopist.utils.*
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import pt.ulisboa.tecnico.cmov.shopist.utils.QueueBroadcastReceiver
+import pt.ulisboa.tecnico.cmov.shopist.utils.SyncService
 import java.util.*
 
 
@@ -42,8 +40,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private var locationPermissionGranted: Boolean = false
-    private lateinit var locationUtils: LocationUtils
 
     // WiFi Direct variables
     private var mManager: SimWifiP2pManager? = null
@@ -83,12 +79,16 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         mReceiver = QueueBroadcastReceiver(this)
         registerReceiver(mReceiver, filter)
 
-        locationUtils = LocationUtils(this)
-
-        if (locationUtils.hasPermissions()) {
-            getDeviceLocation()
-        } else {
-            locationUtils.requestPermissions()
+        if (globalData.pantryToOpen !== null) {
+            findNavController(R.id.nav_host_fragment).navigate(
+                R.id.nav_pantry,
+                bundleOf(
+                    PantryUI.ARG_PANTRY_ID to globalData.pantryToOpen!!.uuid.toString()
+                )
+            )
+        }
+        else if (globalData.currentLocation !== null) {
+            openCorrespondingList(globalData.currentLocation!!)
         }
     }
 
@@ -130,46 +130,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         }
     }
 
-    private fun receivedUriIntent(): Boolean {
-        if (intent?.action == Intent.ACTION_VIEW) {
-            try {
-                val shopIst = (applicationContext as ShopIST)
-                val uuid = UUID.fromString(intent.data.toString().split("/").last())
-
-                // TODO: Set a load activity to do this
-                shopIst.loadPantryList(uuid, {
-                    Log.d(ShopIST.TAG, uuid.toString())
-                    findNavController(R.id.nav_host_fragment).navigate(
-                        R.id.nav_pantry,
-                        bundleOf(
-                            PantryUI.ARG_PANTRY_ID to uuid.toString()
-                        )
-                    )
-                }, {
-                    Toast.makeText(applicationContext,
-                        getString(R.string.cannot_get_pantry),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
-
-                return true
-            } catch (e: NoSuchElementException) {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.unable_open_pantry),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } catch (e: IllegalArgumentException) {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.unable_open_pantry),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-        return false
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.edit_item_menu, menu)
@@ -178,38 +138,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    private fun getDeviceLocation() {
-        /*
-         * Get the best and most recent location of the device, which may be null in rare
-         * cases when a location is not available.
-         */
-        try {
-            locationUtils.getLocationPolling(
-                250, 0, LocationRequest.PRIORITY_HIGH_ACCURACY,
-                object : LocationCallback() {
-                    override fun onLocationResult(result: LocationResult?) {
-                        result ?: return
-                        for (location in result.locations) {
-                            // Got last known location. In some rare situations this can be null.
-                            if (location !== null) {
-                                Log.d(ShopIST.TAG, "Selected location - ${location.toLatLng()}")
-                                (applicationContext as ShopIST).currentLocation =
-                                    location.toLatLng()
-                                openCorrespondingList(location.toLatLng())
-                                locationUtils.fusedLocationClient.removeLocationUpdates(this)
-                                return
-                            } else {
-                                Log.d(ShopIST.TAG, "Null location")
-                            }
-                        }
-                    }
-                }
-            )
-        } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message!!)
-        }
     }
 
     private fun openCorrespondingList(currLocation: LatLng) {
@@ -249,12 +177,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
     private var beaconToken: UUID? = null
     private var currentBeacon: String? = null
 
-    fun getPeers() {
-        if (mBound) {
-            mManager!!.requestPeers(mChannel, this)
-        }
-    }
-
     /*
      * Termite listeners
      */
@@ -286,6 +208,12 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
                 currentBeacon = null
                 beaconToken = null
             }
+        }
+    }
+
+    fun getPeers() {
+        if (mBound) {
+            mManager!!.requestPeers(mChannel, this)
         }
     }
 }

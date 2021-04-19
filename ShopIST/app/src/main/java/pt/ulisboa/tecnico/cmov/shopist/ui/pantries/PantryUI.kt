@@ -4,10 +4,10 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
@@ -31,6 +31,8 @@ import java.util.*
  */
 class PantryUI : Fragment() {
 
+    private lateinit var root: View
+    private lateinit var menuRoot: Menu
     private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
 
@@ -49,7 +51,7 @@ class PantryUI : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_pantry, container, false)
+        root = inflater.inflate(R.layout.fragment_pantry, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)
 
         recyclerAdapter = PantryAdapter(pantryList)
@@ -70,7 +72,11 @@ class PantryUI : Fragment() {
             pantryList = globalData.getPantryList(pantryList.uuid)
             recyclerAdapter.pantryList = pantryList
             recyclerAdapter.notifyDataSetChanged()
+
+            // Received data from server, enable the buttons
+            setEnableButtons(true)
         }
+        setEnableButtons(globalData.isAPIConnected)
 
         if (pantryList.isShared) {
             API.getInstance(requireContext()).getPantry(pantryList.uuid, { result ->
@@ -80,8 +86,10 @@ class PantryUI : Fragment() {
                     globalData.callbackDataSetChanged!!()
                 }
             }, {
-                // FIXME: Handle gracefully
-                Log.e(ShopIST.TAG, it.toString())
+                // Cannot edit this pantry then :(
+                if (context !== null) {
+                    setEnableButtons(globalData.isAPIConnected)
+                }
             })
         }
     }
@@ -93,6 +101,11 @@ class PantryUI : Fragment() {
             items.add(TopBarItems.Directions)
         }
         TopBarController.optionsMenu(menu, requireActivity(), pantryList.name, items)
+        menuRoot = menu
+
+        val globalData = (requireActivity().applicationContext as ShopIST)
+        // If couldn't connect until now disable everything
+        setEnableButtons(globalData.isAPIConnected)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,6 +122,23 @@ class PantryUI : Fragment() {
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun setEnableButtons(enabled: Boolean) {
+        if (pantryList.isShared) {
+            root.findViewById<FloatingActionButton>(R.id.newItemButton).isVisible = enabled
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, enabled)
+            }
+        } else {
+            root.findViewById<FloatingActionButton>(R.id.newItemButton).isVisible = true
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, true)
+            }
+        }
+        if (this::menuRoot.isInitialized) {
+            TopBarController.setOnlineOptions(menuRoot, enabled)
+        }
     }
 
     private fun editPantryList() {

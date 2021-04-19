@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
@@ -19,6 +21,7 @@ import java.util.*
 
 class PantryItemUI : Fragment() {
 
+    private lateinit var root: View
     private lateinit var pantryList: PantryList
     private lateinit var item: Item
 
@@ -30,6 +33,8 @@ class PantryItemUI : Fragment() {
 
     private var cart = 0
     private lateinit var cartView: TextView
+
+    private lateinit var menuRoot: Menu
 
     companion object {
         const val ARG_PANTRY_ID = "pantryId"
@@ -54,7 +59,7 @@ class PantryItemUI : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val root = inflater.inflate(R.layout.fragment_pantry_item, container, false)
+        root = inflater.inflate(R.layout.fragment_pantry_item, container, false)
 
         // Set product and pantry titles
         root.findViewById<TextView>(R.id.productTitleView).text = item.product.name
@@ -87,11 +92,39 @@ class PantryItemUI : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val globalData = requireActivity().applicationContext as ShopIST
+        setEnableButtons(globalData.isAPIConnected)
+    }
+
+    private fun setEnableButtons(enabled: Boolean) {
+        if (pantryList.isShared) {
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, enabled)
+            }
+        } else {
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, true)
+            }
+        }
+        if (this::menuRoot.isInitialized) {
+            TopBarController.setOnlineOptions(menuRoot, enabled)
+        }
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
+        menuRoot = menu
+
         TopBarController.optionsMenu(menu, requireActivity(), item.product.name,
             listOf(TopBarItems.Edit))
+
+        val globalData = (requireActivity().applicationContext as ShopIST)
+        // If couldn't connect until now disable everything
+        setEnableButtons(globalData.isAPIConnected)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

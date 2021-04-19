@@ -81,7 +81,6 @@ class AddItemUI : Fragment() {
 
     private fun addProductsToGroup(products: List<Product>, productsList: RadioGroup) {
         for ((index, product) in products.listIterator().withIndex()) {
-            // TODO: Discuss if a product in pantry list should appear here
             val radioButton = RadioButton(context)
             radioButton.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             radioButton.text = product.name
@@ -134,11 +133,11 @@ class AddItemUI : Fragment() {
                 API.getInstance(requireContext()).updatePantry(pantryList)
             }
         } else {
-            // FIXME: disable this
             Toast.makeText(context,
                 getString(R.string.product_already_in_pantry),
                 Toast.LENGTH_SHORT
             ).show()
+            return
         }
 
         // Save data in file

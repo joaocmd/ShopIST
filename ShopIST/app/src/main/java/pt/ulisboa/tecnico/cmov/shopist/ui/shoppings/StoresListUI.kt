@@ -152,8 +152,9 @@ class StoresListUI : Fragment() {
                 }
 
                 val globalData = activity.applicationContext as ShopIST
-                val percentage = store.itemPercentage(globalData.pantries.toList())
-                itemPercentage.text = (percentage * 100).toInt().toString() + "%"
+                // val percentage = store.itemPercentage(globalData.pantries.toList())
+                val itemQuantityTotal = store.itemQuantityTotal(globalData.pantries.toList())
+                itemPercentage.text = itemQuantityTotal.toString()
 
                 /* TODO FIX THIS! */
                 val startColor = Color.parseColor("#821e1e")
@@ -161,7 +162,7 @@ class StoresListUI : Fragment() {
                 Log.i("Error", startColor.toString())
                 Log.i("Error", endColor.toString())
 
-                val color = ColorUtils.blendARGB(startColor, endColor, percentage)
+                val color = ColorUtils.blendARGB(startColor, endColor, 1f)
 
                 itemPercentage.setTextColor(
                     color

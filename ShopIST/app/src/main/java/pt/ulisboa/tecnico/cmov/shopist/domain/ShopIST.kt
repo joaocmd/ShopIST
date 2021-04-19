@@ -5,9 +5,12 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.location.Location
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
+import com.android.volley.VolleyError
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
@@ -22,10 +25,13 @@ class ShopIST : Application() {
 
         const val TAG = "shopist.domain.ShopIST"
         const val FILENAME_DATA = "data.json"
+        const val FILENAME_FIRST_TIME = "first.json"
         const val OPEN_AUTO_MAX_DISTANCE = 50
         const val IMAGE_EXTENSION = ".jpg"
         const val IMAGE_FOLDER = "photos"
     }
+
+    private var firstTime = true
 
     var currentLocation: LatLng? = null
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
@@ -34,14 +40,15 @@ class ShopIST : Application() {
     private var defaultStore: Store? = null
 
     var currentShoppingListItem: ShoppingListItem? = null
+    var pantryToOpen: PantryList? = null
+    var isAPIConnected = false
+    var callbackDataSetChanged: (() -> Unit)? = null
 
     val pantries: Array<PantryList>
         get() = this.allPantries.values.sortedBy { it.name }.toTypedArray()
 
     val stores: Array<Store>
         get() = this.allStores.values.sortedBy { it.name }.toTypedArray()
-
-    var callbackDataSetChanged: (() -> Unit)? = null
 
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList
@@ -52,7 +59,7 @@ class ShopIST : Application() {
     }
 
     fun loadPantryList(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
-                       onErrorListener: (error: Exception) -> Unit) {
+                       onErrorListener: (error: VolleyError) -> Unit) {
         if (allPantries.containsKey(uuid)) {
             onSuccessListener(uuid)
             return
@@ -153,6 +160,9 @@ class ShopIST : Application() {
     //--------------
 
     fun startUp() {
+        // Set if first time
+        markFirstTime()
+
         // Load previous data
         loadPersistent()
 
@@ -253,7 +263,6 @@ class ShopIST : Application() {
             while (scanner.hasNextLine()) {
                 sb.append(scanner.nextLine())
             }
-            // Toast.makeText(this, "File read", Toast.LENGTH_SHORT).show()
         } catch (e: FileNotFoundException) {
             Log.e(TAG, "File not found")
             result = false
@@ -274,7 +283,9 @@ class ShopIST : Application() {
             val shopIstDto = Gson().fromJson(sb.toString(), ShopISTDto()::class.java)
             populateShopIST(shopIstDto)
         } catch (e: Exception) {
-            // TODO: Detect if it is the first time using app, otherwise say that data was lost
+            if (!firstTime) {
+                Toast.makeText(applicationContext, getString(R.string.error_loading_file), Toast.LENGTH_SHORT).show()
+            }
             Log.d(TAG, "Can't read data file.")
         }
         return result
@@ -289,7 +300,34 @@ class ShopIST : Application() {
         try {
             fos = openFileOutput(FILENAME_DATA, MODE_PRIVATE)
             fos.write(json.toByteArray())
-            // Toast.makeText(this, "File written", Toast.LENGTH_SHORT).show()
+        } catch (e: FileNotFoundException) {
+            Log.e(TAG, "File not found", e)
+        } catch (e: IOException) {
+            Log.e(TAG, "IO problem", e)
+        } finally {
+            try {
+                fos!!.close()
+            } catch (e: IOException) {
+                Log.d(TAG, "Close error.")
+            }
+        }
+    }
+
+    fun markFirstTime() {
+        try {
+            openFileInput(FILENAME_FIRST_TIME)
+            firstTime = false
+            return
+        } catch (e: FileNotFoundException) {
+            firstTime = true
+            Log.d(TAG, "First time opening app.")
+        }
+
+        val json = Gson().toJson("true")
+        var fos: FileOutputStream? = null
+        try {
+            fos = openFileOutput(FILENAME_FIRST_TIME, MODE_PRIVATE)
+            fos.write(json.toByteArray())
         } catch (e: FileNotFoundException) {
             Log.e(TAG, "File not found", e)
         } catch (e: IOException) {

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.22.6.66:3000</string>
+    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.31.230.54:3000</string>
 </resources>

@@ -11,8 +11,10 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -29,6 +31,7 @@ import java.util.*
 class ProductUI : Fragment() {
 
     private lateinit var root: View
+    private lateinit var menuRoot: Menu
     private lateinit var product: Product
     private lateinit var stores: List<Store>
     private var priceStore: Store? = null
@@ -80,6 +83,32 @@ class ProductUI : Fragment() {
             showImages()
         }
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val globalData = requireActivity().applicationContext as ShopIST
+        setEnableButtons(globalData.isAPIConnected)
+    }
+
+    private fun setEnableButtons(enabled: Boolean) {
+        if (product.isShared) {
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, enabled)
+            }
+            root.findViewById<ImageButton>(R.id.imageButton).isEnabled = enabled
+            root.findViewById<Button>(R.id.addPriceButton).isEnabled = enabled
+        } else {
+            if (this::menuRoot.isInitialized) {
+                TopBarController.setSharedOptions(menuRoot, true)
+            }
+            root.findViewById<ImageButton>(R.id.imageButton).isEnabled = true
+            root.findViewById<Button>(R.id.addPriceButton).isEnabled = true
+        }
+        if (this::menuRoot.isInitialized) {
+            TopBarController.setOnlineOptions(menuRoot, enabled)
+        }
     }
 
     private fun showImages() {
@@ -221,6 +250,10 @@ class ProductUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
+
+        menuRoot = menu
+        val globalData = requireActivity().applicationContext as ShopIST
+        setEnableButtons(globalData.isAPIConnected)
 
         TopBarController.optionsMenu(
             menu, requireActivity(), product.name,

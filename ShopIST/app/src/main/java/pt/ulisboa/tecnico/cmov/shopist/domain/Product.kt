@@ -16,10 +16,14 @@ class Product(name: String) {
             val product = Product(p.name)
             product.uuid = p.uuid
             product.stores = p.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
-            product.barcode = p.barcode
+            p.barcode?.let {
+                product.barcode = it
+            }
             product.isShared = p.isShared
-            product.images = p.images
-            p.prices.forEach {
+            p.images?.let {
+                product.images = it
+            }
+            p.prices?.forEach {
                 stores[it.key]?.let { s ->
                     product.prices[s] = it.value
                 }
@@ -35,8 +39,10 @@ class Product(name: String) {
             p1.barcode = update.barcode
             p1.stores = update.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             p1.isShared = update.isShared
-            p1.images = update.images
-            update.prices.forEach {
+            update.images?.let {
+                p1.images = it
+            }
+            update.prices?.forEach {
                 stores[it.key]?.let { s ->
                     p1.prices[s] = it.value
                 }

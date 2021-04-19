@@ -36,6 +36,7 @@
     <string name="cannot_get_pantry">Cannot get pantry list.</string>
     <string name="unable_open_pantry">Unable to open pantry from URI</string>
     <string name="share_pantry_message">Hi! Here\'s the link for our pantry list \"%s\":%n %s</string>
+    <string name="cant_edit_pantry">Can\'t edit the pantry without internet access.</string>
 
     <!-- Shopping Lists -->
     <string name="create_shopping_title"> Add new Shopping List </string>
@@ -45,6 +46,8 @@
     <string name="new_shopping_list">New Shopping List</string>
     <string name="shopping_default_store">Set as default store for products</string>
     <string name="checkout">Checkout</string>
+    <string name="confirm_checkout">Confirm Checkout</string>
+    <string name="checkout_complete">Checkout complete!</string>
 
     <!-- Navigation -->
     <string name="pantries_list">My Pantries</string>
@@ -67,6 +70,7 @@
     <string name="minus">-</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="error_loading_file">Error loading application data</string>
 
     <!-- Images -->
     <string name="add_new_photo">Add new photo</string>

@@ -38,12 +38,10 @@ class Store(var name: String) : Locatable {
     }
 
     fun itemPercentage(allPantries: Collection<PantryList>): Float {
-        val tempItems: MutableMap<Product, MutableList<Item>> = mutableMapOf()
         var max = 0f
         var counter = 0f
         for (pantry in allPantries) {
             for (item in pantry.items) {
-                // TODO: Check when product does not have any store
                 if(item.needingQuantity > 0) {
                     max++
                     if (item.product.stores.contains(this)) {
@@ -54,5 +52,20 @@ class Store(var name: String) : Locatable {
         }
 
         return counter / max
+    }
+
+    fun itemQuantityTotal(allPantries: Collection<PantryList>): Number {
+        var counter = 0
+        for (pantry in allPantries) {
+            for (item in pantry.items) {
+                if(item.needingQuantity > 0) {
+                    if (item.product.stores.contains(this)) {
+                        counter += item.needingQuantity
+                    }
+                }
+            }
+        }
+
+        return counter
     }
 }

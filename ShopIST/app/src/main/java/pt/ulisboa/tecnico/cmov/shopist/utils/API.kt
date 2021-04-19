@@ -22,6 +22,7 @@ class API constructor(context: Context) {
     private val baseURL = context.resources.getString(R.string.api_base_url)
     private val directionsURL = context.resources.getString(R.string.directions_api_url)
     private val bingKey = context.resources.getString(R.string.bing_maps_key)
+    private val globalData = context as ShopIST
 
     companion object {
         @Volatile
@@ -34,10 +35,47 @@ class API constructor(context: Context) {
             }
 
         const val TAG = "${ShopIST.TAG}.api"
+        const val TIMEOUT = 3000 // ms
+        const val MAX_RETRIES = 1
     }
 
-    fun getUpdateDto(received: String): BigBoyDto {
+    private fun setConnection(error: VolleyError?) {
+        if (error == null) {
+            globalData.isAPIConnected = true
+        } else globalData.isAPIConnected = error !is TimeoutError
+    }
+
+    private fun getUpdateDto(received: String): BigBoyDto {
         return Gson().fromJson(received, BigBoyDto::class.java)
+    }
+
+    private fun setRetryPolicy(request: StringRequest): StringRequest {
+        request.retryPolicy = DefaultRetryPolicy(TIMEOUT,
+            MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+
+        return request
+    }
+
+    fun ping() {
+        val url = "$baseURL/ping/"
+
+        // Request a string response from the provided URL.
+        val stringRequest = object : StringRequest(
+            Method.GET, url,
+            {
+                setConnection(null)
+            },
+            {
+                setConnection(it)
+            }) {}
+
+        // Add the request to the RequestQueue.
+        stringRequest.retryPolicy = DefaultRetryPolicy(
+            1000, // ms
+            1,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        queue.add(stringRequest)
     }
 
     fun postProduct(product: Product,
@@ -53,9 +91,11 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 onSuccessListener(response)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
             }) {
             override fun getBody(): ByteArray {
@@ -69,7 +109,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     fun postStore(store: Store,
@@ -85,9 +125,11 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 onSuccessListener(response)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
             }) {
             override fun getBody(): ByteArray {
@@ -101,7 +143,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     fun getPantry(
@@ -115,16 +157,17 @@ class API constructor(context: Context) {
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-                val receivedDto = Gson().fromJson(response, BigBoyDto::class.java)
-
+                setConnection(null)
+                val receivedDto = getUpdateDto(response)
                 onSuccessListener(receivedDto)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
             })
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     fun updatePantry(pantry: PantryList) {
@@ -152,9 +195,11 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 onSuccessListener(response)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
             }) {
                 override fun getBody(): ByteArray {
@@ -168,7 +213,7 @@ class API constructor(context: Context) {
             }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     private fun LatLng.toApiString(): String {
@@ -199,7 +244,7 @@ class API constructor(context: Context) {
             })
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     fun beaconEnter(
@@ -217,12 +262,12 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 onSuccessListener(response)
-                Log.d(TAG, response)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
-                Log.d(TAG, it.toString())
             }) {
             override fun getBody(): ByteArray {
                 super.getBody()
@@ -235,7 +280,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     fun beaconLeave(
@@ -252,12 +297,12 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 onSuccessListener(response)
-                Log.d(TAG, response)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
-                Log.d(TAG, it.toString())
             }) {
             override fun getBody(): ByteArray {
                 super.getBody()
@@ -270,7 +315,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
 
     }
 
@@ -288,12 +333,13 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 val result = Gson().fromJson(response, Map::class.java) as Map<String, Double>
                 onSuccessListener(result)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
-                Log.d(TAG, it.toString())
             }) {
             override fun getBody(): ByteArray {
                 super.getBody()
@@ -306,7 +352,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
 
     }
 
@@ -328,12 +374,12 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 onSuccessListener(response)
-                Log.d(TAG, response)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
-                Log.d(TAG, it.toString())
             }) {
             override fun getBody(): ByteArray {
                 super.getBody()
@@ -346,7 +392,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
     }
 
     fun getListPrices(
@@ -364,12 +410,13 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
+                setConnection(null)
                 val result = Gson().fromJson(response, Map::class.java) as Map<String, Double>
                 onSuccessListener(result)
             },
             {
+                setConnection(it)
                 onErrorListener(it)
-                Log.d(TAG, it.toString())
             }) {
             override fun getBody(): ByteArray {
                 super.getBody()
@@ -382,7 +429,7 @@ class API constructor(context: Context) {
         }
 
         // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        queue.add(setRetryPolicy(stringRequest))
 
     }
 }

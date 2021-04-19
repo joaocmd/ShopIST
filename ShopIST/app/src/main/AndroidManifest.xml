@@ -25,11 +25,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST"
         android:usesCleartextTraffic="true"> <!-- <<<<<<< WARNING WARNING WARNING -->
-        <activity android:name=".BarcodeScannerActivity" />
-        <activity
-            android:name=".SideMenuNavigation"
-            android:label="@string/title_activity_side_menu_navigation"
-            android:theme="@style/Theme.ShopIST.NoActionBar">
+
+        <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,9 +37,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https"
-                      android:host="shopist" />
+                    android:host="shopist" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".SideMenuNavigation"
+            android:label="@string/title_activity_side_menu_navigation"
+            android:theme="@style/Theme.ShopIST.NoActionBar"/>
 
         <service android:name=".utils.SyncService" android:enabled="true" android:stopWithTask="true" />
         <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
@@ -52,6 +54,7 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".LocationPickerActivity" />
+        <activity android:name=".BarcodeScannerActivity" />
     </application>
 
 </manifest>
