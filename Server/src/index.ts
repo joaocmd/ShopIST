@@ -2,9 +2,13 @@ import { createServer } from "http"
 import express, { Application } from 'express'
 import morgan from 'morgan'
 import fs from 'fs'
+import bodyParser from 'body-parser'
 
 const app = express()
 const port = 3000
+
+app.use(bodyParser.json({limit: '50mb'})); // support json encoded bodies
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true })); // support encoded bodies
 
 function registerEndpoints(app: Application, prefix = __dirname + '/routes') {
 	const registerAux = (currPath = '') => {

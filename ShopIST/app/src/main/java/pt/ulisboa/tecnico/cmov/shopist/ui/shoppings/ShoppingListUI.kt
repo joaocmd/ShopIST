@@ -121,6 +121,8 @@ class ShoppingListUI : Fragment() {
         }
 
         setEnableButtons(globalData.isAPIConnected)
+
+        // TODO: Get one image for each product
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

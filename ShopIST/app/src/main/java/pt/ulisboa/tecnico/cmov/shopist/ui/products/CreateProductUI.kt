@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
+package pt.ulisboa.tecnico.cmov.shopist.ui.products
 
 import android.os.Bundle
 import android.util.Log
@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager

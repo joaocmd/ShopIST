@@ -1,4 +1,4 @@
-package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
+package pt.ulisboa.tecnico.cmov.shopist.ui.products
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -25,7 +25,6 @@ import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.io.FileOutputStream
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class ProductUI : Fragment() {
@@ -36,10 +35,11 @@ class ProductUI : Fragment() {
     private lateinit var stores: List<Store>
     private var priceStore: Store? = null
 
-    private lateinit var folder: File
+    private lateinit var imageFolder: File
+    private lateinit var localImageFolder: File
 
     companion object {
-        const val TAG = "${ShopIST.TAG}.productUI"
+        val TAG = ProductUI::class.qualifiedName
         const val ARG_PRODUCT_ID = "productId"
         const val GET_BARCODE_PRODUCT = 0
         const val IMAGE_CAMERA = 1
@@ -59,7 +59,8 @@ class ProductUI : Fragment() {
         }
         setHasOptionsMenu(true)
 
-        folder = globalData.getImageFolder()
+        imageFolder = globalData.getImageFolder()
+        localImageFolder = globalData.getLocalImageFolder()
     }
 
     override fun onCreateView(
@@ -81,10 +82,6 @@ class ProductUI : Fragment() {
             showDialogPrices()
         }
 
-        // Set images
-        if (product.images.size > 0) {
-            showImages()
-        }
         return root
     }
 
@@ -104,12 +101,14 @@ class ProductUI : Fragment() {
             }
             globalData.savePersistent()
         }, {
-
         })
+
+        // Update images
+        showImages()
     }
 
     private fun setEnableButtons(enabled: Boolean) {
-        if (product.isShared) {
+        if (product.barcode !== null) {
             if (this::menuRoot.isInitialized) {
                 TopBarController.setSharedOptions(menuRoot, enabled)
             }
@@ -119,7 +118,6 @@ class ProductUI : Fragment() {
             if (this::menuRoot.isInitialized) {
                 TopBarController.setSharedOptions(menuRoot, true)
             }
-            root.findViewById<ImageButton>(R.id.imageButton).isEnabled = true
             root.findViewById<Button>(R.id.addPriceButton).isEnabled = true
         }
         if (this::menuRoot.isInitialized) {
@@ -128,14 +126,37 @@ class ProductUI : Fragment() {
     }
 
     private fun showImages() {
+        val globalData = requireActivity().applicationContext as ShopIST
+
+        var hasImage = false
+
         // TODO: add multiple images
-        val index = product.getLastImageIndex()
-        val imageFileName = "${product.uuid}_$index${ShopIST.IMAGE_EXTENSION}"
-        val imagePath = File(folder, imageFileName)
+        if (product.barcode !== null) {
+            // Get all images from cache (and then local if not available)
+            API.getInstance(requireContext()).getProductImages(product, { imageIds ->
+                imageIds.forEach { id ->
+                    // Get image from cache
+                    globalData.imageCache.getAsImage(UUID.fromString(id), { image ->
+                        if (!hasImage) {
+                            root.findViewById<ImageView>(R.id.productImage).setImageBitmap(image)
+                            hasImage = true
+                        }
+                    }, { // Ignore
+                    })
+                }
+            }, {
 
-        val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+            })
+        } else if (product.images.size > 0) {
+            val index = product.getLastImageIndex()
+            val imageFileName = "${product.images[index]}${ShopIST.IMAGE_EXTENSION}"
+            val imagePath = File(imageFolder, imageFileName)
 
-        root.findViewById<ImageView>(R.id.productImage).setImageBitmap(imageBitmap)
+            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+
+            root.findViewById<ImageView>(R.id.productImage).setImageBitmap(imageBitmap)
+        }
+
     }
 
     private fun selectImage() {
@@ -300,26 +321,46 @@ class ProductUI : Fragment() {
         return true
     }
 
-    private fun storeImage(bitmap: Bitmap): String? {
-        val index = product.getLastImageIndex() + 1
-        val imageFileName = "${product.uuid}_$index${ShopIST.IMAGE_EXTENSION}"
-        val imagePath = File(folder, imageFileName)
+    private fun storeImage(bitmap: Bitmap, callback: (imageFilename: String?) -> Unit) {
 
-        try {
-            val fos = FileOutputStream(imagePath)
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-            fos.close()
+        if (product.barcode !== null) {
+            // Send to server
+            API.getInstance(requireContext()).postProductImage(product, bitmap, { imageId ->
+                val imageFileName = "${imageId}${ShopIST.IMAGE_EXTENSION}"
+                val imagePath = File(localImageFolder, imageFileName)
 
-            // Add image to product
-            product.addImage(imageFileName)
+                FileOutputStream(imagePath).use { fos ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                }
+                product.addImage(imageId)
 
-            // Store information about the image
-            (requireActivity().applicationContext as ShopIST).savePersistent()
-        } catch (e: Exception) {
-            Log.e(TAG, e.message, e)
-            return null
+                // Store information about the image
+                (requireActivity().applicationContext as ShopIST).savePersistent()
+                callback(imageFileName)
+            }, {
+
+            })
+        } else {
+            val uuid = UUID.randomUUID()
+            val imageFileName = "${uuid}${ShopIST.IMAGE_EXTENSION}"
+            val imagePath = File(localImageFolder, imageFileName)
+
+            try {
+                val fos = FileOutputStream(imagePath)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                fos.close()
+
+                // Add image to product
+                product.addImage(uuid.toString())
+
+                // Store information about the image
+                (requireActivity().applicationContext as ShopIST).savePersistent()
+                callback(imageFileName)
+            } catch (e: Exception) {
+                Log.e(TAG, e.message, e)
+                callback(null)
+            }
         }
-        return imageFileName
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -330,11 +371,12 @@ class ProductUI : Fragment() {
                     if (data !== null) {
                         val bitmap = data.extras?.get("data") as Bitmap
                         // Store the image in product and device
-                        val imageFileName = storeImage(bitmap)
-
-                        if (imageFileName !== null) {
-                            // Set the image in ImageView
-                            root.findViewById<ImageView>(R.id.productImage).setImageBitmap(bitmap)
+                        storeImage(bitmap) {
+                            if (it !== null) {
+                                // Set the image in ImageView
+                                root.findViewById<ImageView>(R.id.productImage)
+                                    .setImageBitmap(bitmap)
+                            }
                         }
                     }
                 }
@@ -345,11 +387,12 @@ class ProductUI : Fragment() {
                         val bitmap = BitmapFactory.decodeStream(imageStream)
 
                         // Store the image in product and device
-                        val imageFileName = storeImage(bitmap)
-
-                        if (imageFileName !== null) {
-                            // Set the image in ImageView
-                            root.findViewById<ImageView>(R.id.productImage).setImageBitmap(bitmap)
+                        storeImage(bitmap) {
+                            if (it !== null) {
+                                // Set the image in ImageView
+                                root.findViewById<ImageView>(R.id.productImage)
+                                    .setImageBitmap(bitmap)
+                            }
                         }
                     }
                 }

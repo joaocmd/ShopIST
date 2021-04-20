@@ -101,12 +101,12 @@
         tools:layout="@layout/fragment_pantries_new" />
     <fragment
         android:id="@+id/nav_create_product"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI"
         tools:layout="@layout/fragment_pantry_create_product"/>
 
     <fragment
         android:id="@+id/nav_view_product"
-        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.pantries.ProductUI"
+        android:name="pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI"
         tools:layout="@layout/fragment_product">
         <action
             android:id="@+id/action_nav_view_product_to_nav_create_product"

@@ -59,6 +59,10 @@ class Product(name: String) {
         return images.size - 1
     }
 
+    fun getLastImageName(): String {
+        return "${images[getLastImageIndex()]}${ShopIST.IMAGE_EXTENSION}"
+    }
+
     fun setPrice(store: Store, price: Number) {
         prices[store] = price
     }

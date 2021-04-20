@@ -20,7 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
-import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreateProductUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 
 class ShoppingListItemUI : Fragment() {

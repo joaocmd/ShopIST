@@ -95,6 +95,10 @@ class PantryUI : Fragment() {
                     setEnableButtons(globalData.isAPIConnected)
                 }
             })
+
+            // TODO: Get one image for each product from cache (and then local if not available)
+        } else {
+            // TODO: Get one image for each product from local
         }
     }
 
@@ -237,8 +241,7 @@ class PantryUI : Fragment() {
                 if (item.product.images.size > 0) {
                     val globalData = requireActivity().applicationContext as ShopIST
 
-                    val index = item.product.getLastImageIndex()
-                    val imageFileName = "${item.product.uuid}_$index${ShopIST.IMAGE_EXTENSION}"
+                    val imageFileName = item.product.getLastImageName()
                     val imagePath = File(globalData.getImageFolder(), imageFileName)
 
                     val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)

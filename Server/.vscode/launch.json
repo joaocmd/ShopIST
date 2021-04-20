@@ -7,7 +7,8 @@
 		"name": "Node: Nodemon",
 		"port": "9449",
 		"restart": true,
-		"protocol": "inspector"
+		"protocol": "inspector",
+		"sourceMap": "true"
 	  }
 	]
   }

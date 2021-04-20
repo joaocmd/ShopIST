@@ -1,6 +1,8 @@
 package pt.ulisboa.tecnico.cmov.shopist.utils
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
 import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
@@ -12,7 +14,11 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.*
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.BeaconEventDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.RequestEstimateDto
-import pt.ulisboa.tecnico.cmov.shopist.domain.prices.*
+import pt.ulisboa.tecnico.cmov.shopist.domain.prices.AddPriceDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.prices.PriceLocationDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByLocationDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByProductDto
+import java.io.ByteArrayOutputStream
 import java.util.*
 
 
@@ -49,9 +55,11 @@ class API constructor(context: Context) {
     }
 
     private fun setRetryPolicy(request: StringRequest): StringRequest {
-        request.retryPolicy = DefaultRetryPolicy(TIMEOUT,
+        request.retryPolicy = DefaultRetryPolicy(
+            TIMEOUT,
             MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
 
         return request
     }
@@ -73,11 +81,13 @@ class API constructor(context: Context) {
         stringRequest.retryPolicy = DefaultRetryPolicy(
             1000, // ms
             1,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         queue.add(stringRequest)
     }
 
-    fun postProduct(product: Product,
+    fun postProduct(
+        product: Product,
         onSuccessListener: (response: String) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
@@ -111,7 +121,8 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
-    fun postStore(store: Store,
+    fun postStore(
+        store: Store,
         onSuccessListener: (response: String) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
@@ -470,6 +481,98 @@ class API constructor(context: Context) {
                 return "application/json"
             }
         }
+
+        // Add the request to the RequestQueue.
+        queue.add(setRetryPolicy(stringRequest))
+
+    }
+
+    fun postProductImage(
+        product: Product,
+        image: Bitmap,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        if (product.barcode === null) {
+            return
+        }
+        val url = "$baseURL/images/${product.barcode!!}/add/"
+
+        val stream = ByteArrayOutputStream()
+        image.compress(Bitmap.CompressFormat.PNG, 90, stream)
+        val imageBytes = stream.toByteArray()
+        val imageString: String = Base64.encodeToString(imageBytes, Base64.DEFAULT)
+
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                setConnection(null)
+                onSuccessListener(response)
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            }) {
+
+            //adding parameters to send
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["image"] = imageString
+                return params
+            }
+        }
+
+        queue.add(setRetryPolicy(stringRequest))
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getProductImage(
+        id: UUID,
+        onSuccessListener: (response: String) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/images/$id"
+
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                setConnection(null)
+                onSuccessListener(response)
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            })
+
+        queue.add(setRetryPolicy(stringRequest))
+
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getProductImages(
+        product: Product,
+        onSuccessListener: (response: List<String>) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        if (product.barcode === null) {
+            return
+        }
+
+        val url = "$baseURL/products/${product.barcode}/images/"
+
+        // Request a string response from the provided URL.
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                setConnection(null)
+                val result = Gson().fromJson(response, List::class.java) as List<String>
+                onSuccessListener(result)
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            })
 
         // Add the request to the RequestQueue.
         queue.add(setRetryPolicy(stringRequest))

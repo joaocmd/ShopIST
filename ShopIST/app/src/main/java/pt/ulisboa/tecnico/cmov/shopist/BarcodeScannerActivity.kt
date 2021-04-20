@@ -31,7 +31,7 @@ class BarcodeScannerActivity : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
 
     companion object {
-        private const val TAG = "shopist.BarcodeScanner"
+        private const val TAG = "${ShopIST.TAG}.BarcodeScanner"
         const val BARCODE = "$TAG.BARCODE"
 
         private const val MIN_TRIES = 3

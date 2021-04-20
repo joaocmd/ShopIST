@@ -12,6 +12,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import pt.ulisboa.tecnico.cmov.shopist.utils.cache.LruDiskCache
 import java.io.*
 import java.util.*
 
@@ -25,8 +26,11 @@ class ShopIST : Application() {
         const val FILENAME_DATA = "data.json"
         const val FILENAME_FIRST_TIME = "first.json"
         const val OPEN_AUTO_MAX_DISTANCE = 50
-        const val IMAGE_EXTENSION = ".jpg"
+        const val IMAGE_EXTENSION = ".png"
         const val IMAGE_FOLDER = "photos"
+        const val LOCAL_IMAGE_FOLDER = "local_photos"
+
+        const val IMAGE_CACHE_SIZE = 10 * 1024; // 10 MiB (cache size in KiB)
     }
 
     private var firstTime = true
@@ -41,7 +45,7 @@ class ShopIST : Application() {
             updateDrivingTimes()
         }
 
-    fun updateDrivingTimes() {
+    private fun updateDrivingTimes() {
         _currentLocation ?: return
         getAllLists().forEach {
             if (it.location != null) {
@@ -49,9 +53,7 @@ class ShopIST : Application() {
                     currentLocation!!,
                     it.location!!,
                     { time -> it.drivingTime = time },
-                    {
-                        // FIXME: handle gracefully
-                    }
+                    { }
                 )
             }
         }
@@ -73,6 +75,8 @@ class ShopIST : Application() {
 
     val stores: Array<Store>
         get() = this.allStores.values.sortedBy { it.name }.toTypedArray()
+
+    val imageCache: LruDiskCache = LruDiskCache(IMAGE_CACHE_SIZE, this)
 
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList
@@ -175,6 +179,15 @@ class ShopIST : Application() {
     fun getImageFolder(): File {
         val cw = ContextWrapper(applicationContext)
         val folder = cw.getDir(IMAGE_FOLDER, Context.MODE_PRIVATE)
+        if (!folder.exists()) {
+            folder.mkdir()
+        }
+        return folder
+    }
+
+    fun getLocalImageFolder(): File {
+        val cw = ContextWrapper(applicationContext)
+        val folder = cw.getDir(LOCAL_IMAGE_FOLDER, Context.MODE_PRIVATE)
         if (!folder.exists()) {
             folder.mkdir()
         }

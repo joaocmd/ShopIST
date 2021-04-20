@@ -6,7 +6,7 @@ const handler = (req: express.Request, res: express.Response) => {
 
 const config = {
     method: 'GET',
-    path: '/ping/'
+    path: '/'
 }
 
 export default {
