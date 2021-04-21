@@ -2,9 +2,9 @@ import Location from "./Location"
 import Product from "./Product"
 
 export default class {
-	uuid: string
-	name: string
-	location: Location
+    uuid: string
+    name: string
+    location: Location
 
     constructor(uuid: string, name: string, location: Location) {
         this.uuid = uuid
@@ -12,15 +12,12 @@ export default class {
         this.location = location
     }
 
-    addProduct(uuid: string, product: Product) {
-    }
-
     toObject() {
         return {
             uuid: this.uuid,
             name: this.name,
             location: this.location,
-			isShared: true
+            isShared: true
         }
     }
 }

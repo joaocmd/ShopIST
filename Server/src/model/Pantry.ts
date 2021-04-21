@@ -1,10 +1,10 @@
 import Item from "./Item"
 
 export default class {
-	uuid: string
-	name: string
-	location: string
-	items: Record<string, Item>
+    uuid: string
+    name: string
+    location: string
+    items: Record<string, Item>
 
     constructor(uuid: string, name: string, location: string, items: Record<string, Item>) {
         this.uuid = uuid
@@ -26,7 +26,7 @@ export default class {
             name: this.name,
             location: this.location,
             items: this.items,
-			isShared: true
+            isShared: true
         }
     }
 }

@@ -49,14 +49,14 @@ export default class {
 
     estimateCurrentTime(): number | null {
         // converts { peopleAhead: x, timeTaken: y} to [x, y]
-		// TODO: Check if it is calculating well
+        // TODO: Check if it is calculating well
         const formattedData = this.#regressionData.map(r => [r.itemsAhead, r.timeTaken] as DataPoint)
 
         const result = regression.linear(formattedData)
         if (result.equation[1] == NaN) {
             return null
         } else {
-			// TODO: Verify with teacher if we need to divide by two
+            // TODO: Verify with teacher if we need to divide by two
             return result.predict(this.itemsInLine())[1]
         }
     }

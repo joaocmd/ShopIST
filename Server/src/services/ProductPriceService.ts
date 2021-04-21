@@ -15,17 +15,17 @@ export default class ProductPriceService {
 		} else {
 			products[barcode].push(new ProductPrice(location, price))
 		}
-    }
+	}
 
 	static getProductPrices(barcode: string) {
-        return Object.values(products[barcode])
-    }
+		return Object.values(products[barcode])
+	}
 
 	static getProductPrice(barcode: string, location: Location): ProductPrice | null {
 		const prices = ProductPriceService.getProductPrices(barcode)
-            .map(product => ({ product: product, distance: product.location.getDistance(location) }))
-            .filter(b => b.distance <= MAX_DISTANCE)
-            .sort((a, b) => a.distance - b.distance)
+			.map(product => ({ product, distance: product.location.getDistance(location) }))
+			.filter(b => b.distance <= MAX_DISTANCE)
+			.sort((a, b) => a.distance - b.distance)
 
 		if (prices.length > 0) {
 			return prices[0].product
@@ -36,7 +36,7 @@ export default class ProductPriceService {
 
 	static getProductsPrice(barcodes: string[], location: Location): Record<string, Number> {
 		let res: Record<string, Number> = {}
-		barcodes.forEach( (barcode) => {
+		barcodes.forEach((barcode) => {
 			let price = this.getProductPrice(barcode, location)
 			if (price !== null) {
 				res[barcode] = price.price
@@ -47,7 +47,7 @@ export default class ProductPriceService {
 
 	static getProductPriceStore(barcode: string, locations: Location[]): ProductPrice[] {
 		let res: ProductPrice[] = []
-		locations.forEach( (location) => {
+		locations.forEach((location) => {
 			let price = this.getProductPrice(barcode, location)
 			if (price !== null) {
 				res.push(price)
@@ -57,11 +57,11 @@ export default class ProductPriceService {
 	}
 
 	static removeProduct(barcode: string) {
-        delete products[barcode]
-    }
+		delete products[barcode]
+	}
 
 	static removeProductPrice(barcode: string, location: Location) {
-        delete products[barcode]
-    }
+		delete products[barcode]
+	}
 
 }
