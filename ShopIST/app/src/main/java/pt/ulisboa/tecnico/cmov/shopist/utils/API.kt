@@ -2,6 +2,7 @@ package pt.ulisboa.tecnico.cmov.shopist.utils
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
 import com.android.volley.*
@@ -525,11 +526,10 @@ class API constructor(context: Context) {
 
         queue.add(setRetryPolicy(stringRequest))
     }
-
-    @Suppress("UNCHECKED_CAST")
+    
     fun getProductImage(
         id: UUID,
-        onSuccessListener: (response: String) -> Unit,
+        onSuccessListener: (response: Bitmap) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
         val url = "$baseURL/images/$id"
@@ -538,7 +538,9 @@ class API constructor(context: Context) {
             Request.Method.GET, url,
             { response ->
                 setConnection(null)
-                onSuccessListener(response)
+                val imageBytes = Base64.decode(response, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                onSuccessListener(bitmap)
             },
             {
                 setConnection(it)

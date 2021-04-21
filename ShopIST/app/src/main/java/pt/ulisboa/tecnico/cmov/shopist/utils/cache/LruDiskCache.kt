@@ -67,8 +67,7 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
 
 		// request from server
         API.getInstance(shopIST).getProductImage(key,
-            {
-                val bitmap = BitmapFactory.decodeByteArray(it.toByteArray(), 0, it.length)
+            { bitmap ->
                 putImage(key, bitmap, false)
                 onSuccessListener(bitmap)
             },
