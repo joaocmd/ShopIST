@@ -58,7 +58,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">ShopISTa</string>
-    <string name="nav_header_subtitle">hugo@trabalha.sff</string>
+    <string name="nav_header_subtitle">hugo@work.pls</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <!-- Global -->
@@ -91,11 +91,10 @@
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="action_see_more">See more</string>
-    <string name="share_pantry">Share</string>
     <string name="action_share">Share</string>
     <string name="create_pantry">Create Pantry</string>
     <string name="edit_product_title">Edit product</string>
     <string name="get_directions">Get Directions</string>
-    <string name="directions_api_url">https://dev.virtualearth.net/REST/V1/Routes</string>
     <string name="add">add</string>
+    <string name="list_name">Name</string>
 </resources>

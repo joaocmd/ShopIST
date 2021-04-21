@@ -108,21 +108,13 @@ class ProductUI : Fragment() {
     }
 
     private fun setEnableButtons(enabled: Boolean) {
-        if (product.barcode !== null) {
-            if (this::menuRoot.isInitialized) {
-                TopBarController.setSharedOptions(menuRoot, enabled)
-            }
-            root.findViewById<ImageButton>(R.id.imageButton).isEnabled = enabled
-            root.findViewById<Button>(R.id.addPriceButton).isEnabled = enabled
-        } else {
-            if (this::menuRoot.isInitialized) {
-                TopBarController.setSharedOptions(menuRoot, true)
-            }
-            root.findViewById<Button>(R.id.addPriceButton).isEnabled = true
-        }
+        val hasBarcode = product.barcode !== null
         if (this::menuRoot.isInitialized) {
-            TopBarController.setOnlineOptions(menuRoot, enabled)
+            TopBarController.setSharedOptions(menuRoot, !hasBarcode || enabled)
         }
+        root.findViewById<ImageButton>(R.id.imageButton).isEnabled = !hasBarcode || enabled
+        root.findViewById<Button>(R.id.addPriceButton).isEnabled = !hasBarcode || enabled
+        root.findViewById<Button>(R.id.seePricesButton).isEnabled = !hasBarcode || enabled
     }
 
     private fun showImages() {
@@ -132,24 +124,32 @@ class ProductUI : Fragment() {
 
         // TODO: add multiple images
         if (product.barcode !== null) {
+            // If not connected insert at least a local image
+            if (!globalData.isAPIConnected) {
+                if (product.images.size > 0) {
+                    val imageFileName = product.getLastImageName()
+                    val imagePath = File(globalData.getImageFolder(), imageFileName)
+                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+                    root.findViewById<ImageView>(R.id.productImage).setImageBitmap(imageBitmap)
+                }
+            }
+
             // Get all images from cache (and then local if not available)
             API.getInstance(requireContext()).getProductImages(product, { imageIds ->
                 imageIds.forEach { id ->
                     // Get image from cache
-                    globalData.imageCache.getAsImage(UUID.fromString(id), { image ->
-                        if (!hasImage) {
+                    if (!hasImage) {
+                        globalData.imageCache.getAsImage(UUID.fromString(id), { image ->
                             root.findViewById<ImageView>(R.id.productImage).setImageBitmap(image)
-                            hasImage = true
-                        }
-                    }, { // Ignore
-                    })
+                        }, { // Ignore
+                        })
+                        hasImage = true
+                    }
                 }
             }, {
-
             })
         } else if (product.images.size > 0) {
-            val index = product.getLastImageIndex()
-            val imageFileName = "${product.images[index]}${ShopIST.IMAGE_EXTENSION}"
+            val imageFileName = product.getLastImageName()
             val imagePath = File(imageFolder, imageFileName)
 
             val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
@@ -261,7 +261,7 @@ class ProductUI : Fragment() {
                 }
 
                 val price = priceText.toDouble()
-                if (priceStore !== null) {
+                if (priceStore !== null && product.barcode !== null) {
                     // Set price and send to server
                     product.setPrice(priceStore!!, price)
 
@@ -274,12 +274,16 @@ class ProductUI : Fragment() {
 
                     (requireActivity().applicationContext as ShopIST).savePersistent()
                     dialog.dismiss()
-                } else {
+                } else if (priceStore == null) {
                     Toast.makeText(
                         context,
                         getString(R.string.first_choose_store),
                         Toast.LENGTH_SHORT
                     ).show()
+                } else {
+                    // Set local price
+                    product.setPrice(priceStore!!, price)
+                    dialog.dismiss()
                 }
             }
         })

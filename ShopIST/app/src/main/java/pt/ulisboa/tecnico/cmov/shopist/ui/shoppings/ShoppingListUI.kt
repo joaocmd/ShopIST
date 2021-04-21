@@ -256,13 +256,32 @@ class ShoppingListUI : Fragment() {
                 if (item.product.images.size > 0) {
                     val globalData = requireActivity().applicationContext as ShopIST
 
-                    val index = item.product.getLastImageIndex()
-                    val imageFileName = "${item.product.uuid}_$index${ShopIST.IMAGE_EXTENSION}"
-                    val imagePath = File(globalData.getImageFolder(), imageFileName)
+                    // Get image from cache
+                    if (item.product.barcode !== null) {
+                        API.getInstance(requireContext()).getProductImages(item.product, { imageIds ->
+                            val lastImage = imageIds[imageIds.size-1]
 
-                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+                            // Get image from cache
+                            globalData.imageCache.getAsImage(UUID.fromString(lastImage), { image ->
+                                root.findViewById<ImageView>(R.id.productImage).setImageBitmap(image)
+                            }, { })
 
-                    view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
+                            item.product.images = imageIds.toMutableList()
+                        }, {
+                            // Verify if locally we have the image
+                            if (item.product.images.size > 0) {
+                                val imageFileName = item.product.getLastImageName()
+                                val imagePath = File(globalData.getImageFolder(), imageFileName)
+                                val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+                                view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
+                            }
+                        })
+                    } else {
+                        val imageFileName = item.product.getLastImageName()
+                        val imagePath = File(globalData.getImageFolder(), imageFileName)
+                        val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+                        view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
+                    }
                 }
             }
         }

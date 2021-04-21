@@ -1,0 +1,100 @@
+<resources>
+    <string name="app_name">ShopIST</string>
+
+    <!-- Products -->
+    <string name="create_product_item_name"> Nome do Produto </string>
+    <string name="create_product_title"> Inserir novo produto </string>
+    <string name="create_product_stores_title"> Escolha as lojas onde o pode comprar </string>
+    <string name="create_product_item_complete"> Adicionar novo produto </string>
+    <string name="edit_product">Editar Produto</string>
+    <string name="edit_product_save">Guardar Produto</string>
+    <string name="product_name">Nome do Produto</string>
+    <string name="product">Produto</string>
+    <string name="product_add_barcode">Ler Código de Barras</string>
+    <string name="product_add_price">Adicionar Preço</string>
+    <string name="product_see_prices">Ver Preços por Loja</string>
+    <string name="price_above_zero">Escreva um preço maior que 0.</string>
+
+    <!-- Pantry Items -->
+    <string name="create_pantry_item_title"> Título </string>
+    <string name="add_item_title"> Adicionar novo item </string>
+    <string name="add_item_quantity"> Quantidade do Item </string>
+    <string name="add_item_quantity_title">Mudar a Quantidade do Item</string>
+    <string name="add_item_quantity_hint">Valor igual ou maior que 0</string>
+    <string name="add_item_button"> Inserir novo item </string>
+    <string name="product_needed">Primeiro selecione um produto.</string>
+    <string name="quantity_equal_or_above_zero">Selecione uma quantidade igual ou maior que 0.</string>
+    <string name="product_already_in_pantry">Este produto já está na sua lista de despensa.</string>
+
+    <!-- Pantry Lists -->
+    <string name="new_pantry">Nova Lista de Despensa</string>
+    <string name="create_pantry_title"> Insira os seus dados da despensa </string>
+    <string name="create_pantry_warning"> Esta lista será adicionada à lista da família </string>
+    <string name="create_pantry_item_complete"> Adicionar nova Lista de Despensa </string>
+    <string name="pantry_list_name">Nome da Lista de Despensa</string>
+    <string name="edit_pantry"> Editar Lista </string>
+    <string name="edit_pantry_complete">Guardar Lista</string>
+    <string name="cannot_get_pantry">Não é possível obter a lista.</string>
+    <string name="unable_open_pantry">Não foi possível abrir a lista a partir do link.</string>
+    <string name="share_pantry_message">Olá! Aqui está o link para a nossa lista de despensa \"%s\":%n %s</string>
+    <string name="cant_edit_pantry">Não é possível editar a lista sem acesso à Internet.</string>
+
+    <!-- Shopping Lists -->
+    <string name="create_shopping_title"> Adicionar nova Lista de Compras </string>
+    <string name="create_shopping_complete"> Adicionar uma Loja nova </string>
+    <string name="edit_shopping"> Editar Loja </string>
+    <string name="edit_shopping_complete"> Guardar Loja </string>
+    <string name="new_shopping_list">Nova Lista de Compras</string>
+    <string name="shopping_default_store">Definir loja por defeito</string>
+    <string name="checkout">Checkout</string>
+    <string name="confirm_checkout">Confirmar Checkout</string>
+    <string name="checkout_complete">Checkout completado!</string>
+
+    <!-- Navigation -->
+    <string name="pantries_list">Listas de Despensa</string>
+    <string name="shopping_lists_title">Listas de Compras</string>
+    <string name="action_settings">Definições</string>
+    <string name="title_activity_side_menu_navigation">SideMenuNavigation</string>
+    <string name="navigation_drawer_open">Abrir Navegação</string>
+    <string name="navigation_drawer_close">Fechar Navegação</string>
+    <string name="nav_header_title">ShopISTa</string>
+    <string name="nav_header_subtitle">hugo@trabalha.sff</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <!-- Global -->
+    <string name="location_not_set">" Localização não definida"</string>
+    <string name="location_set">" Localização definida! "</string>
+    <string name="choose_location">Escolha a localização</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">OK</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="next">Próximo</string>
+    <string name="previous">Anterior</string>
+    <string name="error_loading_file">Erro a carregar os dados da aplicação</string>
+
+    <!-- Images -->
+    <string name="add_new_photo">Adicionar uma imagem nova</string>
+    <string name="take_photo">Tirar foto</string>
+    <string name="choose_from_gallery">Escolher a partir da galeria</string>
+
+    <!-- Others -->
+    <string name="title_activity_test">Teste</string>
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="barcode_read">Código de barras lido: %1$s.</string>
+    <string name="price">Preço (p.e.: 1.23)</string>
+    <string name="choose_store">Escolha a(s) loja(s)</string>
+    <string name="first_choose_store">Primeiro é necessário escolher uma loja</string>
+    <string name="prices_by_stores">Preços por Loja</string>
+
+    <string name="action_edit">Editar</string>
+    <string name="action_delete">Apagar</string>
+    <string name="action_see_more">Ver mais</string>
+    <string name="action_share">Partilhar</string>
+    <string name="create_pantry">Criar Lista de Despensa</string>
+    <string name="edit_product_title">Editar produto</string>
+    <string name="get_directions">Obter Direções</string>
+    <string name="add">adicionar</string>
+    <string name="list_name">Nome</string>
+</resources>

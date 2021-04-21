@@ -526,7 +526,7 @@ class API constructor(context: Context) {
 
         queue.add(setRetryPolicy(stringRequest))
     }
-    
+
     fun getProductImage(
         id: UUID,
         onSuccessListener: (response: Bitmap) -> Unit,
