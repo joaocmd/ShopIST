@@ -37,8 +37,7 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
         val file = File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         FileOutputStream(file).use {
             try {
-                val fos = FileOutputStream(file)
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
                 this.put(key, CacheItem(file, local))
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
@@ -57,10 +56,10 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
 			return
         }
 
-		val imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+       val imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         if (imagePath.exists()) {
             val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-			putImage(key, imageBitmap, true)
+            this.put(key, CacheItem(imagePath, true))
             onSuccessListener(imageBitmap)
             return
         }
@@ -72,8 +71,8 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
                 onSuccessListener(bitmap)
             },
             { 	// If can't find on server and doesn't have locally
-				onErrorListener(it)
-			}
+                onErrorListener(it)
+            }
         )
   }
 }
