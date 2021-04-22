@@ -7,7 +7,7 @@ const handler = (req: express.Request, res: express.Response) => {
         let body = req.body
         const order = StoreSortService.getOrder(body.location, body.barcodes)
         if (order) {
-            res.status(200).send({ order })
+            res.status(200).send(order)
         } else {
             res.status(400).send({ status: 400, error: 'store-not-found' })
         }

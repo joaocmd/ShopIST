@@ -14,7 +14,7 @@ const handler = (req: express.Request, res: express.Response) => {
 
 const config = {
     method: 'POST',
-    path: '/'
+    path: '/submit/'
 }
 
 export default {

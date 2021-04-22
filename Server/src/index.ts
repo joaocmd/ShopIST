@@ -1,4 +1,4 @@
-import { createServer } from "http"
+import { createServer } from "https"
 import express, { Application } from 'express'
 import morgan from 'morgan'
 import fs from 'fs'
@@ -33,8 +33,17 @@ app.use(morgan('tiny'))
 app.use(express.json())
 registerEndpoints(app)
 
-const server = createServer(app)
+// HTTP version on port 3000
+// app.listen(port, () => console.log(`Listening on port ${port}`))
 
-server.listen(port, () => console.log(`Listening on port ${port}`))
+const privateKey = fs.readFileSync( '../../private.pem')
+const certificate = fs.readFileSync( '../../certificate.pem' )
+
+createServer({
+	key: privateKey,
+	cert: certificate
+}, app).listen(443, () => {
+	console.log("Server started on port 443")
+})
 
 export default app
