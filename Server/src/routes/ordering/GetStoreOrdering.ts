@@ -9,7 +9,7 @@ const handler = (req: express.Request, res: express.Response) => {
         if (order) {
             res.status(200).send({ order })
         } else {
-            res.status(400).send({ status: 400, 'store-not-found' })
+            res.status(400).send({ status: 400, error: 'store-not-found' })
         }
     } catch (error) {
         res.status(400).send({ status: 400, error })
