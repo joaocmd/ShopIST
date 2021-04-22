@@ -1,10 +1,10 @@
 import express from "express"
 import StoreSortService from "../../services/StoreSortService"
-
+import Location from '../../model/Location'
 
 const handler = (req: express.Request, res: express.Response) => {
     try {
-        let body = req.body
+        let body = req.body as Request
         StoreSortService.submitOrder(body.location, body.order)
         res.status(200).send({ status: 200 })
     } catch (error) {
@@ -20,4 +20,9 @@ const config = {
 export default {
     handler,
     config
+}
+
+type Request = {
+    order: string[],
+    location: Location
 }

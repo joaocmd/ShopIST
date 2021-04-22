@@ -1,10 +1,10 @@
 import express from "express"
 import StoreSortService from "../../services/StoreSortService"
-
+import Location from '../../model/Location'
 
 const handler = (req: express.Request, res: express.Response) => {
     try {
-        let body = req.body
+        let body = req.body as Request
         const order = StoreSortService.getOrder(body.location, body.order)
         if (order) {
             res.status(200).send(order)
@@ -24,4 +24,9 @@ const config = {
 export default {
     handler,
     config
+}
+
+type Request = {
+    order: string[],
+    location: Location
 }
