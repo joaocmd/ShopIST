@@ -10,6 +10,8 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.*
@@ -579,5 +581,25 @@ class API constructor(context: Context) {
         // Add the request to the RequestQueue.
         queue.add(setRetryPolicy(stringRequest))
 
+    }
+
+    fun submitProductOrder(storeLocation: LatLng, order: List<String>) {
+        val request = JsonObject()
+        request.addProperty("location", storeLocation.toApiString())
+        request.add("order", JsonArray())
+        order.forEach {
+            request.asJsonArray.add(it)
+        }
+
+        val url = "$baseURL/ordering/"
+        StringRequest(
+            Request.Method.POST, url,
+            { setConnection(null) },
+            { setConnection(it) }
+        )
+    }
+
+    fun getProductOrder(store: Store, products: List<String>): List<String> {
+        return emptyList()
     }
 }

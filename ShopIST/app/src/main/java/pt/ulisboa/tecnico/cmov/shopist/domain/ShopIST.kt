@@ -78,6 +78,9 @@ class ShopIST : Application() {
 
     val imageCache: LruDiskCache = LruDiskCache(IMAGE_CACHE_SIZE, this)
 
+    // LinkedHashSet keeps order of insertion, readding an element does not push it to the end
+    val productOrder: HashSet<String> = LinkedHashSet()
+
     fun addPantryList(pantryList: PantryList) {
         allPantries[pantryList.uuid] = pantryList
     }

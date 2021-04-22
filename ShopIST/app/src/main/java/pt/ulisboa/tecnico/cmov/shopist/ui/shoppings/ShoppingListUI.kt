@@ -7,8 +7,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +37,7 @@ class ShoppingListUI : Fragment() {
     private lateinit var store: Store
     private lateinit var storeId: UUID
     private lateinit var recyclerAdapter: ShoppingListAdapter
+    private lateinit var globalData: ShopIST
 
     private lateinit var menuRoot: Menu
 
@@ -48,7 +49,8 @@ class ShoppingListUI : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             storeId = UUID.fromString(it.getString(ARG_STORE_ID))
-            val globalData = requireActivity().applicationContext as ShopIST
+            globalData = requireActivity().applicationContext as ShopIST
+            globalData.productOrder.clear()
             shoppingList = globalData.getShoppingList(storeId)
             store = globalData.getStore(storeId)
         }
@@ -113,7 +115,6 @@ class ShoppingListUI : Fragment() {
         super.onResume()
         recyclerAdapter.notifyDataSetChanged()
 
-        val globalData = requireActivity().applicationContext as ShopIST
         globalData.callbackDataSetChanged = {
             shoppingList = globalData.getShoppingList(storeId)
             recyclerAdapter.shoppingList = shoppingList
@@ -134,7 +135,6 @@ class ShoppingListUI : Fragment() {
         }
         TopBarController.optionsMenu(menu, requireActivity(), store.name, items)
 
-        val globalData = requireActivity().applicationContext as ShopIST
         setEnableButtons(globalData.isAPIConnected)
     }
 
@@ -181,6 +181,10 @@ class ShoppingListUI : Fragment() {
             API.getInstance(requireContext()).updatePantry(it)
         }
 
+        store.location?.let {
+            API.getInstance(requireContext()).submitProductOrder(it, globalData.productOrder.toList())
+        }
+
         (requireActivity().applicationContext as ShopIST).savePersistent()
 
         Toast.makeText(context, getString(R.string.checkout_complete), Toast.LENGTH_SHORT).show()
@@ -189,9 +193,7 @@ class ShoppingListUI : Fragment() {
     }
 
     private fun getPrices() {
-        if (store.location === null) {
-            return
-        }
+        store.location ?: return
         val products = shoppingList.items.map { i -> i.product }.filter { p -> p.barcode !== null }.toSet().toList()
         val barcodeProducts = products.map { p -> p.barcode!! to p }.toMap()
         API.getInstance(requireContext()).getPricesForStore(
@@ -201,7 +203,6 @@ class ShoppingListUI : Fragment() {
                 res.forEach { entry ->
                     barcodeProducts[entry.key]?.setPrice(store, entry.value)
                 }
-                val globalData = requireActivity().applicationContext as ShopIST
                 if (globalData.callbackDataSetChanged !== null) {
                     globalData.callbackDataSetChanged!!()
                 }
@@ -254,8 +255,6 @@ class ShoppingListUI : Fragment() {
 
                 // Set last image
                 if (item.product.images.size > 0) {
-                    val globalData = requireActivity().applicationContext as ShopIST
-
                     // Get image from cache
                     if (item.product.barcode !== null) {
                         API.getInstance(requireContext()).getProductImages(item.product, { imageIds ->

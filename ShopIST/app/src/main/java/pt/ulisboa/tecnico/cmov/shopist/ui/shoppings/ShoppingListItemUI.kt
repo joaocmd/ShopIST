@@ -28,9 +28,11 @@ class ShoppingListItemUI : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var shoppingListItem: ShoppingListItem
+    private lateinit var shopIST: ShopIST
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        shopIST = requireActivity().applicationContext as ShopIST
         setHasOptionsMenu(true)
     }
 
@@ -40,7 +42,7 @@ class ShoppingListItemUI : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_store_shopping_list_item, container, false)
-        shoppingListItem = (activity?.applicationContext as ShopIST).currentShoppingListItem!!
+        shoppingListItem = shopIST.currentShoppingListItem!!
 
         root.findViewById<Button>(R.id.cancelButton).setOnClickListener{ cancel() }
         root.findViewById<Button>(R.id.okButton).setOnClickListener{ saveReturn() }
@@ -137,6 +139,9 @@ class ShoppingListItemUI : Fragment() {
                 currentQuantity.text = quantities.cart.toString()
 
                 view.findViewById<View>(R.id.moreButton).setOnClickListener {
+                    item.product.barcode?.let {
+                        shopIST.productOrder.add(it)
+                    }
                     // Add and update view
                     shoppingListItem.add(item.pantryList)
                     //cartView.text = quantities.cart.toString()
