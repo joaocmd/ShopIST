@@ -116,8 +116,8 @@ class ShoppingListUI : Fragment() {
         recyclerAdapter.notifyDataSetChanged()
 
         globalData.callbackDataSetChanged = {
-            shoppingList = globalData.getShoppingList(storeId)
-            recyclerAdapter.shoppingList = shoppingList
+            // shoppingList = globalData.getShoppingList(storeId)
+            // recyclerAdapter.shoppingList = shoppingList
             recyclerAdapter.notifyDataSetChanged()
         }
 

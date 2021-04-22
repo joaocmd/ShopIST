@@ -21,6 +21,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.prices.AddPriceDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.prices.PriceLocationDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByLocationDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByProductDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.sorting.SubmitOrderDto
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -584,12 +585,8 @@ class API constructor(context: Context) {
     }
 
     fun submitProductOrder(storeLocation: LatLng, order: List<String>) {
-        val request = JsonObject()
-        request.addProperty("location", storeLocation.toApiString())
-        request.add("order", JsonArray())
-        order.forEach {
-            request.asJsonArray.add(it)
-        }
+
+        val sentDto = SubmitOrderDto(storeLocation, order)
 
         val url = "$baseURL/ordering/submit/"
         val stringRequest = object : StringRequest(
@@ -599,7 +596,7 @@ class API constructor(context: Context) {
         ){
             override fun getBody(): ByteArray {
                 super.getBody()
-                return Gson().toJson(request).toByteArray()
+                return Gson().toJson(sentDto).toByteArray()
             }
 
             override fun getBodyContentType(): String {
@@ -617,14 +614,7 @@ class API constructor(context: Context) {
         onSuccessListener: (response: List<String>) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
-        val request = JsonObject()
-        request.addProperty("location", storeLocation.toApiString())
-        request.add("order", JsonArray())
-        products.forEach {
-            it.barcode?.let { barcode ->
-                request.asJsonArray.add(barcode)
-            }
-        }
+        val sentDto = SubmitOrderDto(storeLocation, products.mapNotNull { it.barcode })
 
         val url = "$baseURL/ordering/"
         val stringRequest = object : StringRequest(
@@ -641,7 +631,7 @@ class API constructor(context: Context) {
         ) {
             override fun getBody(): ByteArray {
                 super.getBody()
-                return Gson().toJson(request).toByteArray()
+                return Gson().toJson(sentDto).toByteArray()
             }
 
                 override fun getBodyContentType(): String {

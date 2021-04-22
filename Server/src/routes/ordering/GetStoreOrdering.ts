@@ -5,7 +5,7 @@ import StoreSortService from "../../services/StoreSortService"
 const handler = (req: express.Request, res: express.Response) => {
     try {
         let body = req.body
-        const order = StoreSortService.getOrder(body.location, body.barcodes)
+        const order = StoreSortService.getOrder(body.location, body.order)
         if (order) {
             res.status(200).send(order)
         } else {

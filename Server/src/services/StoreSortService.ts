@@ -23,6 +23,7 @@ export default class {
     }
 
     static findStore(location: Location): Sorting | undefined {
+		// FIXME: Can't use the get distance function this way
         return orders
             .map(sorting => ({ sorting, distance: sorting.location.getDistance(location) }))
             .filter(b => b.distance <= MAX_DISTANCE)
