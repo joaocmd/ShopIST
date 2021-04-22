@@ -123,6 +123,31 @@ class ShoppingListUI : Fragment() {
 
         setEnableButtons(globalData.isAPIConnected)
 
+        // Get product order
+        store.location?.let { storeLocation ->
+            API.getInstance(requireContext()).getProductOrder(
+                storeLocation,
+                shoppingList.items.map { it.product },
+                { order ->
+                    // TODO: Test this
+                    shoppingList.items = shoppingList.items
+                        .sortedWith { s1, s2 ->
+                            val s1Barcode = s1.product.barcode
+                            val s2Barcode = s2.product.barcode
+                            when {
+                                s1Barcode == null && s2Barcode == null -> 0
+                                s2Barcode == null -> 1
+                                s1Barcode == null -> -1
+                                else -> order.indexOf(s2Barcode) - order.indexOf(s1Barcode)
+                            }
+                        }
+                },
+                {
+                    // Ignore
+                }
+            )
+        }
+
         // TODO: Get one image for each product
     }
 

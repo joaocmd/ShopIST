@@ -591,15 +591,64 @@ class API constructor(context: Context) {
             request.asJsonArray.add(it)
         }
 
-        val url = "$baseURL/ordering/"
-        StringRequest(
-            Request.Method.POST, url,
+        val url = "$baseURL/ordering/submit/"
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
             { setConnection(null) },
             { setConnection(it) }
-        )
+        ){
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(request).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        queue.add(setRetryPolicy(stringRequest))
     }
 
-    fun getProductOrder(store: Store, products: List<String>): List<String> {
-        return emptyList()
+    @Suppress("UNCHECKED_CAST")
+    fun getProductOrder(
+        storeLocation: LatLng,
+        products: List<Product>,
+        onSuccessListener: (response: List<String>) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val request = JsonObject()
+        request.addProperty("location", storeLocation.toApiString())
+        request.add("order", JsonArray())
+        products.forEach {
+            it.barcode?.let { barcode ->
+                request.asJsonArray.add(barcode)
+            }
+        }
+
+        val url = "$baseURL/ordering/"
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                val result = Gson().fromJson(response, List::class.java) as List<String>
+                setConnection(null)
+                onSuccessListener(result)
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            }
+        ) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(request).toByteArray()
+            }
+
+                override fun getBodyContentType(): String {
+                    return "application/json"
+                }
+        }
+
+        queue.add(setRetryPolicy(stringRequest))
     }
 }
