@@ -36,8 +36,8 @@ registerEndpoints(app)
 // HTTP version on port 3000
 // app.listen(port, () => console.log(`Listening on port ${port}`))
 
-const privateKey = fs.readFileSync( '../../private.pem')
-const certificate = fs.readFileSync( '../../certificate.pem' )
+const privateKey = fs.readFileSync( '/keys/private.pem')
+const certificate = fs.readFileSync( '/keys/certificate.pem' )
 
 createServer({
 	key: privateKey,
