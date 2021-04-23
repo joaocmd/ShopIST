@@ -97,7 +97,6 @@ class ProductUI : Fragment() {
 
         // Update prices from server for all stores, for this product in specific
         API.getInstance(requireContext()).getPricesForProduct(product, product.stores.mapNotNull { it.location }, { res ->
-            // TODO: Show these prices
             res.forEach {
                 globalData.getClosestStore(it.location)?.let { s ->
                     product.setPrice(s, it.price)
@@ -298,6 +297,31 @@ class ProductUI : Fragment() {
         dialog.show()
     }
 
+    private fun shareProduct() {
+        API.getInstance(requireContext()).postProduct(product, {
+            // Stores product as shared
+            product.share()
+            val globalData = (requireActivity().applicationContext as ShopIST)
+            globalData.addProduct(product)
+            globalData.savePersistent()
+
+            // Share code with the user
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(
+                    Intent.EXTRA_TEXT, getString(R.string.share_product_message).format(
+                        product.name, ShopIST.createUri(product)
+                    )
+                )
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }, {
+            Toast.makeText(context, getString(R.string.error_getting_link), Toast.LENGTH_SHORT).show()
+        })
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
@@ -307,7 +331,7 @@ class ProductUI : Fragment() {
 
         TopBarController.optionsMenu(
             menu, requireActivity(), product.name,
-            listOf(TopBarItems.Edit, TopBarItems.ScanBarcode)
+            listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Share)
         )
     }
 
@@ -324,6 +348,7 @@ class ProductUI : Fragment() {
                     )
                 )
             }
+            R.id.action_share -> shareProduct()
             else -> return super.onOptionsItemSelected(item)
         }
         return true

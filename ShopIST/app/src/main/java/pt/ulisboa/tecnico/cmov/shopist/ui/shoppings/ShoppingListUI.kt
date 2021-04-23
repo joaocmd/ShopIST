@@ -130,7 +130,6 @@ class ShoppingListUI : Fragment() {
                 storeLocation,
                 shoppingList.items.map { it.product },
                 { order ->
-                    // TODO: Test this
                     val newOrder = shoppingList.items
                         .sortedWith { s1, s2 ->
                             val s1Barcode = s1.product.barcode
@@ -233,12 +232,10 @@ class ShoppingListUI : Fragment() {
                 res.forEach { entry ->
                     barcodeProducts[entry.key]?.setPrice(store, entry.value)
                 }
-                if (globalData.callbackDataSetChanged !== null) {
-                    globalData.callbackDataSetChanged!!()
-                }
+                globalData.callbackDataSetChanged?.invoke()
             },
             {
-                // FIXME: handle gracefully
+                // Ignore, can't update prices
             }
         )
     }

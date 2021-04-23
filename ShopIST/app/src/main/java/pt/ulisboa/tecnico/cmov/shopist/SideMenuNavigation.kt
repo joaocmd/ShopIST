@@ -29,6 +29,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.QueueBroadcastReceiver
@@ -79,16 +80,28 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         mReceiver = QueueBroadcastReceiver(this)
         registerReceiver(mReceiver, filter)
 
-        if (globalData.pantryToOpen !== null) {
-            findNavController(R.id.nav_host_fragment).navigate(
-                R.id.nav_pantry,
-                bundleOf(
-                    PantryUI.ARG_PANTRY_ID to globalData.pantryToOpen!!.uuid.toString()
+        when {
+            globalData.pantryToOpen !== null -> {
+                findNavController(R.id.nav_host_fragment).navigate(
+                    R.id.nav_pantry,
+                    bundleOf(
+                        PantryUI.ARG_PANTRY_ID to globalData.pantryToOpen!!.uuid.toString()
+                    )
                 )
-            )
-        }
-        else if (globalData.currentLocation !== null) {
-            openCorrespondingList(globalData.currentLocation!!)
+                globalData.pantryToOpen = null
+            }
+            globalData.productToOpen !== null -> {
+                findNavController(R.id.nav_host_fragment).navigate(
+                    R.id.nav_view_product,
+                    bundleOf(
+                        ProductUI.ARG_PRODUCT_ID to globalData.productToOpen!!.uuid.toString()
+                    )
+                )
+                globalData.productToOpen = null
+            }
+            globalData.currentLocation !== null -> {
+                openCorrespondingList(globalData.currentLocation!!)
+            }
         }
     }
 

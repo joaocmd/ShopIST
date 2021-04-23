@@ -28,6 +28,7 @@ class SplashScreenActivity : AppCompatActivity() {
     private lateinit var progressCircle: ProgressBar
 
     private var hasPantryToOpen = false
+    private var hasProductToOpen = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +78,7 @@ class SplashScreenActivity : AppCompatActivity() {
         try {
             locationUtils.getNewLocation { location ->
                 (applicationContext as ShopIST).currentLocation = location!!.toLatLng()
-                if (!hasPantryToOpen) dismiss()
+                if (!hasPantryToOpen && !hasProductToOpen) dismiss()
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)
@@ -88,21 +89,47 @@ class SplashScreenActivity : AppCompatActivity() {
         if (intent?.action == Intent.ACTION_VIEW) {
             try {
                 val shopIst = (applicationContext as ShopIST)
-                val uuid = UUID.fromString(intent.data.toString().split("/").last())
-                hasPantryToOpen = true
 
-                shopIst.loadPantryList(uuid, {
-                    shopIst.pantryToOpen = shopIst.getPantryList(it)
-                    dismiss()
-                }, {
-                    Toast.makeText(applicationContext,
-                        getString(R.string.cannot_get_pantry),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    dismiss()
-                })
+                val urlArgs = intent.data.toString().split("/")
+                if (urlArgs.size != 5) {
+                    return false
+                }
 
-                return true
+                when (urlArgs[3]) {
+                    "product" -> {
+                        val uuid = UUID.fromString(urlArgs[4])
+                        hasProductToOpen = true
+                        shopIst.loadProduct(uuid, {
+                            shopIst.productToOpen = shopIst.getProduct(it)
+                            dismiss()
+                        }, {
+                            Toast.makeText(applicationContext,
+                                getString(R.string.cannot_get_product),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dismiss()
+                        })
+                        return true
+                    }
+                    "pantry" -> {
+                        val uuid = UUID.fromString(urlArgs[4])
+                        hasPantryToOpen = true
+
+                        shopIst.loadPantryList(uuid, {
+                            shopIst.pantryToOpen = shopIst.getPantryList(it)
+                            dismiss()
+                        }, {
+                            Toast.makeText(
+                                applicationContext,
+                                getString(R.string.cannot_get_pantry),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            dismiss()
+                        })
+
+                        return true
+                    }
+                }
             } catch (e: NoSuchElementException) {
                 Toast.makeText(
                     applicationContext,

@@ -96,7 +96,7 @@ class StoresListUI : Fragment() {
                         }
                     },
                     {
-                        // FIXME: handle gracefully
+                        // Ignore, can't get route time data
                     }
                 )
             }
@@ -107,11 +107,9 @@ class StoresListUI : Fragment() {
                 val store = globalData.getStore(UUID.fromString(s.key))
                 store.queueTime = (s.value / 1000).toLong() // comes in milliseconds
             }
-            if (globalData.callbackDataSetChanged !== null) {
-                globalData.callbackDataSetChanged!!()
-            }
+            globalData.callbackDataSetChanged?.invoke()
         }, {
-            // FIXME: handle gracefully
+            // Ignore, can't get beacon estimates data
         })
     }
 
@@ -155,7 +153,7 @@ class StoresListUI : Fragment() {
                 val itemQuantityTotal = store.itemQuantityTotal(globalData.pantries.toList())
                 itemPercentage.text = itemQuantityTotal.toString()
 
-                /* TODO FIX THIS! */
+                /* TODO: HUGO FIX THIS! */
                 val startColor = Color.parseColor("#821e1e")
                 val endColor = Color.parseColor("#67a327")
                 // Log.i("Error", startColor.toString())

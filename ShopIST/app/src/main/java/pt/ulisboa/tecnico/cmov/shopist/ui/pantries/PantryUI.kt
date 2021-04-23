@@ -160,9 +160,7 @@ class PantryUI : Fragment() {
 
     private fun sharePantryList() {
         // Send pantry to server
-        val context = requireActivity().applicationContext
-
-        API.getInstance(context).postNewPantry(pantryList, {
+        API.getInstance(requireContext()).postNewPantry(pantryList, {
             pantryList.share()
             val globalData = (requireActivity().applicationContext as ShopIST)
             globalData.addPantryList(pantryList)
@@ -180,8 +178,7 @@ class PantryUI : Fragment() {
             val shareIntent = Intent.createChooser(sendIntent, null)
             startActivity(shareIntent)
         }, {
-            // TODO: Resource the string
-            Toast.makeText(context, "Cannot get link.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.error_getting_link), Toast.LENGTH_SHORT).show()
         })
     }
 

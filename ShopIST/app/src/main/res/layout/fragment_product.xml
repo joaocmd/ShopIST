@@ -39,6 +39,7 @@
                 android:text=""
                 android:ems="10"
                 android:hint="@string/create_product_item_name"
+                android:visibility="invisible"
                 android:layout_marginBottom="20dp" />
 
             <TextView

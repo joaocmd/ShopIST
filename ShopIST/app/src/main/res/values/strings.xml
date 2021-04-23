@@ -15,6 +15,8 @@
     <string name="product_see_prices">See Prices by Store</string>
     <string name="price_above_zero">Type a price above 0.</string>
     <string name="barcode_value">Barcode: %s</string>
+    <string name="share_product_message">Hi! Here\'s the link for the product \"%s\":%n %s</string>
+    <string name="cannot_get_product">Cannot get product.</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Title </string>
@@ -74,6 +76,7 @@
     <string name="previous">Previous</string>
     <string name="error_loading_file">Error loading application data</string>
     <string name="server_security_error">Can\'t connect to server due to unsafe connection</string>
+    <string name="error_getting_link">Error getting link.</string>
 
     <!-- Images -->
     <string name="add_new_photo">Add new photo</string>

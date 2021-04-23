@@ -136,6 +136,30 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
+    fun getProduct(
+        productId: UUID,
+        onSuccessListener: (response: ProductDto) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/products/$productId"
+
+        // Request a string response from the provided URL.
+        val stringRequest = StringRequest(
+            Request.Method.GET, url,
+            { response ->
+                setConnection(null)
+                val receivedDto = Gson().fromJson(response, ProductDto::class.java)
+                onSuccessListener(receivedDto)
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            })
+
+        // Add the request to the RequestQueue.
+        queue.add(setRetryPolicy(stringRequest))
+    }
+
     fun postStore(
         store: Store,
         onSuccessListener: (response: String) -> Unit,

@@ -19,7 +19,11 @@ import java.util.*
 class ShopIST : Application() {
     companion object {
         fun createUri(pantryList: PantryList): String {
-            return "https://shopist/${pantryList.uuid}"
+            return "https://shopist/pantry/${pantryList.uuid}"
+        }
+
+        fun createUri(product: Product): String {
+            return "https://shopist/product/${product.uuid}"
         }
 
         const val TAG = "shopist.domain.ShopIST"
@@ -67,6 +71,7 @@ class ShopIST : Application() {
 
     var currentShoppingListItem: ShoppingListItem? = null
     var pantryToOpen: PantryList? = null
+    var productToOpen: Product? = null
     var isAPIConnected = false
     var callbackDataSetChanged: (() -> Unit)? = null
 
@@ -87,6 +92,19 @@ class ShopIST : Application() {
 
     fun getPantryList(uuid: UUID): PantryList {
         return allPantries[uuid]!!
+    }
+
+    fun loadProduct(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
+                    onErrorListener: (error: VolleyError) -> Unit) {
+        if (allProducts.containsKey(uuid)) {
+            onSuccessListener(uuid)
+            return
+        } else {
+            API.getInstance(applicationContext).getProduct(uuid, {
+                addProduct(Product.createProduct(it, allStores))
+                onSuccessListener(it.uuid)
+            }, onErrorListener)
+        }
     }
 
     fun loadPantryList(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,

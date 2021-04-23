@@ -15,6 +15,8 @@
     <string name="product_see_prices">Ver Preços por Loja</string>
     <string name="price_above_zero">Escreva um preço maior que 0.</string>
     <string name="barcode_value">Código de Barras: %s</string>
+    <string name="share_product_message">Olá! Aqui está o link do produto \"%s\":%n %s</string>
+    <string name="cannot_get_product">Não é possível obter o produto.</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Título </string>
@@ -74,6 +76,7 @@
     <string name="previous">Anterior</string>
     <string name="error_loading_file">Erro a carregar os dados da aplicação</string>
     <string name="server_security_error">Erro ao ligar ao servidor devido a um erro de segurança</string>
+    <string name="error_getting_link">Erro ao obter o link.</string>
 
     <!-- Images -->
     <string name="add_new_photo">Adicionar uma imagem nova</string>

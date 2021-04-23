@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_nav_pantries_list_to_nav_create_pantry"
             app:destination="@id/nav_create_pantry" />
+        <action
+            android:id="@+id/action_nav_pantries_list_to_nav_view_product"
+            app:destination="@id/nav_view_product" />
     </fragment>
     <fragment
         android:id="@+id/nav_pantry"

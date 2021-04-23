@@ -70,4 +70,8 @@ class Product(name: String) {
     fun getPrice(store: Store): Number? {
         return prices[store]
     }
+
+    fun share() {
+        isShared = true
+    }
 }
