@@ -21,6 +21,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.util.*
@@ -117,7 +118,7 @@ class ShoppingListUI : Fragment() {
 
         globalData.callbackDataSetChanged = {
             // shoppingList = globalData.getShoppingList(storeId)
-            // recyclerAdapter.shoppingList = shoppingList
+            recyclerAdapter.shoppingList = shoppingList
             recyclerAdapter.notifyDataSetChanged()
         }
 
@@ -130,17 +131,21 @@ class ShoppingListUI : Fragment() {
                 shoppingList.items.map { it.product },
                 { order ->
                     // TODO: Test this
-                    shoppingList.items = shoppingList.items
+                    val newOrder = shoppingList.items
                         .sortedWith { s1, s2 ->
                             val s1Barcode = s1.product.barcode
                             val s2Barcode = s2.product.barcode
                             when {
                                 s1Barcode == null && s2Barcode == null -> 0
-                                s2Barcode == null -> 1
-                                s1Barcode == null -> -1
-                                else -> order.indexOf(s2Barcode) - order.indexOf(s1Barcode)
+                                s2Barcode == null -> -1
+                                s1Barcode == null -> 1
+                                else -> order.indexOf(s1Barcode) - order.indexOf(s2Barcode)
                             }
                         }
+
+                    shoppingList.items = newOrder
+
+                    globalData.callbackDataSetChanged?.invoke()
                 },
                 {
                     // Ignore
@@ -267,7 +272,7 @@ class ShoppingListUI : Fragment() {
                     view.findNavController().navigate(
                         R.id.action_nav_store_shopping_list_to_nav_view_product,
                         bundleOf(
-                            PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                            ProductUI.ARG_PRODUCT_ID to item.product.uuid.toString()
                         )
                     )
                 }

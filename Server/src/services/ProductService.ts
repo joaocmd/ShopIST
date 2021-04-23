@@ -4,7 +4,7 @@ const products: Record<string, Product> = {}
 
 export class ProductService {
     static create(product: Product) {
-        products[product.uuid] = new Product(product.uuid, product.name, product.stores)
+        products[product.uuid] = new Product(product.uuid, product.name, product.stores, product.barcode)
     }
 
     // static addImage(id: string, blob: any) {

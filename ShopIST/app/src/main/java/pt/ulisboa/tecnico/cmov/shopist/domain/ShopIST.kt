@@ -140,6 +140,12 @@ class ShopIST : Application() {
         return allProducts[uuid]
     }
 
+    fun getPantriesWithProduct(uuid: UUID): List<PantryList> {
+        return allPantries.filter {
+            it.value.hasProduct(uuid)
+        }.map {it.value}
+    }
+
     fun addStore(store: Store) {
         allStores[store.uuid] = store
     }

@@ -38,7 +38,7 @@ class PantryUI : Fragment() {
     private lateinit var menuRoot: Menu
     private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
-    private lateinit var globalData: ShopIST
+    // private lateinit var globalData: ShopIST
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +47,6 @@ class PantryUI : Fragment() {
             val globalData = requireActivity().applicationContext as ShopIST
             pantryList = globalData.getPantryList(pantryId)
         }
-        globalData = (requireActivity().applicationContext as ShopIST)
         setHasOptionsMenu(true)
     }
 
@@ -70,6 +69,7 @@ class PantryUI : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val globalData = (requireActivity().applicationContext as ShopIST)
         pantryList = globalData.getPantryList(pantryList.uuid)
         recyclerAdapter.notifyDataSetChanged()
         globalData.callbackDataSetChanged = {
@@ -164,6 +164,7 @@ class PantryUI : Fragment() {
 
         API.getInstance(context).postNewPantry(pantryList, {
             pantryList.share()
+            val globalData = (requireActivity().applicationContext as ShopIST)
             globalData.addPantryList(pantryList)
             globalData.savePersistent()
             // Share code to user

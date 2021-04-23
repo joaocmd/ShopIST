@@ -5,7 +5,7 @@ import Location from '../../model/Location'
 const handler = (req: express.Request, res: express.Response) => {
     try {
         let body = req.body as Request
-        const order = StoreSortService.getOrder(body.location, body.order)
+        const order = StoreSortService.getOrder(new Location(body.location), body.order)
         if (order) {
             res.status(200).send(order)
         } else {

@@ -408,6 +408,12 @@ class ProductUI : Fragment() {
                         val globalData = activity?.applicationContext as ShopIST
                         globalData.savePersistent()
 
+                        API.getInstance(requireContext()).postProduct(product, {
+                            Log.d(ShopIST.TAG, "Product sent for update")
+                        }, {
+                            Log.d(ShopIST.TAG, "Could not send product")
+                        })
+
                         Toast.makeText(
                             context, String.format(
                                 getString(R.string.barcode_read),
@@ -418,14 +424,5 @@ class ProductUI : Fragment() {
                 }
             }
         }
-    }
-
-    private fun cancel() {
-        findNavController().popBackStack()
-    }
-
-    private fun saveAndReturn() {
-        (requireActivity().applicationContext as ShopIST).savePersistent()
-        cancel()
     }
 }

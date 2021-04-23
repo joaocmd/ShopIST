@@ -95,8 +95,8 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
     override fun onResume() {
         super.onResume()
         // Sync calling
-        val syncIntent = Intent(applicationContext, SyncService::class.java)
-        startService(syncIntent)
+        // val syncIntent = Intent(applicationContext, SyncService::class.java)
+        // startService(syncIntent)
 
         // Start WiFi Direct
         val intent = Intent(applicationContext, SimWifiP2pService::class.java)
@@ -106,8 +106,8 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     override fun onPause() {
         super.onPause()
-        val syncIntent = Intent(applicationContext, SyncService::class.java)
-        stopService(syncIntent)
+        // val syncIntent = Intent(applicationContext, SyncService::class.java)
+        // stopService(syncIntent)
 
         if (mBound) {
             unbindService(mConnection)

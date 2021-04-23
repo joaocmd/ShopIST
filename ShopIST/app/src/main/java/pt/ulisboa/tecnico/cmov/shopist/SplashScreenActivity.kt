@@ -42,6 +42,18 @@ class SplashScreenActivity : AppCompatActivity() {
         receivedUriIntent()
 
         API.getInstance(applicationContext).ping()
+
+        val globalData = applicationContext as ShopIST
+        globalData.pantries.forEach {
+            if (it.isShared) {
+                // Check for updates
+                API.getInstance(applicationContext).getPantry(it.uuid, { result ->
+                    globalData.populateFromServer(result)
+                    globalData.callbackDataSetChanged?.invoke()
+                }, {
+                })
+            }
+        }
     }
 
     override fun onResume() {

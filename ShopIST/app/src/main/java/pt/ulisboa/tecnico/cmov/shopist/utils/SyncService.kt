@@ -26,20 +26,6 @@ class SyncService : Service() {
 
     override fun onCreate() {
 
-        val shopIst = (applicationContext as ShopIST)
-        shopIst.pantries.forEach {
-            if (it.isShared) {
-                // Check for updates
-                API.getInstance(applicationContext).getPantry(it.uuid, { result ->
-                    shopIst.populateFromServer(result)
-                    if (shopIst.callbackDataSetChanged !== null) {
-                        shopIst.callbackDataSetChanged!!()
-                    }
-                }, {
-                    // FIXME: handle gracefully
-                })
-            }
-        }
 
         tLogic = Runnable {
             //Schedule a task to run every 5 seconds (or however long you want)
