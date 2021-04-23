@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
+import android.widget.Toast
 import com.android.volley.*
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -24,6 +25,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByProductDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.sorting.SubmitOrderDto
 import java.io.ByteArrayOutputStream
 import java.util.*
+import javax.net.ssl.SSLHandshakeException
 
 
 class API constructor(context: Context) {
@@ -79,6 +81,15 @@ class API constructor(context: Context) {
             },
             {
                 setConnection(it)
+
+                // Verify if error if from SSL
+                if (it is NoConnectionError && (it as NoConnectionError).cause is SSLHandshakeException) {
+                    Toast.makeText(
+                        globalData,
+                        globalData.resources.getString(R.string.server_security_error),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }) {}
 
         // Add the request to the RequestQueue.

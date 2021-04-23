@@ -72,6 +72,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="error_loading_file">Error loading application data</string>
+    <string name="server_security_error">Can\'t connect to server due to unsafe connection</string>
 
     <!-- Images -->
     <string name="add_new_photo">Add new photo</string>
