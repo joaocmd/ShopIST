@@ -41,6 +41,15 @@
                 android:hint="@string/create_product_item_name"
                 android:layout_marginBottom="20dp" />
 
+            <TextView
+                android:id="@+id/barcodeValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:ems="10"
+                android:hint="barcode"
+                android:layout_marginBottom="20dp" />
+
         </LinearLayout>
 
         <LinearLayout

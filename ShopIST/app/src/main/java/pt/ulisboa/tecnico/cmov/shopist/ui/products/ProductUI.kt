@@ -72,6 +72,10 @@ class ProductUI : Fragment() {
 
         // Set product titles and buttons
         root.findViewById<TextView>(R.id.productName).text = product.name
+        // FIXME: Improve this layout
+        val barcodeShown = if (product.barcode !== null) product.barcode else getString(R.string.not_available)
+        root.findViewById<TextView>(R.id.barcodeValue).text =
+            String.format(getString(R.string.barcode_value), barcodeShown)
         root.findViewById<ImageView>(R.id.imageButton).setOnClickListener {
             selectImage()
         }

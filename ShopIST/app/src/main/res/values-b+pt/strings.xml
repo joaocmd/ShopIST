@@ -14,6 +14,7 @@
     <string name="product_add_price">Adicionar Preço</string>
     <string name="product_see_prices">Ver Preços por Loja</string>
     <string name="price_above_zero">Escreva um preço maior que 0.</string>
+    <string name="barcode_value">Código de Barras: %s</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Título </string>
@@ -88,6 +89,7 @@
     <string name="choose_store">Escolha a(s) loja(s)</string>
     <string name="first_choose_store">Primeiro é necessário escolher uma loja</string>
     <string name="prices_by_stores">Preços por Loja</string>
+    <string name="not_available">Vazio</string>
 
     <string name="action_edit">Editar</string>
     <string name="action_delete">Apagar</string>
