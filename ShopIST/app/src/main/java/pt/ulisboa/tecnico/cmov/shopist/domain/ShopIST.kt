@@ -120,7 +120,7 @@ class ShopIST : Application() {
         }
     }
 
-    fun populateFromServer(dto: BigBoyDto) {
+    fun populateFromServer(dto: PantryUpdateDto) {
         // Set stores
         dto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
         // dto.stores.forEach { s ->

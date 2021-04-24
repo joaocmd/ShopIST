@@ -11,8 +11,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.*
@@ -56,8 +54,8 @@ class API constructor(context: Context) {
         } else globalData.isAPIConnected = error !is TimeoutError
     }
 
-    private fun getUpdateDto(received: String): BigBoyDto {
-        return Gson().fromJson(received, BigBoyDto::class.java)
+    private fun getUpdateDto(received: String): PantryUpdateDto {
+        return Gson().fromJson(received, PantryUpdateDto::class.java)
     }
 
     private fun setRetryPolicy(request: StringRequest): StringRequest {
@@ -197,7 +195,7 @@ class API constructor(context: Context) {
 
     fun getPantry(
         pantryId: UUID,
-        onSuccessListener: (response: BigBoyDto) -> Unit,
+        onSuccessListener: (response: PantryUpdateDto) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
         val url = "$baseURL/pantries/$pantryId"
@@ -238,7 +236,7 @@ class API constructor(context: Context) {
         val url = "$baseURL/pantries/" + pantry.uuid.toString()
 
         // Prepare the dto
-        val sentDto = BigBoyDto(pantry)
+        val sentDto = PantryUpdateDto(pantry)
 
         // Request a string response from the provided URL.
         val stringRequest = object : StringRequest(

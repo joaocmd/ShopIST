@@ -39,7 +39,7 @@ class ProductUI : Fragment() {
     private lateinit var localImageFolder: File
 
     companion object {
-        val TAG = ProductUI::class.qualifiedName
+        const val TAG = "${ShopIST.TAG}.productUI"
         const val ARG_PRODUCT_ID = "productId"
         const val GET_BARCODE_PRODUCT = 0
         const val IMAGE_CAMERA = 1
@@ -259,7 +259,7 @@ class ProductUI : Fragment() {
                         getString(R.string.price_above_zero),
                         Toast.LENGTH_SHORT
                     ).show()
-                    Log.d(ShopIST.TAG, "Invalid number inserted: \'$priceText\'")
+                    Log.d(TAG, "Invalid number inserted: \'$priceText\'")
                     return
                 }
 
@@ -270,9 +270,9 @@ class ProductUI : Fragment() {
 
                     API.getInstance(requireContext()).submitPriceProduct(price, product,
                         priceStore!!, {
-                        Log.d(ShopIST.TAG, "Product price sent")
+                        Log.d(TAG, "Product price sent")
                     }, {
-                        Log.d(ShopIST.TAG, "Could not send price")
+                        Log.d(TAG, "Could not send price")
                     })
 
                     (requireActivity().applicationContext as ShopIST).savePersistent()
@@ -438,9 +438,9 @@ class ProductUI : Fragment() {
                         globalData.savePersistent()
 
                         API.getInstance(requireContext()).postProduct(product, {
-                            Log.d(ShopIST.TAG, "Product sent for update")
+                            Log.d(TAG, "Product sent for update")
                         }, {
-                            Log.d(ShopIST.TAG, "Could not send product")
+                            Log.d(TAG, "Could not send product")
                         })
 
                         Toast.makeText(
