@@ -38,4 +38,11 @@ export class PantryService {
         }
         return pantries[id].toObject()
     }
+
+	static delete(id: string) {
+		if (!pantries[id]) {
+            throw 'no-such-pantry'
+        }
+		delete pantries[id]
+	}
 }

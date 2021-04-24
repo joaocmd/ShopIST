@@ -38,9 +38,11 @@
     <string name="edit_pantry"> Edit Pantry </string>
     <string name="edit_pantry_complete">Save Pantry</string>
     <string name="cannot_get_pantry">Cannot get pantry list.</string>
-    <string name="unable_open_pantry">Unable to open pantry from URI</string>
+    <string name="unable_open_pantry">Unable to open pantry from URI.</string>
+    <string name="unable_delete_pantry">Unable to delete pantry.</string>
     <string name="share_pantry_message">Hi! Here\'s the link for our pantry list \"%s\":%n %s</string>
     <string name="cant_edit_pantry">Can\'t edit the pantry without internet access.</string>
+    <string name="confirm_pantry_delete">Confirm Delete Pantry</string>
 
     <!-- Shopping Lists -->
     <string name="create_shopping_title"> Add new Shopping List </string>

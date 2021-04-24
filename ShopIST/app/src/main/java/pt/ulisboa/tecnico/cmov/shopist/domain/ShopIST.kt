@@ -94,6 +94,10 @@ class ShopIST : Application() {
         return allPantries[uuid]!!
     }
 
+    fun deletePantryList(pantryList: PantryList) {
+        allPantries.remove(pantryList.uuid)
+    }
+
     fun loadProduct(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
                     onErrorListener: (error: VolleyError) -> Unit) {
         if (allProducts.containsKey(uuid)) {

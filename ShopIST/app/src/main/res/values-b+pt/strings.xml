@@ -39,8 +39,10 @@
     <string name="edit_pantry_complete">Guardar Lista</string>
     <string name="cannot_get_pantry">Não é possível obter a lista.</string>
     <string name="unable_open_pantry">Não foi possível abrir a lista a partir do link.</string>
+    <string name="unable_delete_pantry">Não foi possível eliminar a lista.</string>
     <string name="share_pantry_message">Olá! Aqui está o link para a nossa lista de despensa \"%s\":%n %s</string>
     <string name="cant_edit_pantry">Não é possível editar a lista sem acesso à Internet.</string>
+    <string name="confirm_pantry_delete">Deseja apagar a lista?</string>
 
     <!-- Shopping Lists -->
     <string name="create_shopping_title"> Adicionar nova Lista de Compras </string>

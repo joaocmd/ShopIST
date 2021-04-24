@@ -74,4 +74,16 @@ class Product(name: String) {
     fun share() {
         isShared = true
     }
+
+    fun clearStores() {
+        stores = mutableSetOf()
+    }
+
+    fun addStore(store: Store) {
+        stores.add(store)
+    }
+
+    fun hasStore(uuid: UUID): Boolean {
+        return stores.filter { it.uuid == uuid }.size == 1
+    }
 }

@@ -14,7 +14,7 @@ class ShoppingList() {
         for (pantry in allPantries) {
             for (item in pantry.items) {
                 // TODO: Check when product does not have any store
-                if (item.product.stores.contains(store) && item.needingQuantity > 0) {
+                if (item.product.hasStore(store.uuid) && item.needingQuantity > 0) {
                     if (tempItems.containsKey(item.product)) {
                         tempItems[item.product]!!.add(item)
                     } else {

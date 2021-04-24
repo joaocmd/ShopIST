@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
@@ -189,17 +190,14 @@ class ShoppingListUI : Fragment() {
     }
 
     private fun confirmCheckout() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.confirm_checkout))
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setPositiveButton(getString(R.string.ok)) { dialog, _ ->
+        ConfirmationDialog(
+            requireContext(),
+            getString(R.string.confirm_checkout),
+            {
                 saveAndReturn()
-                dialog.dismiss()
+            }, {
             }
-            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+        )
     }
 
     private fun saveAndReturn() {

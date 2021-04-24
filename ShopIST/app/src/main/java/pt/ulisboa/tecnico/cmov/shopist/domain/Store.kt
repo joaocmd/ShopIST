@@ -44,7 +44,7 @@ class Store(var name: String) : Locatable {
             for (item in pantry.items) {
                 if(item.needingQuantity > 0) {
                     max++
-                    if (item.product.stores.contains(this)) {
+                    if (item.product.hasStore(this.uuid)) {
                         counter++
                     }
                 }
@@ -59,7 +59,7 @@ class Store(var name: String) : Locatable {
         for (pantry in allPantries) {
             for (item in pantry.items) {
                 if(item.needingQuantity > 0) {
-                    if (item.product.stores.contains(this)) {
+                    if (item.product.hasStore(this.uuid)) {
                         counter += item.needingQuantity
                     }
                 }

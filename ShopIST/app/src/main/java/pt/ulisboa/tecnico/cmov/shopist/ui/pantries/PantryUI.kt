@@ -1,9 +1,12 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -23,6 +26,8 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.util.*
@@ -104,7 +109,7 @@ class PantryUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val items = mutableListOf(TopBarItems.Share, TopBarItems.Edit)
+        val items = mutableListOf(TopBarItems.Share, TopBarItems.Edit, TopBarItems.Delete)
         if (pantryList.location != null) {
             items.add(TopBarItems.Directions)
         }
@@ -127,6 +132,7 @@ class PantryUI : Fragment() {
                 mapIntent.setPackage("com.google.android.apps.maps")
                 startActivity(mapIntent)
             }
+            R.id.action_delete -> confirmDeletePantryList()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -182,6 +188,34 @@ class PantryUI : Fragment() {
         })
     }
 
+    private fun deletePantryList() {
+        // Remove pantry from ShopIST
+        val globalData = (requireActivity().applicationContext as ShopIST)
+        globalData.deletePantryList(pantryList)
+        globalData.savePersistent()
+
+        // Go to previous page
+        findNavController().popBackStack()
+    }
+
+    private fun confirmDeletePantryList() {
+        // Set confirmation dialog
+        ConfirmationDialog(
+            requireContext(),
+            getString(R.string.confirm_pantry_delete),
+            {
+                // TODO: Check if should delete in server, not doing that for now
+                deletePantryList()
+
+                // API.getInstance(requireContext()).deletePantry(pantryList, {
+                //     deletePantryList()
+                // }, {
+                //     Toast.makeText(context, getString(R.string.unable_delete_pantry), Toast.LENGTH_SHORT).show()
+                // })
+            }, {
+            }
+        )
+    }
 
     private fun onNewItem() {
         findNavController().navigate(

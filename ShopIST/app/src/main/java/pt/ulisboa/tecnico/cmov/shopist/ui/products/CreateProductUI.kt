@@ -95,11 +95,21 @@ class CreateProductUI: Fragment() {
         val globalData = activity?.applicationContext as ShopIST
         if (product == null) {
             val product = Product(productNameView.text.toString())
-            product.stores = selectedStores
+            selectedStores.forEach {
+                val store = globalData.getStore(it.uuid)
+                product.addStore(store)
+            }
             globalData.addProduct(product)
+            globalData.savePersistent()
         } else {
             product!!.name = title
-            product!!.stores = selectedStores
+            product!!.clearStores()
+            selectedStores.forEach {
+                val store = globalData.getStore(it.uuid)
+                product!!.addStore(store)
+            }
+            globalData.addProduct(product!!)
+            globalData.savePersistent()
 
             if (product!!.isShared) {
                 selectedStores.forEach {
@@ -124,7 +134,7 @@ class CreateProductUI: Fragment() {
         RecyclerView.Adapter<StoresListAdapter.ViewHolder>() {
 
         inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-            private val textView: TextView = view.findViewById(R.id.rowText)
+            private val textView: TextView = view.findViewById(R.id.storeName)
 
             fun bind(store: Store) {
                 textView.text = store.name
@@ -136,8 +146,12 @@ class CreateProductUI: Fragment() {
                 if (product == null && defaultStore != null && defaultStore == store) {
                     checkBox.isChecked = true
                     selectedStores.add(store)
-                } else if (product !== null && store in product!!.stores) {
+                } else if (product !== null && product!!.hasStore(store.uuid)) {
                     checkBox.isChecked = true
+                }
+
+                textView.setOnClickListener {
+                    checkBox.isChecked = !checkBox.isChecked
                 }
 
 

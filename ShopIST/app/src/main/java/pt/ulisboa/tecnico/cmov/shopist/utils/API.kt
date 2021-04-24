@@ -263,6 +263,27 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
+    fun deletePantry(
+        pantry: PantryList,
+        onSuccessListener: () -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val url = "$baseURL/pantries/${pantry.uuid}"
+
+        val stringRequest = StringRequest(
+            Request.Method.DELETE, url,
+            {
+                setConnection(null)
+                onSuccessListener()
+            },
+            {
+                setConnection(it)
+                onErrorListener(it)
+            })
+
+        queue.add(setRetryPolicy(stringRequest))
+    }
+
     private fun LatLng.toApiString(): String {
         return "${this.latitude},${this.longitude}"
     }
