@@ -96,7 +96,7 @@ class ShoppingListUI : Fragment() {
         }
     }
 
-    fun editStore() {
+    private fun editStore() {
         findNavController().navigate(
             R.id.action_nav_store_shopping_list_to_nav_create_shopping_list,
             bundleOf(
@@ -152,7 +152,7 @@ class ShoppingListUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menuRoot = menu
-        val items = mutableListOf(TopBarItems.Edit)
+        val items = mutableListOf(TopBarItems.Edit, TopBarItems.Delete)
         if (store.location != null) {
             items.add(TopBarItems.Directions)
         }
@@ -171,6 +171,7 @@ class ShoppingListUI : Fragment() {
                 mapIntent.setPackage("com.google.android.apps.maps")
                 startActivity(mapIntent)
             }
+            R.id.action_delete -> confirmDeleteStore()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -231,6 +232,35 @@ class ShoppingListUI : Fragment() {
         )
     }
 
+    private fun confirmDeleteStore() {
+        ConfirmationDialog(
+            requireContext(),
+            getString(R.string.confirm_store_delete),
+            {
+                deleteStore()
+            }, {}
+        )
+    }
+
+    private fun deleteStore() {
+        val globalData = requireContext().applicationContext as ShopIST
+
+        if (store.isShared) {
+            val productsToUpdate = globalData.getProductsWithStore(store.uuid)
+            globalData.removeStore(store.uuid)
+
+            // TODO: What happens if we can't reach the server? Do the products stay the same?
+            productsToUpdate.forEach {
+                API.getInstance(requireContext()).postProduct(it, {}, {})
+            }
+
+            globalData.savePersistent()
+
+        } else {
+            globalData.removeStore(store.uuid)
+            globalData.savePersistent()
+        }
+    }
 
     inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {

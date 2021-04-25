@@ -168,8 +168,24 @@ class ShopIST : Application() {
         }.map {it.value}
     }
 
+    fun getProductsWithStore(uuid: UUID): List<Product> {
+        return getAllProducts().filter {
+            it.hasStore(uuid)
+        }
+    }
+
     fun addStore(store: Store) {
         allStores[store.uuid] = store
+    }
+
+    fun removeStore(uuid: UUID) {
+        // Remove from products
+        getProductsWithStore(uuid).forEach {
+            it.removeStore(uuid)
+        }
+
+        // Remove from global data
+        allStores.remove(uuid)
     }
 
     fun getStore(uuid: UUID): Store {
