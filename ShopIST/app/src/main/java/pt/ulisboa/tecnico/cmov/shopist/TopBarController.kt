@@ -46,6 +46,7 @@ class TopBarController {
 
         fun setSharedOptions(menu: Menu, enabled: Boolean) {
             menu.findItem(R.id.action_edit).isEnabled = enabled
+            menu.findItem(R.id.action_delete).isEnabled = enabled
         }
 
         fun setEnable(menu: Menu, item: TopBarItems, enabled: Boolean) {

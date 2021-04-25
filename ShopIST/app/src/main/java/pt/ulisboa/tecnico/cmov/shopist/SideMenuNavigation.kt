@@ -33,7 +33,6 @@ import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.QueueBroadcastReceiver
-import pt.ulisboa.tecnico.cmov.shopist.utils.SyncService
 import java.util.*
 
 
@@ -107,9 +106,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     override fun onResume() {
         super.onResume()
-        // Sync calling
-        // val syncIntent = Intent(applicationContext, SyncService::class.java)
-        // startService(syncIntent)
 
         // Start WiFi Direct
         val intent = Intent(applicationContext, SimWifiP2pService::class.java)
@@ -119,8 +115,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     override fun onPause() {
         super.onPause()
-        // val syncIntent = Intent(applicationContext, SyncService::class.java)
-        // stopService(syncIntent)
 
         if (mBound) {
             unbindService(mConnection)

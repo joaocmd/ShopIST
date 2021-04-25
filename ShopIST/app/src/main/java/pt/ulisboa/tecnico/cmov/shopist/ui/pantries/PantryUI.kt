@@ -1,12 +1,9 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -27,23 +24,16 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.util.*
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PantryUI.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PantryUI : Fragment() {
 
     private lateinit var root: View
     private lateinit var menuRoot: Menu
     private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
-    // private lateinit var globalData: ShopIST
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,6 +142,7 @@ class PantryUI : Fragment() {
         }
         if (this::menuRoot.isInitialized) {
             TopBarController.setOnlineOptions(menuRoot, enabled)
+            TopBarController.setEnable(menuRoot, TopBarItems.Delete, true)
         }
     }
 
@@ -204,14 +195,7 @@ class PantryUI : Fragment() {
             requireContext(),
             getString(R.string.confirm_pantry_delete),
             {
-                // TODO: Check if should delete in server, not doing that for now
                 deletePantryList()
-
-                // API.getInstance(requireContext()).deletePantry(pantryList, {
-                //     deletePantryList()
-                // }, {
-                //     Toast.makeText(context, getString(R.string.unable_delete_pantry), Toast.LENGTH_SHORT).show()
-                // })
             }, {
             }
         )

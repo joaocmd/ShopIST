@@ -46,7 +46,6 @@
             android:label="@string/title_activity_side_menu_navigation"
             android:theme="@style/Theme.ShopIST.NoActionBar"/>
 
-        <service android:name=".utils.SyncService" android:enabled="true" android:stopWithTask="true" />
         <service android:name="pt.inesc.termite.wifidirect.service.SimWifiP2pService" />
 
         <meta-data

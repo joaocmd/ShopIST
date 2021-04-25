@@ -19,11 +19,6 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PantriesListUI.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PantriesListUI : Fragment() {
     // TODO: Don't show cart quantities
 
@@ -91,7 +86,7 @@ class PantriesListUI : Fragment() {
                         }
                     },
                     {
-                        // FIXME: handle gracefully
+                        // Ignore
                     }
                 )
             }

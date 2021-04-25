@@ -28,6 +28,7 @@
     <string name="product_needed">First select a product.</string>
     <string name="quantity_equal_or_above_zero">Select a quantity equal or above 0.</string>
     <string name="product_already_in_pantry">This product is already in your pantry list.</string>
+    <string name="confirm_pantry_item_delete">Confirm Delete Pantry Item</string>
 
     <!-- Pantry Lists -->
     <string name="new_pantry">New Pantry</string>

@@ -28,6 +28,7 @@
     <string name="product_needed">Primeiro selecione um produto.</string>
     <string name="quantity_equal_or_above_zero">Selecione uma quantidade igual ou maior que 0.</string>
     <string name="product_already_in_pantry">Este produto já está na sua lista de despensa.</string>
+    <string name="confirm_pantry_item_delete">Deseja apagar o item da sua lista?</string>
 
     <!-- Pantry Lists -->
     <string name="new_pantry">Nova Lista de Despensa</string>

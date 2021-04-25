@@ -12,6 +12,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
@@ -117,7 +118,7 @@ class PantryItemUI : Fragment() {
         menuRoot = menu
 
         TopBarController.optionsMenu(menu, requireActivity(), item.product.name,
-            listOf(TopBarItems.Edit))
+            listOf(TopBarItems.Edit, TopBarItems.Delete))
 
         val globalData = (requireActivity().applicationContext as ShopIST)
         // If couldn't connect until now disable everything
@@ -134,6 +135,7 @@ class PantryItemUI : Fragment() {
                     )
                 )
             }
+            R.id.action_delete -> deleteItem()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -158,6 +160,20 @@ class PantryItemUI : Fragment() {
             cart += v
         }
         cartView.text = cart.toString()
+    }
+
+    private fun deleteItem() {
+        ConfirmationDialog(
+            requireContext(),
+            getString(R.string.confirm_pantry_item_delete),
+            {
+                // Remove item from pantry
+                pantryList.removeItem(item.product.uuid)
+
+                saveAndReturn()
+            },
+            {}
+        )
     }
 
     private fun cancel() {

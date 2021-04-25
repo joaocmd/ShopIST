@@ -78,13 +78,6 @@ class ShoppingListUI : Fragment() {
         // Checkout button
         root.findViewById<View>(R.id.okButton).setOnClickListener { confirmCheckout() }
 
-        /*
-        // TODO: Improve the location of this button
-        root.findViewById<View>(R.id.editStoreButton).setOnClickListener {
-            editStore()
-        }
-        */
-
         return root
     }
 
