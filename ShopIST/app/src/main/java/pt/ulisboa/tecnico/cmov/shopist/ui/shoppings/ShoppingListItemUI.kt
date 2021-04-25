@@ -20,8 +20,10 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
+import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
 class ShoppingListItemUI : Fragment() {
     // TODO: Add button to set to min and max quantity on cart
@@ -60,7 +62,12 @@ class ShoppingListItemUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.optionsMenu(menu, requireActivity(),
-            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.ScanBarcode))
+            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Delete))
+
+        TopBarController.setOnlineOptions(menu, shopIST.isAPIConnected)
+        if (shoppingListItem.product.isShared) {
+            TopBarController.setSharedOptions(menu, shopIST.isAPIConnected)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -76,9 +83,32 @@ class ShoppingListItemUI : Fragment() {
                     )
                 )
             }
+            R.id.action_delete -> deleteItemShoppingList()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
+    }
+
+    private fun deleteItemShoppingList() {
+        ConfirmationDialog(
+            requireContext(),
+            getString(R.string.confirm_pantry_item_delete),
+            {
+                // Remove item from shopping list
+                if (shoppingListItem.product.isShared) {
+                    shoppingListItem.shoppingList.removeItem(shoppingListItem.product.uuid)
+                    // TODO: What happens if the server can't accept it? The product will remain equal, is that bad?
+                    API.getInstance(requireContext()).postProduct(shoppingListItem.product, {
+                        saveReturn()
+                    }, {
+                    })
+                } else {
+                    shoppingListItem.shoppingList.removeItem(shoppingListItem.product.uuid)
+                    saveReturn()
+                }
+            },
+            {}
+        )
     }
 
     // Barcode getter
@@ -100,7 +130,8 @@ class ShoppingListItemUI : Fragment() {
                     barcode
                 ), Toast.LENGTH_SHORT).show()
             }
-        } else if (requestCode == PantriesListUI.GET_BARCODE_PRODUCT && resultCode == AppCompatActivity.RESULT_CANCELED) {
+        }
+        else if (requestCode == PantriesListUI.GET_BARCODE_PRODUCT && resultCode == AppCompatActivity.RESULT_CANCELED) {
             Log.d(ShopIST.TAG, "Couldn't find barcode")
         }
     }

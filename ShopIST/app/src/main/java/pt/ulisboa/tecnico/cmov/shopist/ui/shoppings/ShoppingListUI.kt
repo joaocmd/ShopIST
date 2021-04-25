@@ -136,7 +136,7 @@ class ShoppingListUI : Fragment() {
                             }
                         }
 
-                    shoppingList.items = newOrder
+                    shoppingList.items = newOrder.toMutableList()
 
                     globalData.callbackDataSetChanged?.invoke()
                 },

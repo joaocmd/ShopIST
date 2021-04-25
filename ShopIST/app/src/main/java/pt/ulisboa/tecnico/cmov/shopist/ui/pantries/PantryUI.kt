@@ -81,9 +81,7 @@ class PantryUI : Fragment() {
             API.getInstance(requireContext()).getPantry(pantryList.uuid, { result ->
                 globalData.populateFromServer(result)
                 pantryList = globalData.getPantryList(pantryList.uuid)
-                if (globalData.callbackDataSetChanged !== null) {
-                    globalData.callbackDataSetChanged!!()
-                }
+                globalData.callbackDataSetChanged?.invoke()
             }, {
                 // Cannot edit this pantry then :(
                 if (context !== null) {

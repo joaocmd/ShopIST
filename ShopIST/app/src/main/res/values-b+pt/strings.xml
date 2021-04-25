@@ -55,6 +55,7 @@
     <string name="checkout">Checkout</string>
     <string name="confirm_checkout">Confirmar Checkout</string>
     <string name="checkout_complete">Checkout completado!</string>
+    <string name="confirm_shopping_item_delete">Deseja apagar o item da lista de compras?</string>
 
     <!-- Navigation -->
     <string name="pantries_list">Listas de Despensa</string>

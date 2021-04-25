@@ -55,6 +55,7 @@
     <string name="checkout">Checkout</string>
     <string name="confirm_checkout">Confirm Checkout</string>
     <string name="checkout_complete">Checkout complete!</string>
+    <string name="confirm_shopping_item_delete">Confirm Delete Shopping List Item</string>
 
     <!-- Navigation -->
     <string name="pantries_list">My Pantries</string>

@@ -86,4 +86,10 @@ class Product(name: String) {
     fun hasStore(uuid: UUID): Boolean {
         return stores.filter { it.uuid == uuid }.size == 1
     }
+
+    fun removeStore(uuid: UUID) {
+        stores.removeIf {
+            it.uuid == uuid
+        }
+    }
 }

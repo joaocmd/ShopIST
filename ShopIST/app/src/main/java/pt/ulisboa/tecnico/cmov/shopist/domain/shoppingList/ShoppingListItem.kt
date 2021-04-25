@@ -3,19 +3,22 @@ package pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList;
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item;
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList;
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product;
+import java.util.*
 import kotlin.math.max
 
 class ShoppingListItem(val product: Product) {
 
    var items: MutableList<Item> = mutableListOf()
    val quantities: MutableMap<PantryList, Quantity> = mutableMapOf()
+   lateinit var shoppingList: ShoppingList
 
-   constructor(product: Product, items: Collection<Item>) : this(product) {
+   constructor(product: Product, items: Collection<Item>, shoppingList: ShoppingList) : this(product) {
       items.forEach {
          this.items.add(it)
          this.quantities[it.pantryList] = Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
       }
       this.items = items.sortedBy { it.pantryList.name }.toMutableList()
+      this.shoppingList = shoppingList
    }
 
    fun getAllQuantities(): Quantity {

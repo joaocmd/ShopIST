@@ -4,12 +4,15 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import java.util.*
 
 class ShoppingList() {
 
-    lateinit var items: List<ShoppingListItem>
+    lateinit var items: MutableList<ShoppingListItem>
+    var store: Store? = null
 
     constructor(store: Store, allPantries: Collection<PantryList>) : this() {
+        this.store = store
         val tempItems: MutableMap<Product, MutableList<Item>> = mutableMapOf()
         for (pantry in allPantries) {
             for (item in pantry.items) {
@@ -25,9 +28,25 @@ class ShoppingList() {
 
         val items: MutableMap<Product, ShoppingListItem> = mutableMapOf()
         for (item in tempItems) {
-            items[item.key] = ShoppingListItem(item.key, item.value)
+            items[item.key] = ShoppingListItem(item.key, item.value, this)
         }
-        this.items = items.values.sortedBy { it.product.name }
+        this.items = items.values.sortedBy { it.product.name }.toMutableList()
+    }
+
+    fun removeItem(uuid: UUID) {
+        val item = items.find {
+            it.product.uuid == uuid
+        }
+
+        item?.let {
+            items.remove(it)
+
+            store?.let { store ->
+                it.items.forEach { pantryItem ->
+                    pantryItem.product.removeStore(store.uuid)
+                }
+            }
+        }
     }
 
     fun saveChanges() {

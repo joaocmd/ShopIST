@@ -81,7 +81,7 @@ class API constructor(context: Context) {
                 setConnection(it)
 
                 // Verify if error if from SSL
-                if (it is NoConnectionError && (it as NoConnectionError).cause is SSLHandshakeException) {
+                if (it is NoConnectionError && it.cause is SSLHandshakeException) {
                     Toast.makeText(
                         globalData,
                         globalData.resources.getString(R.string.server_security_error),
