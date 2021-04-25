@@ -106,10 +106,15 @@ class ShoppingListUI : Fragment() {
     }
 
     override fun onResume() {
-        getPrices()
         super.onResume()
-        recyclerAdapter.notifyDataSetChanged()
+        getPrices()
 
+        // Verify if some product should not appear in this list
+        shoppingList.items.removeIf {
+            !it.product.hasStore(store.uuid)
+        }
+
+        recyclerAdapter.notifyDataSetChanged()
         globalData.callbackDataSetChanged = {
             // shoppingList = globalData.getShoppingList(storeId)
             recyclerAdapter.shoppingList = shoppingList
@@ -298,7 +303,8 @@ class ShoppingListUI : Fragment() {
                 quantityView.setOnClickListener {
                     // set current item because we can't pass object references in bundles
                     (activity?.applicationContext as ShopIST).currentShoppingListItem = item
-                    findNavController().navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
+                    findNavController()
+                        .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
                 }
 
                 // Set last image

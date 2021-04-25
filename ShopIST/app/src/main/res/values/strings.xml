@@ -17,6 +17,7 @@
     <string name="barcode_value">Barcode: %s</string>
     <string name="share_product_message">Hi! Here\'s the link for the product \"%s\":%n %s</string>
     <string name="cannot_get_product">Cannot get product.</string>
+    <string name="confirm_product_delete">Confirm Delete Product</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Title </string>

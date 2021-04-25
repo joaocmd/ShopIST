@@ -154,6 +154,27 @@ class ShopIST : Application() {
         allProducts[product.uuid] = product
     }
 
+    fun removeProduct(uuid: UUID) {
+        val product = getAllProducts().find {
+            it.uuid == uuid
+        }
+
+        product?.let {
+            // Remove product from pantries
+            pantries.forEach { pantry ->
+                if (pantry.hasProduct(product)) {
+                    pantry.removeItem(uuid)
+                }
+            }
+
+            // Also remove from the current shopping list
+            currentShoppingListItem?.shoppingList?.removeItem(it.uuid)
+
+            // Remove product
+            allProducts.remove(uuid)
+        }
+    }
+
     fun getAllProducts(): List<Product> {
         return allProducts.values.toList()
     }
@@ -163,9 +184,9 @@ class ShopIST : Application() {
     }
 
     fun getPantriesWithProduct(uuid: UUID): List<PantryList> {
-        return allPantries.filter {
-            it.value.hasProduct(uuid)
-        }.map {it.value}
+        return pantries.filter {
+            it.hasProduct(uuid)
+        }
     }
 
     fun getProductsWithStore(uuid: UUID): List<Product> {

@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PriceByStoreDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
@@ -322,6 +323,33 @@ class ProductUI : Fragment() {
         })
     }
 
+    private fun confirmDeleteProduct() {
+        ConfirmationDialog(
+            requireContext(),
+            getString(R.string.confirm_product_delete),
+            {
+                deleteProduct()
+                findNavController().popBackStack()
+            }, {}
+        )
+    }
+
+    private fun deleteProduct() {
+        val globalData = requireContext().applicationContext as ShopIST
+        if (product.isShared) {
+            val pantriesToUpdate = globalData.getPantriesWithProduct(product.uuid)
+
+            globalData.removeProduct(product.uuid)
+            // TODO: What happens if the server does not respond? the pantry stays without the item?
+            pantriesToUpdate.forEach { pantryList ->
+                API.getInstance(requireContext()).updatePantry(pantryList)
+            }
+        } else {
+            globalData.removeProduct(product.uuid)
+            globalData.savePersistent()
+        }
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
@@ -331,7 +359,7 @@ class ProductUI : Fragment() {
 
         TopBarController.optionsMenu(
             menu, requireActivity(), product.name,
-            listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Share)
+            listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Share, TopBarItems.Delete)
         )
     }
 
@@ -349,6 +377,7 @@ class ProductUI : Fragment() {
                 )
             }
             R.id.action_share -> shareProduct()
+            R.id.action_delete -> confirmDeleteProduct()
             else -> return super.onOptionsItemSelected(item)
         }
         return true
