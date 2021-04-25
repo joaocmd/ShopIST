@@ -81,6 +81,8 @@ class PantryUI : Fragment() {
             API.getInstance(requireContext()).getPantry(pantryList.uuid, { result ->
                 globalData.populateFromServer(result)
                 pantryList = globalData.getPantryList(pantryList.uuid)
+
+                // FIXME: When loading the pantry from the server, when it translates to the current language, the text will flick from the original one to the translated one
                 globalData.callbackDataSetChanged?.invoke()
             }, {
                 // Cannot edit this pantry then :(
@@ -218,7 +220,7 @@ class PantryUI : Fragment() {
             private val cartQuantityView : TextView = view.findViewById(R.id.cartQuantityDisplay)
 
             fun bind(item: Item) {
-                textView.text = item.product.name
+                textView.text = item.product.getTranslatedName()
                 pantryQuantityView.text = item.pantryQuantity.toString()
                 needingQuantityView.text = item.needingQuantity.toString()
                 cartQuantityView.text = item.cartQuantity.toString()

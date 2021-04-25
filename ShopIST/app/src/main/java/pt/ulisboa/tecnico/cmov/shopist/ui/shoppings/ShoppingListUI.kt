@@ -282,7 +282,7 @@ class ShoppingListUI : Fragment() {
             private val cartQuantityView : TextView = view.findViewById(R.id.cartQuantityDisplay)
 
             fun bind(item: ShoppingListItem) {
-                textView.text = item.product.name
+                textView.text = item.product.getTranslatedName()
                 val quantities = item.getAllQuantities()
                 pantryQuantityView.text = quantities.pantry.toString()
                 needingQuantityView.text = quantities.needing.toString()

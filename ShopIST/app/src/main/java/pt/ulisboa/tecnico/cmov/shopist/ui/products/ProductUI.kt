@@ -358,7 +358,7 @@ class ProductUI : Fragment() {
         setEnableButtons(globalData.isAPIConnected)
 
         TopBarController.optionsMenu(
-            menu, requireActivity(), product.name,
+            menu, requireActivity(), product.getTranslatedName(),
             listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Share, TopBarItems.Delete)
         )
     }

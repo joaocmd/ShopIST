@@ -5,12 +5,14 @@ export default class {
     name: string
     stores: string[]
 	barcode: string | null
+	lang: string
 
-    constructor(uuid: string, name: string, stores: string[], barcode: string | null) {
+    constructor(uuid: string, name: string, stores: string[], barcode: string | null, lang: string) {
         this.uuid = uuid
         this.name = name
         this.stores = stores
 		this.barcode = barcode
+		this.lang = lang
     }
 
     // setBarcode(barcode: string) {
@@ -38,7 +40,8 @@ export default class {
             name: this.name,
             stores: this.stores,
             isShared: true,
-			barcode: this.barcode
+			barcode: this.barcode,
+			lang: this.lang
         }
     }
 }

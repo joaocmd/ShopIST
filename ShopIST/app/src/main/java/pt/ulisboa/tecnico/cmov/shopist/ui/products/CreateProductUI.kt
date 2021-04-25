@@ -94,7 +94,8 @@ class CreateProductUI: Fragment() {
 
         val globalData = activity?.applicationContext as ShopIST
         if (product == null) {
-            val product = Product(productNameView.text.toString())
+            val product = Product(productNameView.text.toString(), globalData.getLang())
+            product.setLang(globalData.getLang())
             selectedStores.forEach {
                 val store = globalData.getStore(it.uuid)
                 product.addStore(store)
@@ -104,6 +105,8 @@ class CreateProductUI: Fragment() {
         } else {
             product!!.name = title
             product!!.clearStores()
+            product!!.setLang(globalData.getLang())
+            product!!.translatedText = title
             selectedStores.forEach {
                 val store = globalData.getStore(it.uuid)
                 product!!.addStore(store)

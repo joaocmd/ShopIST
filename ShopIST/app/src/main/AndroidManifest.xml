@@ -24,7 +24,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ShopIST"
-        android:usesCleartextTraffic="true"> <!-- <<<<<<< WARNING WARNING WARNING -->
+        android:usesCleartextTraffic="true"> <!-- <<<<<<< FIXME: WARNING WARNING WARNING -->
 
         <activity android:name=".SplashScreenActivity">
             <intent-filter>

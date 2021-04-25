@@ -2,9 +2,8 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import java.util.*
 
-class Product(name: String) {
+class Product(var name: String, originLang: Languages?): Translatable(name, originLang) {
     var uuid: UUID = UUID.randomUUID()
-    var name: String = name
     var barcode: String? = null
     var images: MutableList<String> = mutableListOf()
     var stores: MutableSet<Store> = mutableSetOf()
@@ -13,7 +12,7 @@ class Product(name: String) {
 
     companion object {
         fun createProduct(p: ProductDto, stores: MutableMap<UUID, Store>): Product {
-            val product = Product(p.name)
+            val product = Product(p.name, null)
             product.uuid = p.uuid
             product.stores = p.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             p.barcode?.let {
@@ -27,6 +26,9 @@ class Product(name: String) {
                 stores[it.key]?.let { s ->
                     product.prices[s] = it.value
                 }
+            }
+            p.lang?.let {
+                product.originLang = Language.languages[it]!!
             }
             return product
         }
@@ -91,5 +93,13 @@ class Product(name: String) {
         stores.removeIf {
             it.uuid == uuid
         }
+    }
+
+    fun setLang(lang: Languages) {
+        this.originLang = lang
+    }
+
+    fun getTranslatedName(): String {
+        return this.translatedText
     }
 }

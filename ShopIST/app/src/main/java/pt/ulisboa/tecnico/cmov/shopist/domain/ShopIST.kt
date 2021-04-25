@@ -38,6 +38,7 @@ class ShopIST : Application() {
     }
 
     private var firstTime = true
+    var languageSettings = Language()
 
     private var _currentLocation: LatLng? = null
     var currentLocation: LatLng?
@@ -135,7 +136,15 @@ class ShopIST : Application() {
         // }
 
         // Set products
-        dto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allStores)}
+        dto.products.forEach { p ->
+            val product = Product.createProduct(p, allStores)
+            product.getText(getLang(), applicationContext) {
+                product.translatedText = it
+                product.hasTranslated = true
+                callbackDataSetChanged?.invoke()
+            }
+            allProducts[p.uuid] = product
+        }
         // dto.products.forEach { p ->
         //     run {
         //         val p1 = allProducts[p.uuid]
@@ -262,6 +271,18 @@ class ShopIST : Application() {
         return folder
     }
 
+    fun getLang(): Languages {
+        if (languageSettings.currentLanguage == null) {
+            val currentLang = Language.languages[Locale.getDefault().language]
+            if (currentLang == null) {
+                languageSettings.currentLanguage = Languages.EN
+            } else {
+                languageSettings.currentLanguage = currentLang
+            }
+        }
+        return languageSettings.currentLanguage!!
+    }
+
     //--------------
 
     fun startUp() {
@@ -269,7 +290,9 @@ class ShopIST : Application() {
         markFirstTime()
 
         // Load previous data
-        loadPersistent()
+        if (!firstTime) {
+            loadPersistent()
+        }
 
         // FIXME: Remove for production
         if (allPantries.isEmpty()) {
@@ -282,20 +305,18 @@ class ShopIST : Application() {
             addStore(store3)
             setDefaultStore(store2)
 
-            val product1 = Product("Pasta de Dentes")
-            product1.stores.add(store1)
+            // Products without barcode
+            val product1 = Product("Pasta de Dentes", getLang())
             product1.stores.add(store2)
 
-            val product2 = Product("Escova de Dentes")
+            val product2 = Product("Escova de Dentes", getLang())
             product2.stores.add(store2)
             product2.stores.add(store3)
 
-            val product3 = Product("Baguette")
-            product3.stores.add(store1)
+            val product3 = Product("Baguette", getLang())
             product3.stores.add(store3)
 
-            val product4 = Product("Croissant de Chocolate")
-            product4.stores.add(store1)
+            val product4 = Product("Croissant de Chocolate", getLang())
             product4.stores.add(store2)
             product4.stores.add(store3)
 
@@ -304,19 +325,37 @@ class ShopIST : Application() {
             addProduct(product3)
             addProduct(product4)
 
+            // Product with barcode
+            val productBar1 = Product("Boneco", getLang())
+            productBar1.stores.add(store1)
+            productBar1.barcode = "26907055"
+
+            val productBar2 = Product("Par de porta-chaves", getLang())
+            productBar2.stores.add(store1)
+            productBar2.barcode = "8435460733861"
+
             val pantry1 = PantryList("Dani's Pantry")
             pantry1.location = LatLng(38.73783576632948, -9.137839190661907)
-            pantry1.addItem(Item(product1, pantry1, 10, 0, 0))
-            pantry1.addItem(Item(product2, pantry1, 2, 0, 0))
-            pantry1.isShared = true
+            pantry1.addItem(Item(productBar1, pantry1, 10, 10, 0))
+            pantry1.addItem(Item(productBar2, pantry1, 10, 10, 0))
+            pantry1.share()
             API.getInstance(applicationContext).updatePantry(pantry1)
             addPantryList(pantry1)
 
             val pantry2 = PantryList("Joca's Pantry")
             pantry2.location = LatLng(38.732010405640224, -9.142283610999584)
-            pantry2.addItem(Item(product3, pantry2, 1, 1, 1))
-            pantry2.addItem(Item(product4, pantry2, 2, 0, 2))
+            pantry2.addItem(Item(product1, pantry1, 10, 4, 0))
+            pantry2.addItem(Item(product2, pantry1, 2, 13, 0))
+            pantry2.addItem(Item(product3, pantry2, 1, 23, 0))
+            pantry2.addItem(Item(product4, pantry2, 2, 6, 0))
             addPantryList(pantry2)
+
+            val currentLang = Language.languages[Locale.getDefault().language]
+            if (currentLang == null) {
+                languageSettings.currentLanguage = Languages.PT
+            } else {
+                languageSettings.currentLanguage = currentLang
+            }
         }
     }
 
@@ -325,14 +364,22 @@ class ShopIST : Application() {
         var products: MutableList<ProductDto> = mutableListOf()
         var stores: MutableList<StoreDto> = mutableListOf()
         var defaultStoreId: UUID? = null
+        var currentLang: String? = null
 
         constructor(shopIST: ShopIST) : this() {
             pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
-            products = shopIST.allProducts.values.map { p -> ProductDto(p) }.toMutableList()
+            products = shopIST.allProducts.values.map { p ->
+                val newP = ProductDto(p)
+                if (newP.lang == null) {
+                    newP.lang = getLang().language
+                }
+                newP
+            }.toMutableList()
             stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
             if (shopIST.defaultStore != null) {
                 defaultStoreId = shopIST.defaultStore!!.uuid
             }
+            currentLang = getLang().language
         }
     }
 
@@ -346,7 +393,9 @@ class ShopIST : Application() {
         }
 
         // Set products
-        shopISTDto.products.forEach { p -> allProducts[p.uuid] = Product.createProduct(p, allStores)}
+        shopISTDto.products.forEach { p ->
+            allProducts[p.uuid] = Product.createProduct(p, allStores)
+        }
 
         // Set pantries
         val pairs = shopISTDto.pantriesList
@@ -369,8 +418,10 @@ class ShopIST : Application() {
                 sb.append(scanner.nextLine())
             }
         } catch (e: FileNotFoundException) {
-            Log.e(TAG, "File not found")
-            result = false
+            if (!firstTime) {
+                Log.e(TAG, "File not found")
+                result = false
+            }
         } finally {
             if (fis != null) {
                 try {
@@ -393,6 +444,7 @@ class ShopIST : Application() {
             }
             Log.d(TAG, "Can't read data file.")
         }
+        Log.d(TAG, "Application data loaded.")
         return result
     }
 
@@ -418,7 +470,7 @@ class ShopIST : Application() {
         }
     }
 
-    fun markFirstTime() {
+    private fun markFirstTime() {
         try {
             openFileInput(FILENAME_FIRST_TIME)
             firstTime = false

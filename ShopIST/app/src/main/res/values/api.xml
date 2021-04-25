@@ -2,4 +2,5 @@
 <resources>
     <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.21.30.37:3000</string>
     <string name="directions_api_url" translatable="false">https://dev.virtualearth.net/REST/V1/Routes</string>
+    <string name="translate_api_url" translatable="false">https://translation.googleapis.com/language/translate/v2</string>
 </resources>

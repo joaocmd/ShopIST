@@ -51,9 +51,6 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         super.onCreate(savedInstanceState)
 
         val globalData = applicationContext as ShopIST
-        if (globalData.pantries.isEmpty()) {
-            globalData.startUp()
-        }
 
         setContentView(R.layout.activity_side_menu_navigation)
         val toolbar: Toolbar = findViewById(R.id.toolbar)

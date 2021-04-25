@@ -15,6 +15,8 @@ import com.android.volley.TimeoutError
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import pt.ulisboa.tecnico.cmov.shopist.domain.Language
+import pt.ulisboa.tecnico.cmov.shopist.domain.Languages
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
@@ -45,6 +47,10 @@ class SplashScreenActivity : AppCompatActivity() {
         API.getInstance(applicationContext).ping()
 
         val globalData = applicationContext as ShopIST
+        if (globalData.pantries.isEmpty()) {
+            globalData.startUp()
+        }
+
         globalData.pantries.forEach {
             if (it.isShared) {
                 // Check for updates
@@ -53,6 +59,23 @@ class SplashScreenActivity : AppCompatActivity() {
                     globalData.callbackDataSetChanged?.invoke()
                 }, {
                 })
+            }
+        }
+
+        // Set current language
+        var currentLang = Language.languages[Locale.getDefault().language]
+        if (currentLang == null) {
+            globalData.languageSettings.currentLanguage = Languages.EN
+            currentLang = Languages.EN
+        } else {
+            globalData.languageSettings.currentLanguage = currentLang
+        }
+
+        // Get translations at start
+        globalData.getAllProducts().forEach { p ->
+            p.getText(currentLang, applicationContext) {
+                p.translatedText = it
+                p.hasTranslated = true
             }
         }
     }

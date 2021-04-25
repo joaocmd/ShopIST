@@ -8,6 +8,7 @@ data class ProductDto(val uuid: UUID, val name: String) {
     var stores: MutableSet<UUID> = mutableSetOf()
     var isShared = false
     var prices: MutableMap<UUID, Number>? = mutableMapOf()
+    var lang: String? = null
 
     constructor(p: Product) : this(p.uuid, p.name) {
         stores = p.stores.map { s -> s.uuid }.toMutableSet()
@@ -15,5 +16,8 @@ data class ProductDto(val uuid: UUID, val name: String) {
         isShared = p.isShared
         images = p.images
         prices = p.prices.map { it.key.uuid to it.value }.toMap().toMutableMap()
+        p.originLang?.let {
+            lang = it.language
+        }
     }
 }
