@@ -17,7 +17,7 @@ class RatingDialog(fragment: Fragment, rating: Int?, onPositiveListener: (Int) -
         ratingBar.rating = rating?.toFloat() ?: 0f
 
         val context = fragment.requireContext()
-        builder.setTitle("TESTE")
+        builder.setTitle(context.getString(R.string.add_rating_dialog))
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton(context.resources.getString(R.string.ok)) { dialog, _ ->
                 onPositiveListener(ratingBar.rating.toInt())

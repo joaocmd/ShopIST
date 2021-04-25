@@ -110,4 +110,5 @@
     <string name="add">add</string>
     <string name="list_name">Name</string>
     <string name="no_ratings">No ratings yet!</string>
+    <string name="add_rating_dialog">Add Product Rating</string>
 </resources>
