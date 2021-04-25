@@ -39,6 +39,8 @@ class ShopIST : Application() {
 
     private var firstTime = true
     var languageSettings = Language()
+    lateinit var deviceId: UUID
+        private set
 
     private var _currentLocation: LatLng? = null
     var currentLocation: LatLng?
@@ -364,6 +366,7 @@ class ShopIST : Application() {
         var products: MutableList<ProductDto> = mutableListOf()
         var stores: MutableList<StoreDto> = mutableListOf()
         var defaultStoreId: UUID? = null
+        var deviceId: UUID? = null
         var currentLang: String? = null
 
         constructor(shopIST: ShopIST) : this() {
@@ -376,6 +379,7 @@ class ShopIST : Application() {
                 newP
             }.toMutableList()
             stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
+            deviceId = shopIST.deviceId
             if (shopIST.defaultStore != null) {
                 defaultStoreId = shopIST.defaultStore!!.uuid
             }
@@ -384,6 +388,8 @@ class ShopIST : Application() {
     }
 
     private fun populateShopIST(shopISTDto: ShopISTDto) {
+        deviceId = if (shopISTDto.deviceId != null) shopISTDto.deviceId!! else UUID.randomUUID()
+
         // Set stores
         shopISTDto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
 

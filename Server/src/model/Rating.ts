@@ -1,15 +1,28 @@
 export default class {
     ratings: Record<string, number> = {}
 
-    submitRating(val: number, voterId: string) {
-        if (val <= 0 || val > 5) {
+    submitRating(val: number, userId: string) {
+        if (val < 0 || val > 5) {
             throw 'bad-rating'
         }
-        this.ratings[voterId] = val
+        if (val === 0 && this.ratings[userId]) {
+            delete this.ratings[userId]
+        } else if (val !== 0) {
+            this.ratings[userId] = val
+        }
     }
 
-    getRating() {
+    getRating(userId: string): RatingResponse {
         const ratings = Object.values(this.ratings)
-        return ratings.reduce((a, b) => a + b) / ratings.length
+        let rating = null
+        if (ratings.length > 0) {
+            rating = ratings.reduce((a, b) => a + b) / ratings.length
+        }
+        return { rating, personalRating: this.ratings[userId] ?? null }
     }
+}
+
+export type RatingResponse = {
+    rating: number | null,
+    personalRating: number | null
 }

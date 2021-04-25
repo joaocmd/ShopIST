@@ -22,6 +22,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PriceByStoreDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.io.FileOutputStream
@@ -38,6 +39,9 @@ class ProductUI : Fragment() {
 
     private lateinit var imageFolder: File
     private lateinit var localImageFolder: File
+    private lateinit var globalData: ShopIST
+
+    private var personalRating: Int? = null
 
     companion object {
         const val TAG = "${ShopIST.TAG}.productUI"
@@ -49,7 +53,7 @@ class ProductUI : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val globalData = requireActivity().applicationContext as ShopIST
+        globalData = requireActivity().applicationContext as ShopIST
         arguments?.let {
             val productId = UUID.fromString(it.getString(ARG_PRODUCT_ID))
 
@@ -86,6 +90,9 @@ class ProductUI : Fragment() {
         root.findViewById<Button>(R.id.seePricesButton).setOnClickListener {
             showDialogPrices()
         }
+        root.findViewById<LinearLayout>(R.id.product_rating).setOnClickListener {
+            showDialogRating()
+        }
 
         return root
     }
@@ -93,7 +100,6 @@ class ProductUI : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val globalData = requireActivity().applicationContext as ShopIST
         setEnableButtons(globalData.isAPIConnected)
 
         // Update prices from server for all stores, for this product in specific
@@ -106,6 +112,16 @@ class ProductUI : Fragment() {
             globalData.savePersistent()
         }, {
         })
+
+        if (product.barcode != null) {
+            API.getInstance(requireContext()).getProductRating(
+                product.barcode!!, globalData.deviceId
+            ) { rating, personalRating ->
+                val text = if (rating != null) String.format("%.1f", rating) else getString(R.string.no_ratings)
+                root.findViewById<TextView>(R.id.rating_text).text = text
+                this.personalRating = personalRating
+            }
+        }
 
         // Update images
         showImages()
@@ -122,8 +138,6 @@ class ProductUI : Fragment() {
     }
 
     private fun showImages() {
-        val globalData = requireActivity().applicationContext as ShopIST
-
         var hasImage = false
 
         // TODO: add multiple images
@@ -218,8 +232,6 @@ class ProductUI : Fragment() {
             spinner.adapter = adapter
         }
 
-        val globalData = requireActivity().applicationContext as ShopIST
-
         // Set current store if has location
         globalData.currentLocation?.let {
             globalData.getClosestStore(it)?.let { s ->
@@ -236,8 +248,7 @@ class ProductUI : Fragment() {
                 priceStore = stores[position]
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         // Override Success button to make sure the user meets the conditions
@@ -298,11 +309,23 @@ class ProductUI : Fragment() {
         dialog.show()
     }
 
+    private fun showDialogRating() {
+        val dialog = RatingDialog(this, personalRating) { rating ->
+            API.getInstance(requireContext()).submitProductRating(
+                product.barcode!!,
+                globalData.deviceId,
+                rating
+            ) {
+                personalRating = rating
+            }
+        }
+        dialog.show()
+    }
+
     private fun shareProduct() {
         API.getInstance(requireContext()).postProduct(product, {
             // Stores product as shared
             product.share()
-            val globalData = (requireActivity().applicationContext as ShopIST)
             globalData.addProduct(product)
             globalData.savePersistent()
 
@@ -354,7 +377,6 @@ class ProductUI : Fragment() {
         super.onPrepareOptionsMenu(menu)
 
         menuRoot = menu
-        val globalData = requireActivity().applicationContext as ShopIST
         setEnableButtons(globalData.isAPIConnected)
 
         TopBarController.optionsMenu(
@@ -463,7 +485,6 @@ class ProductUI : Fragment() {
                         val barcode = data.getStringExtra(BarcodeScannerActivity.BARCODE)
                         product.barcode = barcode
 
-                        val globalData = activity?.applicationContext as ShopIST
                         globalData.savePersistent()
 
                         API.getInstance(requireContext()).postProduct(product, {

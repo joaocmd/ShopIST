@@ -22,6 +22,9 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.prices.AddPriceDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.prices.PriceLocationDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByLocationDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.prices.RequestPricesByProductDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.GetProductRatingDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.GetProductRatingResponseDto
+import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.SubmitProductRatingDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.sorting.SubmitOrderDto
 import java.io.ByteArrayOutputStream
 import java.util.*
@@ -738,4 +741,59 @@ class API constructor(context: Context) {
 
         queue.add(setRetryPolicy(stringRequest))
     }
+
+    fun getProductRating(
+        barcode: String,
+        deviceId: UUID,
+        onSuccessListener: (rating: Float?, personalRating: Int?) -> Unit) {
+        val sentDto = GetProductRatingDto(barcode, deviceId)
+
+        val url = "$baseURL/ratings/"
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            { response ->
+                val result = Gson().fromJson(response, GetProductRatingResponseDto::class.java)
+                setConnection(null)
+                onSuccessListener(result.rating, result.personalRating)
+            },
+            { setConnection(it) }
+        ) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        queue.add(setRetryPolicy(stringRequest))
+    }
+
+    fun submitProductRating(barcode: String, deviceId: UUID, rating: Int?, onSuccessListener: () -> Unit) {
+        val sentDto = SubmitProductRatingDto(barcode, deviceId, rating)
+
+        val url = "$baseURL/ratings/submit/"
+        val stringRequest = object : StringRequest(
+            Method.POST, url,
+            {
+                setConnection(null)
+                onSuccessListener()
+            },
+            { setConnection(it) }
+        ) {
+            override fun getBody(): ByteArray {
+                super.getBody()
+                return Gson().toJson(sentDto).toByteArray()
+            }
+
+            override fun getBodyContentType(): String {
+                return "application/json"
+            }
+        }
+
+        queue.add(setRetryPolicy(stringRequest))
+    }
+
 }

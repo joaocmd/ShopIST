@@ -1,4 +1,4 @@
-import Rating from '../model/Rating'
+import Rating, { RatingResponse } from '../model/Rating'
 
 const ratings: Record<string, Rating> = {}
 
@@ -11,17 +11,21 @@ export default class {
         ratings[barcode].submitRating(rating, userId)
     }
 
-    static getRating(barcode: string): number | undefined {
-        return ratings[barcode]?.getRating()
+    static getRating(barcode: string, userId: string): RatingResponse {
+        if (ratings[barcode]) {
+            return ratings[barcode].getRating(userId)
+        } else {
+            return { rating: null, personalRating: null }
+        }
     }
 
-    static getRatings(barcodes: string[]) {
-        return barcodes.reduce((acc: Record<string, number>, barcode) => {
-            const rating = this.getRating(barcode)
-            if (rating !== undefined) {
-                acc[barcode] = rating
-            }
-            return acc
-        }, {})
-    }
+    // static getRatings(barcodes: string[]) {
+    //     return barcodes.reduce((acc: Record<string, number>, barcode) => {
+    //         const rating = this.getRating(barcode)
+    //         if (rating !== undefined) {
+    //             acc[barcode] = rating
+    //         }
+    //         return acc
+    //     }, {})
+    // }
 }
