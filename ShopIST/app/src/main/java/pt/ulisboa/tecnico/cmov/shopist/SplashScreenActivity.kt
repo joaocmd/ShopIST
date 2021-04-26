@@ -46,6 +46,8 @@ class SplashScreenActivity : AppCompatActivity() {
 
         API.getInstance(applicationContext).ping()
 
+        // TODO: Get local cache files to the cache
+
         val globalData = applicationContext as ShopIST
         if (globalData.pantries.isEmpty()) {
             globalData.startUp()
@@ -63,13 +65,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
 
         // Set current language
-        var currentLang = Language.languages[Locale.getDefault().language]
-        if (currentLang == null) {
-            globalData.languageSettings.currentLanguage = Languages.EN
-            currentLang = Languages.EN
-        } else {
-            globalData.languageSettings.currentLanguage = currentLang
-        }
+        var currentLang = globalData.getLang()
 
         // Get translations at start
         globalData.getAllProducts().forEach { p ->

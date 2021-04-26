@@ -14,7 +14,7 @@ import java.util.*
 class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheItem>(maxSize) {
     
     companion object {
-        private val TAG = LruDiskCache::class.qualifiedName
+        private const val TAG = "${ShopIST.TAG}.LruDiskCache"
     }
 
     /**

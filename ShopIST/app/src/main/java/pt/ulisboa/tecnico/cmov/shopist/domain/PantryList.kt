@@ -68,6 +68,10 @@ class PantryList(var name: String) : Locatable {
         return _items.find { i -> i.product.uuid == uuid } != null
     }
 
+    fun getProducts(): List<Product> {
+        return _items.map { it.product }
+    }
+
     fun share() {
         this.isShared = true
         _items.forEach {

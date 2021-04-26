@@ -5,11 +5,13 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -26,6 +28,7 @@ import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -36,10 +39,11 @@ class ProductUI : Fragment() {
     private lateinit var product: Product
     private lateinit var stores: List<Store>
     private var priceStore: Store? = null
+    private lateinit var globalData: ShopIST
 
     private lateinit var imageFolder: File
     private lateinit var localImageFolder: File
-    private lateinit var globalData: ShopIST
+    private var photoFile: File? = null
 
     private var personalRating: Int? = null
 
@@ -103,15 +107,19 @@ class ProductUI : Fragment() {
         setEnableButtons(globalData.isAPIConnected)
 
         // Update prices from server for all stores, for this product in specific
-        API.getInstance(requireContext()).getPricesForProduct(product, product.stores.mapNotNull { it.location }, { res ->
-            res.forEach {
-                globalData.getClosestStore(it.location)?.let { s ->
-                    product.setPrice(s, it.price)
+        API.getInstance(requireContext()).getPricesForProduct(
+            product,
+            product.stores.mapNotNull { it.location },
+            { res ->
+                res.forEach {
+                    globalData.getClosestStore(it.location)?.let { s ->
+                        product.setPrice(s, it.price)
+                    }
                 }
-            }
-            globalData.savePersistent()
-        }, {
-        })
+                globalData.savePersistent()
+            },
+            {
+            })
 
         if (product.barcode != null) {
             API.getInstance(requireContext()).getProductRating(
@@ -138,43 +146,29 @@ class ProductUI : Fragment() {
     }
 
     private fun showImages() {
-        var hasImage = false
+        val layout = root.findViewById<LinearLayout>(R.id.productImageLayout)
+        layout.removeAllViews()
 
-        // TODO: add multiple images
-        if (product.barcode !== null) {
-            // If not connected insert at least a local image
-            if (!globalData.isAPIConnected) {
-                if (product.images.size > 0) {
-                    val imageFileName = product.getLastImageName()
-                    val imagePath = File(globalData.getImageFolder(), imageFileName)
-                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-                    root.findViewById<ImageView>(R.id.productImage).setImageBitmap(imageBitmap)
-                }
+        if (product.images.size > 0) {
+            root.findViewById<ImageView>(R.id.productImage).visibility = View.GONE
+            root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.VISIBLE
+            product.images.forEachIndexed { i: Int, s: String ->
+                val uuid = UUID.fromString(s)
+                globalData.imageCache.getAsImage(uuid, {
+                    val imageView = ImageView(requireContext())
+                    imageView.id = i
+                    imageView.setImageBitmap(it)
+                    imageView.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                    )
+                    layout.addView(imageView)
+                }, { })
             }
-
-            // Get all images from cache (and then local if not available)
-            API.getInstance(requireContext()).getProductImages(product, { imageIds ->
-                imageIds.forEach { id ->
-                    // Get image from cache
-                    if (!hasImage) {
-                        globalData.imageCache.getAsImage(UUID.fromString(id), { image ->
-                            root.findViewById<ImageView>(R.id.productImage).setImageBitmap(image)
-                        }, { // Ignore
-                        })
-                        hasImage = true
-                    }
-                }
-            }, {
-            })
-        } else if (product.images.size > 0) {
-            val imageFileName = product.getLastImageName()
-            val imagePath = File(imageFolder, imageFileName)
-
-            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-
-            root.findViewById<ImageView>(R.id.productImage).setImageBitmap(imageBitmap)
+        } else {
+            root.findViewById<ImageView>(R.id.productImage).visibility = View.VISIBLE
+            root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.GONE
         }
-
     }
 
     private fun selectImage() {
@@ -188,6 +182,14 @@ class ProductUI : Fragment() {
             when (options[item]) {
                 getString(R.string.take_photo) -> {
                     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+                    val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+                    photoFile = getPhotoFileUri(timeStamp)
+                    val fileProvider = FileProvider.getUriForFile(requireContext(),
+                        "pt.ulisboa.tecnico.cmov.shopist.fileprovider",
+                        photoFile!!
+                    )
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
                     startActivityForResult(intent, IMAGE_CAMERA)
                 }
                 getString(R.string.choose_from_gallery) -> {
@@ -200,6 +202,19 @@ class ProductUI : Fragment() {
             }
         }
         builder.show()
+    }
+
+    private fun getPhotoFileUri(fileName: String): File {
+        val mediaStorageDir =
+            File(requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG)
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
+            Log.d(TAG, "Failed to create directory for temp photo")
+        }
+
+        // Return the file target for the photo based on filename
+        return File(mediaStorageDir.path + File.separator + fileName)
     }
 
     private fun readBarcode() {
@@ -253,7 +268,8 @@ class ProductUI : Fragment() {
 
         // Override Success button to make sure the user meets the conditions
         val dialog = alert.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(object : View.OnClickListener {
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(object :
+            View.OnClickListener {
             override fun onClick(v: View?) {
                 val priceText = alertRoot.findViewById<EditText>(R.id.productPrice).text.toString()
                 try {
@@ -282,10 +298,10 @@ class ProductUI : Fragment() {
 
                     API.getInstance(requireContext()).submitPriceProduct(price, product,
                         priceStore!!, {
-                        Log.d(TAG, "Product price sent")
-                    }, {
-                        Log.d(TAG, "Could not send price")
-                    })
+                            Log.d(TAG, "Product price sent")
+                        }, {
+                            Log.d(TAG, "Could not send price")
+                        })
 
                     (requireActivity().applicationContext as ShopIST).savePersistent()
                     dialog.dismiss()
@@ -316,6 +332,7 @@ class ProductUI : Fragment() {
                 globalData.deviceId,
                 rating
             ) {
+                // TODO: Update rating in view
                 personalRating = rating
             }
         }
@@ -342,7 +359,8 @@ class ProductUI : Fragment() {
             val shareIntent = Intent.createChooser(sendIntent, null)
             startActivity(shareIntent)
         }, {
-            Toast.makeText(context, getString(R.string.error_getting_link), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.error_getting_link), Toast.LENGTH_SHORT)
+                .show()
         })
     }
 
@@ -419,7 +437,10 @@ class ProductUI : Fragment() {
                 product.addImage(imageId)
 
                 // Store information about the image
-                (requireActivity().applicationContext as ShopIST).savePersistent()
+                val globalData = requireActivity().applicationContext as ShopIST
+                val uuid = UUID.fromString(imageId)
+                globalData.imageCache.putImage(uuid, bitmap, true)
+                globalData.savePersistent()
                 callback(imageFileName)
             }, {
 
@@ -438,7 +459,9 @@ class ProductUI : Fragment() {
                 product.addImage(uuid.toString())
 
                 // Store information about the image
-                (requireActivity().applicationContext as ShopIST).savePersistent()
+                val globalData = requireActivity().applicationContext as ShopIST
+                globalData.imageCache.putImage(uuid, bitmap, true)
+                globalData.savePersistent()
                 callback(imageFileName)
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
@@ -452,37 +475,34 @@ class ProductUI : Fragment() {
         if (resultCode == AppCompatActivity.RESULT_OK) {
             when (requestCode) {
                 IMAGE_CAMERA -> {
-                    if (data !== null) {
-                        val bitmap = data.extras?.get("data") as Bitmap
+                    data?.let {
                         // Store the image in product and device
-                        storeImage(bitmap) {
-                            if (it !== null) {
-                                // Set the image in ImageView
-                                root.findViewById<ImageView>(R.id.productImage)
-                                    .setImageBitmap(bitmap)
+                        val takenImage = BitmapFactory.decodeFile(photoFile?.absolutePath)
+                        storeImage(takenImage) {
+                            it?.let {
+                                showImages()
                             }
                         }
                     }
                 }
                 IMAGE_PICK_GALLERY -> {
-                    if (data !== null && data.data !== null && data.data!!.path !== null) {
+                    data?.data?.path?.let {
                         val uri = data.data!!
                         val imageStream = requireContext().contentResolver.openInputStream(uri)
                         val bitmap = BitmapFactory.decodeStream(imageStream)
 
                         // Store the image in product and device
                         storeImage(bitmap) {
-                            if (it !== null) {
-                                // Set the image in ImageView
-                                root.findViewById<ImageView>(R.id.productImage)
-                                    .setImageBitmap(bitmap)
+                            it?.let {
+                                showImages()
                             }
                         }
                     }
                 }
                 GET_BARCODE_PRODUCT -> {
-                    if (data !== null) {
+                    data?.let {
                         val barcode = data.getStringExtra(BarcodeScannerActivity.BARCODE)
+                        // TODO: Verify if barcode is updating on view
                         product.barcode = barcode
 
                         globalData.savePersistent()

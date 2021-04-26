@@ -309,6 +309,7 @@ class ShoppingListUI : Fragment() {
 
                 // Set last image
                 if (item.product.images.size > 0) {
+                    // TODO: Use cache to get image
                     // Get image from cache
                     if (item.product.barcode !== null) {
                         API.getInstance(requireContext()).getProductImages(item.product, { imageIds ->
@@ -316,7 +317,7 @@ class ShoppingListUI : Fragment() {
 
                             // Get image from cache
                             globalData.imageCache.getAsImage(UUID.fromString(lastImage), { image ->
-                                root.findViewById<ImageView>(R.id.productImage).setImageBitmap(image)
+                                root.findViewById<ImageView>(R.id.productImageView).setImageBitmap(image)
                             }, { })
 
                             item.product.images = imageIds.toMutableList()

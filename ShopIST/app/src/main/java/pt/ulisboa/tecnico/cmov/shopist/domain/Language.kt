@@ -20,7 +20,7 @@ enum class Languages(val language: String) {
 }
 
 open class Translatable(var originText: String, var originLang: Languages?) {
-    var translatedText: String = originText
+    var translatedText: String = ""
     var hasTranslated = false
 
     fun getText(targetLang: Languages, context: Context, onSuccessListener: (String) -> Unit) {

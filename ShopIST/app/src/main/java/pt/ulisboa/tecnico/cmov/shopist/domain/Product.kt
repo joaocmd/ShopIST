@@ -37,8 +37,14 @@ class Product(var name: String, originLang: Languages?): Translatable(name, orig
             if (p1 === null) {
                 return createProduct(update, stores)
             }
-            p1.name = update.name
-            p1.barcode = update.barcode
+            if (update.name != p1.name) {
+                p1.hasTranslated = false
+                p1.translatedText = ""
+                p1.name = update.name
+            }
+            update.barcode?.let {
+                p1.barcode = update.barcode
+            }
             p1.stores = update.stores.mapNotNull { uuid -> stores[uuid] }.toMutableSet()
             p1.isShared = update.isShared
             update.images?.let {
@@ -48,6 +54,9 @@ class Product(var name: String, originLang: Languages?): Translatable(name, orig
                 stores[it.key]?.let { s ->
                     p1.prices[s] = it.value
                 }
+            }
+            update.lang?.let {
+                p1.originLang = Language.languages[it]!!
             }
             return p1
         }
@@ -63,6 +72,10 @@ class Product(var name: String, originLang: Languages?): Translatable(name, orig
 
     fun getLastImageName(): String {
         return "${images[getLastImageIndex()]}${ShopIST.IMAGE_EXTENSION}"
+    }
+
+    fun getLastImageId(): String {
+        return images[getLastImageIndex()]
     }
 
     fun setPrice(store: Store, price: Number) {

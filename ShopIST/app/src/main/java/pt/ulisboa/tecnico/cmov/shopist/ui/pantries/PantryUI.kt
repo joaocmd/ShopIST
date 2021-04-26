@@ -82,6 +82,15 @@ class PantryUI : Fragment() {
                 globalData.populateFromServer(result)
                 pantryList = globalData.getPantryList(pantryList.uuid)
 
+                // Get one image for each product
+                pantryList.getProducts().forEach {
+                    if (it.images.size > 0) {
+                        globalData.imageCache.getAsImage(UUID.fromString(it.getLastImageId()), {
+                            globalData.callbackDataSetChanged?.invoke()
+                        }, {})
+                    }
+                }
+
                 // FIXME: When loading the pantry from the server, when it translates to the current language, the text will flick from the original one to the translated one
                 globalData.callbackDataSetChanged?.invoke()
             }, {
@@ -90,10 +99,15 @@ class PantryUI : Fragment() {
                     setEnableButtons(globalData.isAPIConnected)
                 }
             })
-
-            // TODO: Get one image for each product from cache (and then local if not available)
         } else {
-            // TODO: Get one image for each product from local
+            pantryList.getProducts().forEach {
+                if (it.images.size > 0) {
+                    val uuid = UUID.fromString(it.getLastImageId())
+                    globalData.imageCache.getAsImage(uuid, {
+                        globalData.callbackDataSetChanged?.invoke()
+                    }, {})
+                }
+            }
         }
     }
 
@@ -255,14 +269,11 @@ class PantryUI : Fragment() {
 
                 // Set last image
                 if (item.product.images.size > 0) {
-                    val globalData = requireActivity().applicationContext as ShopIST
-
-                    val imageFileName = item.product.getLastImageName()
-                    val imagePath = File(globalData.getImageFolder(), imageFileName)
-
-                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-
-                    view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
+                    val uuid = UUID.fromString(item.product.getLastImageId())
+                    val globalData = (requireContext().applicationContext as ShopIST)
+                    globalData.imageCache.getAsImage(uuid, {
+                        view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
+                    }, {})
                 }
             }
         }

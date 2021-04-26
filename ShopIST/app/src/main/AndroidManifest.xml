@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         tools:replace="android:icon,android:theme"
@@ -54,6 +55,16 @@
 
         <activity android:name=".LocationPickerActivity" />
         <activity android:name=".BarcodeScannerActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="pt.ulisboa.tecnico.cmov.shopist.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider" />
+        </provider>
     </application>
 
 </manifest>

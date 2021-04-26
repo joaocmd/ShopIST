@@ -138,20 +138,26 @@ class ShopIST : Application() {
         // }
 
         // Set products
-        dto.products.forEach { p ->
-            val product = Product.createProduct(p, allStores)
-            product.getText(getLang(), applicationContext) {
-                product.translatedText = it
-                product.hasTranslated = true
-                callbackDataSetChanged?.invoke()
-            }
-            allProducts[p.uuid] = product
-        }
         // dto.products.forEach { p ->
-        //     run {
-        //         val p1 = allProducts[p.uuid]
-        //         allProducts[p.uuid] = Product.updateProduct(p1, p, allStores)
-        // }}
+        //     val product = Product.createProduct(p, allStores)
+        //     product.getText(getLang(), applicationContext) {
+        //         product.translatedText = it
+        //         product.hasTranslated = true
+        //         callbackDataSetChanged?.invoke()
+        //     }
+        //     allProducts[p.uuid] = product
+        // }
+        dto.products.forEach { p ->
+            run {
+                val p1 = allProducts[p.uuid]
+                val product = Product.updateProduct(p1, p, allStores)
+                product.getText(getLang(), applicationContext) {
+                    product.translatedText = it
+                    product.hasTranslated = true
+                    callbackDataSetChanged?.invoke()
+                }
+                allProducts[p.uuid] = product
+        }}
 
         // Set pantry
         allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
@@ -276,10 +282,12 @@ class ShopIST : Application() {
     fun getLang(): Languages {
         if (languageSettings.currentLanguage == null) {
             val currentLang = Language.languages[Locale.getDefault().language]
-            if (currentLang == null) {
-                languageSettings.currentLanguage = Languages.EN
+            return if (currentLang == null) {
+                // languageSettings.currentLanguage = Languages.EN
+                Languages.EN
             } else {
-                languageSettings.currentLanguage = currentLang
+                // languageSettings.currentLanguage = currentLang
+                currentLang
             }
         }
         return languageSettings.currentLanguage!!
@@ -294,6 +302,9 @@ class ShopIST : Application() {
         // Load previous data
         if (!firstTime) {
             loadPersistent()
+        }
+        if (!this::deviceId.isInitialized) {
+            deviceId = UUID.randomUUID()
         }
 
         // FIXME: Remove for production
@@ -337,11 +348,12 @@ class ShopIST : Application() {
             productBar2.barcode = "8435460733861"
 
             val pantry1 = PantryList("Dani's Pantry")
+            pantry1.uuid = UUID.fromString("fa999d5c-0f32-455f-a6ee-c38d680d1af8")
             pantry1.location = LatLng(38.73783576632948, -9.137839190661907)
             pantry1.addItem(Item(productBar1, pantry1, 10, 10, 0))
             pantry1.addItem(Item(productBar2, pantry1, 10, 10, 0))
             pantry1.share()
-            API.getInstance(applicationContext).updatePantry(pantry1)
+            // API.getInstance(applicationContext).updatePantry(pantry1)
             addPantryList(pantry1)
 
             val pantry2 = PantryList("Joca's Pantry")
@@ -383,12 +395,15 @@ class ShopIST : Application() {
             if (shopIST.defaultStore != null) {
                 defaultStoreId = shopIST.defaultStore!!.uuid
             }
-            currentLang = getLang().language
+            currentLang = languageSettings.currentLanguage?.language
         }
     }
 
     private fun populateShopIST(shopISTDto: ShopISTDto) {
         deviceId = if (shopISTDto.deviceId != null) shopISTDto.deviceId!! else UUID.randomUUID()
+        shopISTDto.currentLang?.let {
+            languageSettings.currentLanguage = Language.languages[it]!!
+        }
 
         // Set stores
         shopISTDto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
