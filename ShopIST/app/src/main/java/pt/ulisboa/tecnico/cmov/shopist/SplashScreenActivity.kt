@@ -46,11 +46,16 @@ class SplashScreenActivity : AppCompatActivity() {
 
         API.getInstance(applicationContext).ping()
 
-        // TODO: Get local cache files to the cache
-
         val globalData = applicationContext as ShopIST
         if (globalData.pantries.isEmpty()) {
             globalData.startUp()
+        }
+
+        // Get local cache files to the cache
+        globalData.getAllProducts().forEach {
+            it.images.forEach { id ->
+                globalData.imageCache.startupImage(UUID.fromString(id))
+            }
         }
 
         globalData.pantries.forEach {

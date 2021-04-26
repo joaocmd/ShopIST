@@ -347,6 +347,9 @@ class ShopIST : Application() {
             productBar2.stores.add(store1)
             productBar2.barcode = "8435460733861"
 
+            addProduct(productBar1)
+            addProduct(productBar2)
+
             val pantry1 = PantryList("Dani's Pantry")
             pantry1.uuid = UUID.fromString("fa999d5c-0f32-455f-a6ee-c38d680d1af8")
             pantry1.location = LatLng(38.73783576632948, -9.137839190661907)
@@ -364,12 +367,7 @@ class ShopIST : Application() {
             pantry2.addItem(Item(product4, pantry2, 2, 6, 0))
             addPantryList(pantry2)
 
-            val currentLang = Language.languages[Locale.getDefault().language]
-            if (currentLang == null) {
-                languageSettings.currentLanguage = Languages.PT
-            } else {
-                languageSettings.currentLanguage = currentLang
-            }
+            savePersistent()
         }
     }
 

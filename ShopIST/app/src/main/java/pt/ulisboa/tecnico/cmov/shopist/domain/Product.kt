@@ -113,6 +113,10 @@ class Product(var name: String, originLang: Languages?): Translatable(name, orig
     }
 
     fun getTranslatedName(): String {
-        return this.translatedText
+        return if (this.translatedText.isEmpty()) {
+            this.originText
+        } else {
+            this.translatedText
+        }
     }
 }

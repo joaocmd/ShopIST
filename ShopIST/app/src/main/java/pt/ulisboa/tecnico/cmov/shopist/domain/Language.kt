@@ -46,7 +46,7 @@ open class Translatable(var originText: String, var originLang: Languages?) {
                     this.translatedText = it
                     onSuccessListener(it)
                 }, {
-                    // Ignore
+                    this.translatedText = originText
                 })
             }
         }

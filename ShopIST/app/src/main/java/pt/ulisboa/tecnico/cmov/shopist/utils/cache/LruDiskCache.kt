@@ -75,4 +75,12 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
             }
         )
   }
+
+    fun startupImage(key: UUID) {
+        val imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        if (imagePath.exists()) {
+            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+            this.put(key, CacheItem(imagePath, true))
+        }
+    }
 }
