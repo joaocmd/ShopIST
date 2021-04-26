@@ -109,4 +109,6 @@
     <string name="get_directions">Obter Direções</string>
     <string name="add">adicionar</string>
     <string name="list_name">Nome</string>
+    <string name="no_ratings">Sem avaliações!</string>
+    <string name="add_rating_dialog">Adicinar Avaliação</string>
 </resources>
