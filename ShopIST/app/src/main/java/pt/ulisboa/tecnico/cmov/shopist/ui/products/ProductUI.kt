@@ -143,6 +143,7 @@ class ProductUI : Fragment() {
         root.findViewById<ImageButton>(R.id.imageButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.addPriceButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.seePricesButton).isEnabled = !hasBarcode || enabled
+        root.findViewById<LinearLayout>(R.id.product_rating).isEnabled = hasBarcode && enabled
     }
 
     private fun showImages() {
