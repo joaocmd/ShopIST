@@ -28,7 +28,7 @@ class ShopIST : Application() {
 
         const val TAG = "shopist.domain.ShopIST"
         const val FILENAME_DATA = "data.json"
-        const val FILENAME_FIRST_TIME = "first.json"
+        const val FILENAME_DEVICE_ID = "id.json"
         const val OPEN_AUTO_MAX_DISTANCE = 50
         const val IMAGE_EXTENSION = ".png"
         const val IMAGE_FOLDER = "photos"
@@ -296,15 +296,11 @@ class ShopIST : Application() {
     //--------------
 
     fun startUp() {
-        // Set if first time
-        markFirstTime()
+        getDeviceId()
 
         // Load previous data
         if (!firstTime) {
             loadPersistent()
-        }
-        if (!this::deviceId.isInitialized) {
-            deviceId = UUID.randomUUID()
         }
 
         // FIXME: Remove for production
@@ -389,7 +385,6 @@ class ShopIST : Application() {
                 newP
             }.toMutableList()
             stores = shopIST.allStores.values.map { s -> StoreDto(s) }.toMutableList()
-            deviceId = shopIST.deviceId
             if (shopIST.defaultStore != null) {
                 defaultStoreId = shopIST.defaultStore!!.uuid
             }
@@ -398,7 +393,6 @@ class ShopIST : Application() {
     }
 
     private fun populateShopIST(shopISTDto: ShopISTDto) {
-        deviceId = if (shopISTDto.deviceId != null) shopISTDto.deviceId!! else UUID.randomUUID()
         shopISTDto.currentLang?.let {
             languageSettings.currentLanguage = Language.languages[it]!!
         }
@@ -489,20 +483,27 @@ class ShopIST : Application() {
         }
     }
 
-    private fun markFirstTime() {
+    private fun getDeviceId() {
         try {
-            openFileInput(FILENAME_FIRST_TIME)
+            val fis = openFileInput(FILENAME_DEVICE_ID)
+            val scanner = Scanner(fis)
+            val sb = StringBuilder()
+            while (scanner.hasNextLine()) {
+                sb.append(scanner.nextLine())
+            }
+            deviceId = UUID.fromString(Gson().fromJson(sb.toString(), String::class.java))
             firstTime = false
             return
         } catch (e: FileNotFoundException) {
             firstTime = true
+            deviceId = UUID.randomUUID()
             Log.d(TAG, "First time opening app.")
         }
 
-        val json = Gson().toJson("true")
+        val json = Gson().toJson(deviceId)
         var fos: FileOutputStream? = null
         try {
-            fos = openFileOutput(FILENAME_FIRST_TIME, MODE_PRIVATE)
+            fos = openFileOutput(FILENAME_DEVICE_ID, MODE_PRIVATE)
             fos.write(json.toByteArray())
         } catch (e: FileNotFoundException) {
             Log.e(TAG, "File not found", e)
