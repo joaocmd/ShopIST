@@ -2,11 +2,13 @@ package pt.ulisboa.tecnico.cmov.shopist
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
-import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
@@ -14,6 +16,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -52,17 +55,40 @@ class BarcodeScannerActivity : AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
 
-        // Set up the listener for take photo button
-        findViewById<Button>(R.id.camera_capture_button).setOnClickListener { cancel() }
+        // Set up the listener for inserting manually
+        findViewById<FloatingActionButton>(R.id.insertManuallyBarcode).setOnClickListener {
+            insertManually()
+        }
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+
     }
 
-    private fun cancel() {
-        setResult(
-            RESULT_CANCELED
-        )
-        finish()
+    private fun insertManually() {
+        val editText = EditText(this)
+        editText.inputType = InputType.TYPE_CLASS_NUMBER
+        AlertDialog.Builder(this)
+            .setTitle(R.string.product_add_barcode)
+            .setView(editText)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                val value = editText.text
+                if (value.isEmpty()) {
+                    Toast.makeText(this, R.string.barcode_not_empty, Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    dialog.dismiss()
+                    setResult(
+                        RESULT_OK,
+                        Intent().putExtra(BARCODE, value.toString())
+                    )
+                    finish()
+                }
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
     private fun startCamera() {

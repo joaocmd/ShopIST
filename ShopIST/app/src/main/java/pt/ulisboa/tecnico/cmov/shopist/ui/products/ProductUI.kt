@@ -502,8 +502,10 @@ class ProductUI : Fragment() {
                 GET_BARCODE_PRODUCT -> {
                     data?.let {
                         val barcode = data.getStringExtra(BarcodeScannerActivity.BARCODE)
-                        // TODO: Verify if barcode is updating on view
+
                         product.barcode = barcode
+                        root.findViewById<TextView>(R.id.barcodeValue).text =
+                            String.format(getString(R.string.barcode_value), barcode)
 
                         globalData.savePersistent()
 

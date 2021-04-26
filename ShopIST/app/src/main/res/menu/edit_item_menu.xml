@@ -6,7 +6,7 @@
         android:id="@+id/action_scan_barcode"
         android:icon="@drawable/ic_baseline_barcode"
         app:showAsAction="ifRoom"
-        android:title="@string/product_add_barcode"
+        android:title="@string/product_scan_barcode"
         />
 
     <item

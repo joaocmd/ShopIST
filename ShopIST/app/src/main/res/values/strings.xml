@@ -10,7 +10,7 @@
     <string name="edit_product_save">Save Product</string>
     <string name="product_name">Product Name</string>
     <string name="product">Product</string>
-    <string name="product_add_barcode">Scan Barcode</string>
+    <string name="product_scan_barcode">Scan Barcode</string>
     <string name="product_add_price">Add Price</string>
     <string name="product_see_prices">See Prices by Store</string>
     <string name="price_above_zero">Type a price above 0.</string>
@@ -18,6 +18,8 @@
     <string name="share_product_message">Hi! Here\'s the link for the product \"%s\":%n %s</string>
     <string name="cannot_get_product">Cannot get product.</string>
     <string name="confirm_product_delete">Confirm Delete Product</string>
+    <string name="product_add_barcode">Insert Barcode</string>
+    <string name="barcode_not_empty">The barcode value must not be empty.</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Title </string>

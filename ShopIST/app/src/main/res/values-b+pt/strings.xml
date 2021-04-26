@@ -10,7 +10,7 @@
     <string name="edit_product_save">Guardar Produto</string>
     <string name="product_name">Nome do Produto</string>
     <string name="product">Produto</string>
-    <string name="product_add_barcode">Ler Código de Barras</string>
+    <string name="product_scan_barcode">Ler Código de Barras</string>
     <string name="product_add_price">Adicionar Preço</string>
     <string name="product_see_prices">Ver Preços por Loja</string>
     <string name="price_above_zero">Escreva um preço maior que 0.</string>
@@ -18,6 +18,8 @@
     <string name="share_product_message">Olá! Aqui está o link do produto \"%s\":%n %s</string>
     <string name="cannot_get_product">Não é possível obter o produto.</string>
     <string name="confirm_product_delete">Deseja apagar o produto?</string>
+    <string name="product_add_barcode">Insira o Código de Barras</string>
+    <string name="barcode_not_empty">O código de barras não pode ser vazio.</string>
 
     <!-- Pantry Items -->
     <string name="create_pantry_item_title"> Título </string>
