@@ -104,8 +104,6 @@ class ProductUI : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        setEnableButtons(globalData.isAPIConnected)
-
         // Update prices from server for all stores, for this product in specific
         API.getInstance(requireContext()).getPricesForProduct(
             product,
@@ -140,6 +138,7 @@ class ProductUI : Fragment() {
         if (this::menuRoot.isInitialized) {
             TopBarController.setSharedOptions(menuRoot, !hasBarcode || enabled)
         }
+        TopBarController.setOnlineOptions(menuRoot, enabled)
         root.findViewById<ImageButton>(R.id.imageButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.addPriceButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.seePricesButton).isEnabled = !hasBarcode || enabled
@@ -333,8 +332,13 @@ class ProductUI : Fragment() {
                 globalData.deviceId,
                 rating
             ) {
-                // TODO: Update rating in view
                 personalRating = rating
+
+                // Update rating in view
+                val ratingTextView = root.findViewById<TextView>(R.id.rating_text)
+                if (ratingTextView.text == getString(R.string.no_ratings)) {
+                    ratingTextView.text = String.format("%.1f", rating)
+                }
             }
         }
         dialog.show()

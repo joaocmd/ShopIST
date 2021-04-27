@@ -104,6 +104,8 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
     override fun onResume() {
         super.onResume()
 
+        // TODO: Detect change of location and open the corresponding list
+
         // Start WiFi Direct
         val intent = Intent(applicationContext, SimWifiP2pService::class.java)
         bindService(intent, mConnection, BIND_AUTO_CREATE)
@@ -190,11 +192,14 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
                 // enter beacon range
                 currentBeacon = it.deviceName
                 beaconToken = UUID.randomUUID()
-                val nrItems = (applicationContext as ShopIST).pantries.sumBy {
-                    pantry -> pantry.items.sumBy { i -> i.cartQuantity }
+
+                var nrItems = 0
+                (applicationContext as ShopIST).currentShoppingList?.let { shoppingList ->
+                    nrItems = shoppingList.getTotalCartQuantity()
                 }
+
                 if (nrItems == 0) {
-                    // Don't do anything if there are not items in cart
+                    // Don't do anything if there are no items in cart
                     return
                 }
                 API.getInstance(applicationContext).beaconEnter(it.deviceName, nrItems, beaconToken!!, {

@@ -56,4 +56,12 @@ class ShoppingList() {
     fun getPantries(): List<PantryList> {
         return items.map { it.items.map { i -> i.pantryList } }.flatten().toSet().toList()
     }
+
+    fun getTotalCartQuantity(): Int {
+        return items.sumBy { item ->
+            item.quantities.values.sumBy { q ->
+                q.cart
+            }
+        }
+    }
 }
