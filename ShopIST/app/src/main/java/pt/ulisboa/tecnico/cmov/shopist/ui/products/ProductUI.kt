@@ -334,10 +334,12 @@ class ProductUI : Fragment() {
             ) {
                 personalRating = rating
 
-                // Update rating in view
+                // Update rating in view if without rating
                 val ratingTextView = root.findViewById<TextView>(R.id.rating_text)
                 if (ratingTextView.text == getString(R.string.no_ratings)) {
                     ratingTextView.text = String.format("%.1f", rating)
+                } else {
+                    // TODO: Fetch rating after this
                 }
             }
         }

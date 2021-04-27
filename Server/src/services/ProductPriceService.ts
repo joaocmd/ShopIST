@@ -13,16 +13,25 @@ export default class ProductPriceService {
 		if (oldPrice !== null) {
 			oldPrice.price = price
 		} else {
-			products[barcode].push(new ProductPrice(location, price))
+			if (products[barcode] == undefined) {
+				products[barcode] = []	
+			}
+			products[barcode].push(new ProductPrice(new Location(location), price))
 		}
 	}
 
-	static getProductPrices(barcode: string) {
-		return Object.values(products[barcode])
+	static getProductPrices(barcode: string): ProductPrice[] | null {
+		if (products[barcode] !== undefined) {
+			return Object.values(products[barcode])
+		} else {
+			return null
+		}
 	}
 
 	static getProductPrice(barcode: string, location: Location): ProductPrice | null {
-		const prices = ProductPriceService.getProductPrices(barcode)
+		const previousPrices = ProductPriceService.getProductPrices(barcode)
+		if (previousPrices === null) return null
+		const prices = previousPrices
 			.map(product => ({ product, distance: product.location.getDistance(location) }))
 			.filter(b => b.distance <= MAX_DISTANCE)
 			.sort((a, b) => a.distance - b.distance)

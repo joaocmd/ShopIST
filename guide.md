@@ -4,6 +4,22 @@
 
 Joca tens de apagar o raio do croissant e do boneco para não ser duplicado
 
+- Price não está a ser guardado no servidor
+
+- Carregar num item para passar para compras
+- Search tool with barcode
+- Colocar o número do carrinho logo igual ao da needing
+- Subtrair assim que se coloca no carrinho
+- O carrinho tem de ser visível por todos
+- Alterar ícone de quantidade necessária
+- Localização mais rápido com low accuracy
+- Fazer proxy no servidor para aceder à api do google e bing
+- Fazer cache das traduções no servidor
+- Rating 0 estrelas?
+- Cache na pasta certa
+- Fazer preloading da cache quando se tem WiFi
+
+
 ## Guião
 
 Passo 1:
