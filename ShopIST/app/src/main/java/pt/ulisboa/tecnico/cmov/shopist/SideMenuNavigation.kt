@@ -1,14 +1,13 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.content.ComponentName
-import android.content.Intent
-import android.content.IntentFilter
-import android.content.ServiceConnection
+import android.content.*
+import android.content.SharedPreferences.Editor
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
@@ -25,13 +24,12 @@ import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList
 import pt.inesc.termite.wifidirect.SimWifiP2pManager
 import pt.inesc.termite.wifidirect.service.SimWifiP2pService
-import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
-import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.domain.*
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.QueueBroadcastReceiver
 import java.util.*
 
@@ -76,6 +74,10 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         mReceiver = QueueBroadcastReceiver(this)
         registerReceiver(mReceiver, filter)
 
+
+        findViewById<View>(R.id.buttonPT) .setOnClickListener { onChangeLanguageSetting(Languages.PT) }
+        findViewById<View>(R.id.buttonEN) .setOnClickListener { onChangeLanguageSetting(Languages.EN) }
+
         when {
             globalData.pantryToOpen !== null -> {
                 findNavController(R.id.nav_host_fragment).navigate(
@@ -119,6 +121,12 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
             unbindService(mConnection)
             mBound = false
         }
+    }
+
+    private fun onChangeLanguageSetting(lang: Languages) {
+        LocaleHelper.setNewLocale(baseContext, lang.language)
+        finish()
+        startActivity(intent)
     }
 
     private val mConnection: ServiceConnection = object : ServiceConnection {
@@ -202,18 +210,23 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
                     // Don't do anything if there are no items in cart
                     return
                 }
-                API.getInstance(applicationContext).beaconEnter(it.deviceName, nrItems, beaconToken!!, {
-                    Log.d(ShopIST.TAG, "Beacon entered successfully!")
-				}, {
-                    Log.d(ShopIST.TAG, "Beacon not entered!")
-				})
+                API.getInstance(applicationContext).beaconEnter(
+                    it.deviceName,
+                    nrItems,
+                    beaconToken!!,
+                    {
+                        Log.d(ShopIST.TAG, "Beacon entered successfully!")
+                    },
+                    {
+                        Log.d(ShopIST.TAG, "Beacon not entered!")
+                    })
             } else if (currentBeacon != null) {
                 // leave beacon range (had previously assigned beacon)
                 API.getInstance(applicationContext).beaconLeave(currentBeacon!!, beaconToken!!, {
                     Log.d(ShopIST.TAG, "Beacon entered successfully!")
-				}, {
+                }, {
                     Log.d(ShopIST.TAG, "Beacon not entered!")
-				})
+                })
                 currentBeacon = null
                 beaconToken = null
             }

@@ -20,5 +20,28 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
+        app:menu="@menu/activity_main_drawer" >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            >
+
+            <Button
+                android:layout_alignParentBottom="true"
+                android:id="@+id/buttonPT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PT" />
+            <Button
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/buttonEN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EN" />
+        </RelativeLayout>
+    </com.google.android.material.navigation.NavigationView>
+
 </androidx.drawerlayout.widget.DrawerLayout>

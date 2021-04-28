@@ -20,6 +20,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Languages
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils
 import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
 import java.util.*
@@ -69,6 +70,7 @@ class SplashScreenActivity : AppCompatActivity() {
             }
         }
 
+        LocaleHelper.setLocale(baseContext)
         // Set current language
         val currentLang = globalData.getLang()
 

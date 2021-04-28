@@ -13,4 +13,5 @@
             android:icon="@drawable/ic_baseline_add_shopping_cart_24"
             android:title="@string/shopping_lists_title" />
     </group>
+
 </menu>

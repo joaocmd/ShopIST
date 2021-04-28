@@ -3,6 +3,8 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.util.Log
 import android.widget.Toast
 import com.android.volley.VolleyError
@@ -12,9 +14,11 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.cache.LruDiskCache
 import java.io.*
 import java.util.*
+
 
 class ShopIST : Application() {
     companion object {
@@ -102,8 +106,10 @@ class ShopIST : Application() {
         allPantries.remove(pantryList.uuid)
     }
 
-    fun loadProduct(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
-                    onErrorListener: (error: VolleyError) -> Unit) {
+    fun loadProduct(
+        uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
         if (allProducts.containsKey(uuid)) {
             onSuccessListener(uuid)
             return
@@ -115,8 +121,10 @@ class ShopIST : Application() {
         }
     }
 
-    fun loadPantryList(uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
-                       onErrorListener: (error: VolleyError) -> Unit) {
+    fun loadPantryList(
+        uuid: UUID, onSuccessListener: (response: UUID) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
         if (allPantries.containsKey(uuid)) {
             onSuccessListener(uuid)
             return
@@ -281,17 +289,11 @@ class ShopIST : Application() {
     }
 
     fun getLang(): Languages {
-        if (languageSettings.currentLanguage == null) {
-            val currentLang = Language.languages[Locale.getDefault().language]
-            return if (currentLang == null) {
-                // languageSettings.currentLanguage = Languages.EN
-                Languages.EN
-            } else {
-                // languageSettings.currentLanguage = currentLang
-                currentLang
-            }
+        when (LocaleHelper.getLanguage(baseContext)) {
+            "EN" -> return Languages.EN;
+            "PT" -> return Languages.PT;
+            else -> return Languages.EN
         }
-        return languageSettings.currentLanguage!!
     }
 
     //--------------
@@ -306,9 +308,9 @@ class ShopIST : Application() {
 
         // FIXME: Remove for production
         if (allPantries.isEmpty()) {
-            val store1 = Store("Bom Dia", LatLng(38.73361076643277,-9.142712429165842))
-            val store2 = Store("Pingo Doce", LatLng(38.735076664409554,-9.14225209504366))
-            val store3 = Store("Intermarche", LatLng(38.73595121972168,-9.141665026545525))
+            val store1 = Store("Bom Dia", LatLng(38.73361076643277, -9.142712429165842))
+            val store2 = Store("Pingo Doce", LatLng(38.735076664409554, -9.14225209504366))
+            val store3 = Store("Intermarche", LatLng(38.73595121972168, -9.141665026545525))
 
             addStore(store1)
             addStore(store2)
@@ -413,7 +415,8 @@ class ShopIST : Application() {
 
         // Set pantries
         val pairs = shopISTDto.pantriesList
-            .map { p -> Pair(p.uuid,
+            .map { p -> Pair(
+                p.uuid,
                 PantryList(p, allProducts)
             ) }
         allPantries = mutableMapOf(*pairs.toTypedArray())
@@ -454,7 +457,11 @@ class ShopIST : Application() {
             populateShopIST(shopIstDto)
         } catch (e: Exception) {
             if (!firstTime) {
-                Toast.makeText(applicationContext, getString(R.string.error_loading_file), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.error_loading_file),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             Log.d(TAG, "Can't read data file.")
         }
