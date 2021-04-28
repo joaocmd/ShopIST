@@ -394,7 +394,7 @@ class API constructor(context: Context) {
 
     }
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST") // Map
     fun beaconEstimates(
         stores: List<Store>,
         onSuccessListener: (response: Map<String, Double>) -> Unit,
@@ -471,7 +471,7 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST") // Map
     fun getPricesForStore(
         products: List<Product>,
         location: LatLng,
@@ -510,7 +510,6 @@ class API constructor(context: Context) {
 
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun getPricesForProduct(
         product: Product,
         location: List<LatLng>,
@@ -530,7 +529,7 @@ class API constructor(context: Context) {
             Method.POST, url,
             { response ->
                 setConnection(null)
-                val result = Gson().fromJson(response, List::class.java) as List<PriceLocationDto>
+                val result = Gson().fromJson(response, Array<PriceLocationDto>::class.java).asList()
                 onSuccessListener(result)
             },
             {
@@ -615,7 +614,6 @@ class API constructor(context: Context) {
 
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun getProductImages(
         product: Product,
         onSuccessListener: (response: List<String>) -> Unit,
@@ -632,7 +630,7 @@ class API constructor(context: Context) {
             Request.Method.GET, url,
             { response ->
                 setConnection(null)
-                val result = Gson().fromJson(response, List::class.java) as List<String>
+                val result = Gson().fromJson(response, Array<String>::class.java).toList()
                 onSuccessListener(result)
             },
             {
@@ -668,7 +666,6 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
-    @Suppress("UNCHECKED_CAST")
     fun getProductOrder(
         storeLocation: LatLng,
         products: List<Product>,
@@ -681,7 +678,7 @@ class API constructor(context: Context) {
         val stringRequest = object : StringRequest(
             Method.POST, url,
             { response ->
-                val result = Gson().fromJson(response, List::class.java) as List<String>
+                val result = Gson().fromJson(response, Array<String>::class.java).toList()
                 setConnection(null)
                 onSuccessListener(result)
             },

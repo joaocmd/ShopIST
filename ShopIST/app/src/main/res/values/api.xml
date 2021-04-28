@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">https://cmov.dagoncalves.me</string>-->
-    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.28.2.194:9449</string>
+    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">https://cmov.dagoncalves.me</string>
+<!--    <string name="api_base_url" templateMergeStrategy="preserve" translatable="false">http://172.29.32.90:3000</string>-->
     <string name="directions_api_url" translatable="false">https://dev.virtualearth.net/REST/V1/Routes</string>
     <string name="translate_api_url" translatable="false">https://translation.googleapis.com/language/translate/v2</string>
 </resources>
