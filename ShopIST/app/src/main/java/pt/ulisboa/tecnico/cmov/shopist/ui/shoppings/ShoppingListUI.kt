@@ -21,6 +21,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
@@ -265,6 +266,11 @@ class ShoppingListUI : Fragment() {
         }
     }
 
+    fun displayFullScreenImage(imageView: ImageView) {
+        val dialog = ImageFullScreenDialog(this, imageView)
+        dialog.show()
+    }
+
     inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
@@ -274,6 +280,7 @@ class ShoppingListUI : Fragment() {
          * (custom ViewHolder).
          */
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+            private val imageView: ImageView = view.findViewById(R.id.productImageView)
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
             private val needingQuantityView : TextView = view.findViewById(R.id.needingQuantityDisplay)
@@ -303,6 +310,9 @@ class ShoppingListUI : Fragment() {
                         .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
                 }
 
+                imageView.setOnClickListener {
+                    displayFullScreenImage(it as ImageView)
+                }
                 // Set last image
                 if (item.product.images.size > 0) {
                     // TODO: Use cache to get image

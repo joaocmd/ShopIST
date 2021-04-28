@@ -24,6 +24,8 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.util.*
@@ -226,16 +228,23 @@ class PantryUI : Fragment() {
         )
     }
 
+    fun displayFullScreenImage(imageView: ImageView) {
+        val dialog = ImageFullScreenDialog(this, imageView)
+        dialog.show()
+    }
+
     inner class PantryAdapter(var pantryList: PantryList) :
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+            private val imageView: ImageView = view.findViewById(R.id.productImageView)
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
             private val needingQuantityView : TextView = view.findViewById(R.id.needingQuantityDisplay)
             private val cartQuantityView : TextView = view.findViewById(R.id.cartQuantityDisplay)
 
             fun bind(item: Item) {
+
                 textView.text = item.product.getTranslatedName()
                 pantryQuantityView.text = item.pantryQuantity.toString()
                 needingQuantityView.text = item.needingQuantity.toString()
@@ -259,6 +268,10 @@ class PantryUI : Fragment() {
                             PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
                         )
                     )
+                }
+
+                imageView.setOnClickListener {
+                    displayFullScreenImage(it as ImageView)
                 }
 
                 // view.setOnLongClickListener {
