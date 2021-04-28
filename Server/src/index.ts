@@ -3,6 +3,9 @@ import express, { Application } from 'express'
 import morgan from 'morgan'
 import fs from 'fs'
 import bodyParser from 'body-parser'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
 const port = 3000

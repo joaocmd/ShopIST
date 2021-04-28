@@ -36,8 +36,6 @@ class API constructor(context: Context) {
     private val baseURL = context.resources.getString(R.string.api_base_url)
     private val directionsURL = context.resources.getString(R.string.directions_api_url)
     private val bingKey = context.resources.getString(R.string.bing_maps_key)
-    private val translateURL = context.resources.getString(R.string.translate_api_url)
-    private val googleKey = context.resources.getString(R.string.translate_key)
     private val globalData = context as ShopIST
 
     companion object {
@@ -708,27 +706,12 @@ class API constructor(context: Context) {
         onSuccessListener: (response: String) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
-        val url = "${translateURL}?q=$text&source=$sourceLang&target=$targetLang&key=$googleKey"
+        val url = "$baseURL/translation?q=$text&source=$sourceLang&target=$targetLang"
         val stringRequest = StringRequest(
-            Request.Method.POST, url,
+            Request.Method.GET, url,
             { response ->
                 setConnection(null)
-                /**
-                Response example:
-                    {
-                        "data": {
-                            "translations": [
-                                { "translatedText": "test" }
-                            ]
-                        },
-                    }
-                 */
-                val translatedText = (
-                        ((JSONObject(response).get("data") as JSONObject)
-                                .get("translations") as JSONArray
-                        )[0] as JSONObject
-                    ).get("translatedText").toString()
-                onSuccessListener(translatedText)
+                onSuccessListener(response)
             },
             {
                 setConnection(it)
