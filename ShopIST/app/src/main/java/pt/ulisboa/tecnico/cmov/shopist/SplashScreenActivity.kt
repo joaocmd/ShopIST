@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.app.ActionBar
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,16 +8,7 @@ import android.view.Window
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
-import com.android.volley.TimeoutError
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import pt.ulisboa.tecnico.cmov.shopist.domain.Language
-import pt.ulisboa.tecnico.cmov.shopist.domain.Languages
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils

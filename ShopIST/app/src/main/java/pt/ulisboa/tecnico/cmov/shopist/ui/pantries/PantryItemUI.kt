@@ -55,7 +55,7 @@ class PantryItemUI : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_pantry_item, container, false)
 

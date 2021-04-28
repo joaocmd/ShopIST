@@ -12,8 +12,6 @@ import com.android.volley.toolbox.Volley
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.google.gson.JsonParser
-import org.json.JSONArray
-import org.json.JSONObject
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.*
 import pt.ulisboa.tecnico.cmov.shopist.domain.beacon.BeaconEventDto

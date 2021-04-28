@@ -1,12 +1,10 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -27,7 +25,6 @@ import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import java.io.File
 import java.util.*
 
 class PantryUI : Fragment() {
@@ -50,7 +47,7 @@ class PantryUI : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_pantry, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)

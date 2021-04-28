@@ -4,12 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,11 +19,10 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.Quantity
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
 class ShoppingListItemUI : Fragment() {

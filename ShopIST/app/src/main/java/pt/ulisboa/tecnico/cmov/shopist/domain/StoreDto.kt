@@ -4,6 +4,5 @@ import com.google.android.gms.maps.model.LatLng
 import java.util.*
 
 class StoreDto(val name: String, val location: LatLng?, val uuid: UUID, var isShared: Boolean) {
-    constructor(s: Store) : this(s.name, s.location, s.uuid, s.isShared) {
-    }
+    constructor(s: Store) : this(s.name, s.location, s.uuid, s.isShared)
 }

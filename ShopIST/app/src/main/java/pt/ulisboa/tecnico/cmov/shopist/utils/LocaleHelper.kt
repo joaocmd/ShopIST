@@ -3,31 +3,25 @@ package pt.ulisboa.tecnico.cmov.shopist.utils
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.icu.util.ULocale.getLanguage
-import android.provider.Settings.System.getConfiguration
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
-import pt.ulisboa.tecnico.cmov.shopist.domain.Languages
-import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import java.util.*
 
 class LocaleHelper {
 
     companion object {
         fun setLocale(c: Context) {
-            setNewLocale(c, getLanguage(c));
+            setNewLocale(c, getLanguage(c))
         }
 
         fun setNewLocale(c: Context, language: String) {
-            persistLanguage(c, language);
-            updateResources(c, language);
+            persistLanguage(c, language)
+            updateResources(c, language)
         }
 
         fun getLanguage(c: Context): String {
-            var settings = c.getSharedPreferences(c.getString(R.string.my_preference), MODE_PRIVATE)
+            val settings = c.getSharedPreferences(c.getString(R.string.my_preference), MODE_PRIVATE)
             val langString = settings.getString(c.getString(R.string.my_lang), null)
 
             if (langString != null) {
@@ -40,7 +34,7 @@ class LocaleHelper {
         }
 
         private fun persistLanguage(c: Context, language: String) {
-            var settings = c.getSharedPreferences(
+            val settings = c.getSharedPreferences(
                 c.getString(R.string.my_preference),
                 AppCompatActivity.MODE_PRIVATE
             )
@@ -55,10 +49,10 @@ class LocaleHelper {
             Log.i("lang", Locale.getDefault().toString())
             Log.i("lang", language)
 
-            var locale = Locale(language);
-            Locale.setDefault(locale);
+            val locale = Locale(language)
+            Locale.setDefault(locale)
 
-            var newConfig = c.resources.configuration
+            val newConfig = c.resources.configuration
             newConfig.setLocale(locale)
             //val newContext = c.createConfigurationContext(newConfig)
             c.resources.updateConfiguration(newConfig, c.resources.displayMetrics)

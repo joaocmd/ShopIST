@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast
 import pt.ulisboa.tecnico.cmov.shopist.SideMenuNavigation
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST

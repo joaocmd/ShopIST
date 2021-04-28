@@ -15,7 +15,6 @@ import com.google.android.gms.maps.model.LatLng
 import pt.ulisboa.tecnico.cmov.shopist.LocationPickerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
-import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
@@ -51,7 +50,7 @@ class CreateShoppingListUI : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_stores_new, container, false)
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }

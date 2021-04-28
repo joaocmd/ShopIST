@@ -1,7 +1,9 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
-import android.content.*
-import android.content.SharedPreferences.Editor
+import android.content.ComponentName
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
@@ -24,7 +26,10 @@ import pt.inesc.termite.wifidirect.SimWifiP2pBroadcast
 import pt.inesc.termite.wifidirect.SimWifiP2pDeviceList
 import pt.inesc.termite.wifidirect.SimWifiP2pManager
 import pt.inesc.termite.wifidirect.service.SimWifiP2pService
-import pt.ulisboa.tecnico.cmov.shopist.domain.*
+import pt.ulisboa.tecnico.cmov.shopist.domain.Languages
+import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
+import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI

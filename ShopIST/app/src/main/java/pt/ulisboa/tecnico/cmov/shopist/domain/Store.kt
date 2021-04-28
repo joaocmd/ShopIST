@@ -1,7 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import com.google.android.gms.maps.model.LatLng
-import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import java.util.*
 
 class Store(var name: String) : Locatable {

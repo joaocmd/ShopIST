@@ -1,6 +1,5 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
-import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -21,8 +20,6 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
@@ -64,7 +61,7 @@ class ShoppingListUI : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_store_shopping_list, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)

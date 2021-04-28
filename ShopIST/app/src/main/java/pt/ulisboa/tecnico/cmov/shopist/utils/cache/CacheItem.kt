@@ -4,11 +4,11 @@ import java.io.File
 
 class CacheItem(val file: File, val local: Boolean) {
     fun size(): Int {
-        if (local) {
+        return if (local) {
             // users' local files really don't matter for cache space
-            return 0
+            0
         } else {
-            return (file.length()/1024).toInt()
+            (file.length()/1024).toInt()
         }
     }
 

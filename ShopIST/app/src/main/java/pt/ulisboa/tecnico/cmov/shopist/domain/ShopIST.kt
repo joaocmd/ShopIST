@@ -3,8 +3,6 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.util.Log
 import android.widget.Toast
 import com.android.volley.VolleyError
@@ -38,7 +36,7 @@ class ShopIST : Application() {
         const val IMAGE_FOLDER = "photos"
         const val LOCAL_IMAGE_FOLDER = "local_photos"
 
-        const val IMAGE_CACHE_SIZE = 10 * 1024; // 10 MiB (cache size in KiB)
+        const val IMAGE_CACHE_SIZE = 10 * 1024 // 10 MiB (cache size in KiB)
     }
 
     private var firstTime = true
@@ -289,10 +287,10 @@ class ShopIST : Application() {
     }
 
     fun getLang(): Languages {
-        when (LocaleHelper.getLanguage(baseContext)) {
-            "EN" -> return Languages.EN;
-            "PT" -> return Languages.PT;
-            else -> return Languages.EN
+        return when (LocaleHelper.getLanguage(baseContext)) {
+            "EN" -> Languages.EN
+            "PT" -> Languages.PT
+            else -> Languages.EN
         }
     }
 

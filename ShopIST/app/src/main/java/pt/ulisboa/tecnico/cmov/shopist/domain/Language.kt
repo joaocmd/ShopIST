@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
-class Language() {
+class Language {
     var currentLanguage: Languages? = null
 
     companion object {

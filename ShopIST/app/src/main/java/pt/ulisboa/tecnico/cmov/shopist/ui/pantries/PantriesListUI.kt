@@ -2,7 +2,10 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -12,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
@@ -81,10 +83,7 @@ class PantriesListUI : Fragment() {
                     it.location!!,
                     { time ->
                         it.drivingTime = time
-                        val shopIST = requireContext().applicationContext as ShopIST
-                        if (shopIST.callbackDataSetChanged !== null) {
-                            shopIST.callbackDataSetChanged!!()
-                        }
+                        globalData.callbackDataSetChanged?.invoke()
                     },
                     {
                         // Ignore
@@ -136,8 +135,8 @@ class PantriesListUI : Fragment() {
                     drivingTimeText.text = "---"
                 }
 
-                itemsAtHouseText.text = calculateItemsAtHouse(pantryList).toString();
-                missingItemsText.text = calculateMissingItems(pantryList).toString();
+                itemsAtHouseText.text = calculateItemsAtHouse(pantryList).toString()
+                missingItemsText.text = calculateMissingItems(pantryList).toString()
 
 
                 val cardView: View = view.findViewById(R.id.rowCard)

@@ -1,9 +1,8 @@
-package pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList;
+package pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList
 
-import pt.ulisboa.tecnico.cmov.shopist.domain.Item;
-import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList;
-import pt.ulisboa.tecnico.cmov.shopist.domain.Product;
-import java.util.*
+import pt.ulisboa.tecnico.cmov.shopist.domain.Item
+import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
+import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import kotlin.math.max
 
 class ShoppingListItem(val product: Product) {

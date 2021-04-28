@@ -72,8 +72,8 @@ class CreateProductUI: Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        var name = R.string.create_product_title;
-        if(product != null) name = R.string.edit_product_title;
+        var name = R.string.create_product_title
+        if(product != null) name = R.string.edit_product_title
         TopBarController.noOptionsMenu(menu, requireActivity(), getString(name))
     }
 
