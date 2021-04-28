@@ -173,7 +173,9 @@ class ProductUI : Fragment() {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
         chart.axisRight.isEnabled = false
+        chart.axisRight.axisMinimum = 0f
         chart.axisLeft.isEnabled = false
+        chart.axisLeft.axisMinimum = 0f
     }
 
     private fun prepareData(ratings: Map<Int, Int>) {
@@ -181,14 +183,6 @@ class ProductUI : Fragment() {
         val values = ratings.entries
             .sortedByDescending { it.key }
             .map { BarEntry(it.key.toFloat(), it.value.toFloat()) }
-
-        // val values = mutableListOf(
-        //     BarEntry(5f,  45f),
-        //     BarEntry(4f,  30f),
-        //     BarEntry(3f,  15f),
-        //     BarEntry(2f,  3f),
-        //     BarEntry(1f, 10f),
-        // )
 
         val set = BarDataSet(values, "")
         set.setDrawIcons(false)
@@ -208,7 +202,7 @@ class ProductUI : Fragment() {
         val chart = root.findViewById<HorizontalBarChart>(R.id.histogram)
         chart.data = BarData(set)
         chart.data.barWidth = barWidth
-        chart.notifyDataSetChanged()
+        chart.invalidate()
     }
 
     inner class ChartAxisFormatter : IndexAxisValueFormatter() {
