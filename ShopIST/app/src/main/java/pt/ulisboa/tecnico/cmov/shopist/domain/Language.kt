@@ -24,17 +24,14 @@ enum class Languages(val language: String) {
 
 open class Translatable(var originText: String, var originLang: Languages?) {
     var translatedText: String = ""
-    var hasTranslated = false
+    var hasTranslatedToLanguage: Languages? = null
 
     fun getText(targetLang: Languages, context: Context, onSuccessListener: (String) -> Unit) {
-        // Return translated if already translated once
-
-        Log.i("lang", "test1")
-        if (hasTranslated) {
+        // Return translated if already translated to target language
+        if (hasTranslatedToLanguage == targetLang) {
             onSuccessListener(translatedText)
             return
         }
-        Log.i("lang", "test")
         // Get current language if not given
         if (originLang === null) {
             val globalData = context.applicationContext as ShopIST
@@ -47,7 +44,7 @@ open class Translatable(var originText: String, var originLang: Languages?) {
             }
             else -> {
                 API.getInstance(context).translate(originText, originLang!!.language, targetLang.language, {
-                    hasTranslated = true
+                    hasTranslatedToLanguage = targetLang
                     this.translatedText = it
                     onSuccessListener(it)
                 }, {

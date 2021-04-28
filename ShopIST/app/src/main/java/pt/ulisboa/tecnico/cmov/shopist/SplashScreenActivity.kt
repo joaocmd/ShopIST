@@ -68,7 +68,7 @@ class SplashScreenActivity : AppCompatActivity() {
         globalData.getAllProducts().forEach { p ->
             p.getText(currentLang, applicationContext) {
                 p.translatedText = it
-                p.hasTranslated = true
+                p.hasTranslatedToLanguage = currentLang
             }
         }
     }

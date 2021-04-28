@@ -38,7 +38,7 @@ class Product(var name: String, originLang: Languages?): Translatable(name, orig
                 return createProduct(update, stores)
             }
             if (update.name != p1.name) {
-                p1.hasTranslated = false
+                p1.hasTranslatedToLanguage = null
                 p1.translatedText = ""
                 p1.name = update.name
             }

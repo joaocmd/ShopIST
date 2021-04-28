@@ -158,9 +158,10 @@ class ShopIST : Application() {
             run {
                 val p1 = allProducts[p.uuid]
                 val product = Product.updateProduct(p1, p, allStores)
-                product.getText(getLang(), applicationContext) {
+                val lang = getLang()
+                product.getText(lang, applicationContext) {
                     product.translatedText = it
-                    product.hasTranslated = true
+                    product.hasTranslatedToLanguage = lang
                     callbackDataSetChanged?.invoke()
                 }
                 allProducts[p.uuid] = product
