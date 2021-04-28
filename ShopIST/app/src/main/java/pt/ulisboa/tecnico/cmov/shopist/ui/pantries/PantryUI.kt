@@ -191,6 +191,8 @@ class PantryUI : Fragment() {
         }, {
             Toast.makeText(context, getString(R.string.error_getting_link), Toast.LENGTH_SHORT).show()
         })
+
+        // TODO: Send images, prices and ratings on share
     }
 
     private fun deletePantryList() {

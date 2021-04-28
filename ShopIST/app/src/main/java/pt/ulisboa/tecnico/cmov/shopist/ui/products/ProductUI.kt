@@ -114,7 +114,7 @@ class ProductUI : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        setEnableButtons(globalData.isAPIConnected)
+        // setEnableButtons(globalData.isAPIConnected)
 
         // Update prices from server for all stores, for this product in specific
         API.getInstance(requireContext()).getPricesForProduct(
@@ -134,7 +134,6 @@ class ProductUI : Fragment() {
         if (product.barcode != null) {
             updateRatings()
         }
-        prepareChart()
 
         // Update images
         showImages()
@@ -223,6 +222,7 @@ class ProductUI : Fragment() {
         if (this::menuRoot.isInitialized) {
             TopBarController.setSharedOptions(menuRoot, !hasBarcode || enabled)
         }
+        TopBarController.setOnlineOptions(menuRoot, enabled)
         root.findViewById<ImageButton>(R.id.imageButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.addPriceButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.seePricesButton).isEnabled = !hasBarcode || enabled

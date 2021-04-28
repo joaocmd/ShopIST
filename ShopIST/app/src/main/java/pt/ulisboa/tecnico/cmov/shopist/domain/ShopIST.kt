@@ -72,6 +72,7 @@ class ShopIST : Application() {
     private var allStores: MutableMap<UUID, Store> = mutableMapOf()
     private var defaultStore: Store? = null
 
+    var currentShoppingList: ShoppingList? = null
     var currentShoppingListItem: ShoppingListItem? = null
     var pantryToOpen: PantryList? = null
     var productToOpen: Product? = null

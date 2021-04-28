@@ -55,6 +55,7 @@ class ShoppingListUI : Fragment() {
             globalData.productOrder.clear()
             shoppingList = globalData.getShoppingList(storeId)
             store = globalData.getStore(storeId)
+            globalData.currentShoppingList = shoppingList
         }
         setHasOptionsMenu(true)
     }

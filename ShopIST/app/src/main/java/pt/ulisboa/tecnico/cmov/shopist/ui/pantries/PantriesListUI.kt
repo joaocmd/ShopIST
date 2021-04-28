@@ -73,6 +73,7 @@ class PantriesListUI : Fragment() {
             recyclerAdapter.notifyDataSetChanged()
         }
 
+        // TODO: Update currentLocation when getting the route
         globalData.pantries.forEach {
             if (it.location != null && globalData.currentLocation != null) {
                 API.getInstance(requireContext()).getRouteTime(

@@ -85,6 +85,7 @@
     <string name="error_loading_file">Erro a carregar os dados da aplicação</string>
     <string name="server_security_error">Erro ao ligar ao servidor devido a um erro de segurança</string>
     <string name="error_getting_link">Erro ao obter o link.</string>
+    <string name="save">Guardar</string>
 
     <!-- Images -->
     <string name="add_new_photo">Adicionar uma imagem nova</string>

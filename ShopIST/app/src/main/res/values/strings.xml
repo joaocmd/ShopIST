@@ -85,6 +85,7 @@
     <string name="error_loading_file">Error loading application data</string>
     <string name="server_security_error">Can\'t connect to server due to unsafe connection</string>
     <string name="error_getting_link">Error getting link.</string>
+    <string name="save">Save</string>
 
     <!-- Images -->
     <string name="add_new_photo">Add new photo</string>
