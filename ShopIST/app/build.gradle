@@ -66,4 +66,6 @@ dependencies {
 
     implementation project(':Termite-WifiP2P-API')
     implementation 'com.neovisionaries:nv-websocket-client:2.14'
+
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

@@ -745,7 +745,7 @@ class API constructor(context: Context) {
     fun getProductRating(
         barcode: String,
         deviceId: UUID,
-        onSuccessListener: (rating: Float?, personalRating: Int?) -> Unit) {
+        onSuccessListener: (rating: HashMap<Int, Int>, personalRating: Int?) -> Unit) {
         val sentDto = GetProductRatingDto(barcode, deviceId)
 
         val url = "$baseURL/ratings/"
@@ -754,7 +754,7 @@ class API constructor(context: Context) {
             { response ->
                 val result = Gson().fromJson(response, GetProductRatingResponseDto::class.java)
                 setConnection(null)
-                onSuccessListener(result.rating, result.personalRating)
+                onSuccessListener(result.ratings, result.personalRating)
             },
             { setConnection(it) }
         ) {

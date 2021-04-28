@@ -70,7 +70,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
 
         // Set current language
-        var currentLang = globalData.getLang()
+        val currentLang = globalData.getLang()
 
         // Get translations at start
         globalData.getAllProducts().forEach { p ->

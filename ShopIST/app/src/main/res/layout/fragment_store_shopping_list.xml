@@ -28,16 +28,6 @@
         </ScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="false"
-            app:srcCompat="@drawable/ic_baseline_cancel_24"
-            android:contentDescription="@string/add" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

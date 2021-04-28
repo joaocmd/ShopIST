@@ -19,6 +19,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.Quantity
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
@@ -156,7 +157,6 @@ class ShoppingListItemUI : Fragment() {
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryView: TextView = view.findViewById(R.id.pantryViewLocal)
             private val needingView: TextView = view.findViewById(R.id.needingViewLocal)
-            //private val cartView: TextView = view.findViewById(R.id.cartViewLocal)
             private val currentQuantity: TextView = view.findViewById(R.id.currentQuantity)
 
             fun bind(item: Item) {

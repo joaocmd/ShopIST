@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -15,6 +17,12 @@ import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.github.mikephil.charting.charts.HorizontalBarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -98,6 +106,8 @@ class ProductUI : Fragment() {
             showDialogRating()
         }
 
+        prepareChart()
+
         return root
     }
 
@@ -122,17 +132,90 @@ class ProductUI : Fragment() {
             })
 
         if (product.barcode != null) {
-            API.getInstance(requireContext()).getProductRating(
-                product.barcode!!, globalData.deviceId
-            ) { rating, personalRating ->
-                val text = if (rating != null) String.format("%.1f", rating) else getString(R.string.no_ratings)
-                root.findViewById<TextView>(R.id.rating_text).text = text
-                this.personalRating = personalRating
-            }
+            updateRatings()
         }
+        prepareChart()
 
         // Update images
         showImages()
+    }
+
+    private fun updateRatings() {
+        API.getInstance(requireContext()).getProductRating(
+            product.barcode!!, globalData.deviceId
+        ) { ratings, personalRating ->
+            val totalRatings = ratings.values.sum()
+
+            val rating =
+                ratings.entries.fold(0f) { acc, (stars, num) -> acc + stars * num } / totalRatings
+
+            val text = if (totalRatings > 0) String.format("%.1f", rating) else "---"
+            root.findViewById<TextView>(R.id.rating_text).text = text
+            prepareData(ratings)
+            this.personalRating = personalRating
+        }
+    }
+
+    private fun prepareChart() {
+        val chart = root.findViewById<HorizontalBarChart>(R.id.histogram)
+        chart.setDrawValueAboveBar(true)
+        chart.setTouchEnabled(false)
+        chart.setPinchZoom(false)
+        chart.setDrawGridBackground(false)
+        chart.setDrawBarShadow(false)
+        chart.setFitBars(true)
+        chart.legend.isEnabled = false
+        chart.description.isEnabled = false
+
+        val xAxis = chart.xAxis
+        xAxis.granularity = 1f
+        xAxis.valueFormatter = ChartAxisFormatter()
+        xAxis.setDrawGridLines(false)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        chart.axisRight.isEnabled = false
+        chart.axisLeft.isEnabled = false
+    }
+
+    private fun prepareData(ratings: Map<Int, Int>) {
+        val barWidth = 0.75f
+        val values = ratings.entries
+            .sortedByDescending { it.key }
+            .map { BarEntry(it.key.toFloat(), it.value.toFloat()) }
+
+        // val values = mutableListOf(
+        //     BarEntry(5f,  45f),
+        //     BarEntry(4f,  30f),
+        //     BarEntry(3f,  15f),
+        //     BarEntry(2f,  3f),
+        //     BarEntry(1f, 10f),
+        // )
+
+        val set = BarDataSet(values, "")
+        set.setDrawIcons(false)
+        set.valueFormatter = ChartAxisFormatter()
+        set.valueTextSize = 12f
+        set.setDrawIcons(false)
+
+        val colors = mutableListOf(
+            Color.rgb(121, 201, 161),
+            Color.rgb(174, 216, 136),
+            Color.rgb(255, 217, 53),
+            Color.rgb(255, 178, 53),
+            Color.rgb(255, 140, 90),
+        )
+        set.colors = colors
+
+        val chart = root.findViewById<HorizontalBarChart>(R.id.histogram)
+        chart.data = BarData(set)
+        chart.data.barWidth = barWidth
+        chart.notifyDataSetChanged()
+    }
+
+    inner class ChartAxisFormatter : IndexAxisValueFormatter() {
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString()
+        }
     }
 
     private fun setEnableButtons(enabled: Boolean) {
@@ -143,7 +226,8 @@ class ProductUI : Fragment() {
         root.findViewById<ImageButton>(R.id.imageButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.addPriceButton).isEnabled = !hasBarcode || enabled
         root.findViewById<Button>(R.id.seePricesButton).isEnabled = !hasBarcode || enabled
-        root.findViewById<LinearLayout>(R.id.product_rating).isEnabled = hasBarcode && enabled
+        root.findViewById<TextView>(R.id.product_rating_disabled).visibility = if (hasBarcode && enabled) View.GONE else View.VISIBLE
+        root.findViewById<LinearLayout>(R.id.product_rating).visibility = if (hasBarcode && enabled) View.VISIBLE else View.GONE
     }
 
     private fun showImages() {
@@ -333,8 +417,8 @@ class ProductUI : Fragment() {
                 globalData.deviceId,
                 rating
             ) {
-                // TODO: Update rating in view
                 personalRating = rating
+                updateRatings()
             }
         }
         dialog.show()

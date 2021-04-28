@@ -13,16 +13,15 @@ export default class {
     }
 
     getRating(userId: string): RatingResponse {
-        const ratings = Object.values(this.ratings)
-        let rating = null
-        if (ratings.length > 0) {
-            rating = ratings.reduce((a, b) => a + b) / ratings.length
-        }
-        return { rating, personalRating: this.ratings[userId] ?? null }
+        const ratings: any = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+        Object.values(this.ratings).forEach(val => {
+            ratings[val] += 1
+        });
+        return { ratings, personalRating: this.ratings[userId] ?? null }
     }
 }
 
 export type RatingResponse = {
-    rating: number | null,
+    ratings: any,
     personalRating: number | null
 }

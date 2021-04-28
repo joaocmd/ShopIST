@@ -72,9 +72,6 @@ class ShoppingListUI : Fragment() {
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = recyclerAdapter
 
-        // Navigation Buttons
-        root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
-
         // Checkout button
         root.findViewById<View>(R.id.okButton).setOnClickListener { confirmCheckout() }
 
@@ -288,19 +285,17 @@ class ShoppingListUI : Fragment() {
                 needingQuantityView.text = quantities.needing.toString()
                 cartQuantityView.text = quantities.cart.toString()
 
-                val productView: LinearLayout = view.findViewById(R.id.firstLayout)
-                val quantityView: LinearLayout = view.findViewById(R.id.thirdLayout)
-
-                productView.setOnClickListener {
+                view.setOnLongClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_store_shopping_list_to_nav_view_product,
                         bundleOf(
                             ProductUI.ARG_PRODUCT_ID to item.product.uuid.toString()
                         )
                     )
+                    true
                 }
 
-                quantityView.setOnClickListener {
+                view.setOnClickListener {
                     // set current item because we can't pass object references in bundles
                     (activity?.applicationContext as ShopIST).currentShoppingListItem = item
                     findNavController()

@@ -239,19 +239,17 @@ class PantryUI : Fragment() {
                 needingQuantityView.text = item.needingQuantity.toString()
                 cartQuantityView.text = item.cartQuantity.toString()
 
-                val productView: LinearLayout = view.findViewById(R.id.firstLayout)
-                val quantityView: LinearLayout = view.findViewById(R.id.thirdLayout)
-
-                productView.setOnClickListener {
+                view.setOnLongClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_pantry_to_nav_view_product,
                         bundleOf(
                             PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
                         )
                     )
+                    true
                 }
 
-                quantityView.setOnClickListener {
+                view.setOnClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_pantry_to_pantryItem,
                         bundleOf(

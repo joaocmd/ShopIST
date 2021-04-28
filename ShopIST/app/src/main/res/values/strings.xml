@@ -113,4 +113,5 @@
     <string name="list_name">Name</string>
     <string name="no_ratings">No ratings yet!</string>
     <string name="add_rating_dialog">Add Product Rating</string>
+    <string name="connect_to_the_internet_and_add_or_add_a_barcode_to_access_user_ratings">Connect to the internet and add/or add a barcode to access user ratings</string>
 </resources>
