@@ -5,8 +5,7 @@ const images: ProductImages = {}
 const productImages: Record<string, string[]> = {}
 
 export class ImageProductService {
-	static create(barcode: string, image: string): string {
-		let id = this.generateId()
+	static create(barcode: string, image: string, id: string): string {
 		if (productImages[barcode] === undefined) {
 			productImages[barcode] = []
 		}

@@ -552,6 +552,7 @@ class API constructor(context: Context) {
     fun postProductImage(
         product: Product,
         image: Bitmap,
+        id: UUID,
         onSuccessListener: (response: String) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
@@ -581,6 +582,7 @@ class API constructor(context: Context) {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
                 params["image"] = imageString
+                params["id"] = id.toString()
                 return params
             }
         }

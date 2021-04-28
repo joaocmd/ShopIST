@@ -4,7 +4,7 @@ import { ImageProductService } from "../../services/ImageProductService"
 const handler = (req: express.Request, res: express.Response) => {
     try {
         let body = req.body
-        let id = ImageProductService.create(req.params.id, body.image)
+        let id = ImageProductService.create(req.params.id, body.image, body.id)
         res.status(200).send(id)
     } catch (error) {
         res.status(400).send({ status: 400, error })

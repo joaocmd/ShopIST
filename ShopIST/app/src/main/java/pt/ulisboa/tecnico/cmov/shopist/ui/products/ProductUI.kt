@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -505,25 +504,27 @@ class ProductUI : Fragment() {
     private fun storeImage(bitmap: Bitmap, callback: (imageFilename: String?) -> Unit) {
 
         if (product.barcode !== null) {
+            val id = UUID.randomUUID()
+            val imageFileName = "${id}${ShopIST.IMAGE_EXTENSION}"
+            val imagePath = File(localImageFolder, imageFileName)
+
+            FileOutputStream(imagePath).use { fos ->
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            }
+            product.addImage(id.toString())
+
             // Send to server
-            API.getInstance(requireContext()).postProductImage(product, bitmap, { imageId ->
-                val imageFileName = "${imageId}${ShopIST.IMAGE_EXTENSION}"
-                val imagePath = File(localImageFolder, imageFileName)
-
-                FileOutputStream(imagePath).use { fos ->
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                }
-                product.addImage(imageId)
-
-                // Store information about the image
-                val globalData = requireActivity().applicationContext as ShopIST
-                val uuid = UUID.fromString(imageId)
-                globalData.imageCache.putImage(uuid, bitmap, true)
-                globalData.savePersistent()
-                callback(imageFileName)
+            API.getInstance(requireContext()).postProductImage(product, bitmap, id, { imageId ->
+                Log.d(TAG, "Image: $imageId")
             }, {
-
+                // TODO: Cancel adding
             })
+
+            // Store information about the image
+            val globalData = requireActivity().applicationContext as ShopIST
+            globalData.imageCache.putImage(id, bitmap, true)
+            globalData.savePersistent()
+            callback(imageFileName)
         } else {
             val uuid = UUID.randomUUID()
             val imageFileName = "${uuid}${ShopIST.IMAGE_EXTENSION}"
