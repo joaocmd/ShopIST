@@ -54,6 +54,7 @@ class CreatePantryUI : Fragment() {
         editTitle = root.findViewById(R.id.pantryName)
         root.findViewById<View>(R.id.okButton) .setOnClickListener { createPantry() }
         root.findViewById<View>(R.id.chooseLocationButton) .setOnClickListener { chooseLocation() }
+        root.findViewById<View>(R.id.deleteLocationButton) .setOnClickListener { deleteLocation() }
 
         if (editPantry != null) {
             root.findViewById<Button>(R.id.okButton).text = getString(R.string.edit_pantry_complete)
@@ -63,6 +64,8 @@ class CreatePantryUI : Fragment() {
 
             if (editPantry!!.location != null) {
                 root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_set)
+                root.findViewById<Button>(R.id.chooseLocationButton).text = getString(R.string.choose_new_location)
+                root.findViewById<Button>(R.id.deleteLocationButton).visibility = View.VISIBLE
                 coords = editPantry!!.location!!
             }
         }
@@ -87,6 +90,13 @@ class CreatePantryUI : Fragment() {
                 getString(R.string.create_pantry)
             )
         }
+    }
+
+    private fun deleteLocation() {
+        coords = null
+        root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_not_set)
+        root.findViewById<Button>(R.id.deleteLocationButton).visibility = View.INVISIBLE
+        root.findViewById<Button>(R.id.chooseLocationButton).text = getString(R.string.choose_location)
     }
 
     private fun createPantry() {
@@ -132,6 +142,9 @@ class CreatePantryUI : Fragment() {
                 coords = LatLng(lat, lon)
                 // Set UI
                 root.findViewById<TextView>(R.id.locationMessage).text = getString(R.string.location_set)
+
+                root.findViewById<Button>(R.id.chooseLocationButton).text = getString(R.string.choose_new_location)
+                root.findViewById<Button>(R.id.deleteLocationButton).visibility = View.VISIBLE
 
                 Log.d(ShopIST.TAG, "Received - Lat: $lat, Lon: $lon")
             }

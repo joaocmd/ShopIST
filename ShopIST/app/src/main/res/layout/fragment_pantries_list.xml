@@ -7,34 +7,44 @@
     android:orientation="vertical"
     android:layout_marginTop="@dimen/activity_vertical_margin">
 
-    <include layout="@layout/pantries_list_row_title"/>
-
-    <RelativeLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
-        <ScrollView
-            android:id="@+id/scrollView"
+        android:layout_height="match_parent">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:orientation="vertical">
+            <include layout="@layout/pantries_list_row_title"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/pantriesList"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                >
+                <ScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
 
-            </androidx.recyclerview.widget.RecyclerView>
-        </ScrollView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/pantriesList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/newPantryButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            app:srcCompat="@drawable/ic_baseline_add_24"
-            android:contentDescription="@string/add" />
-    </RelativeLayout>
+                    </androidx.recyclerview.widget.RecyclerView>
+                </ScrollView>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/newPantryButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    app:srcCompat="@drawable/ic_baseline_add_24"
+                    android:contentDescription="@string/add" />
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -115,4 +115,6 @@
     <string name="no_ratings">Sem avaliações!</string>
     <string name="add_rating_dialog">Adicinar Avaliação</string>
     <string name="connect_to_the_internet_and_add_or_add_a_barcode_to_access_user_ratings">Ligue-se à internet e/ou adicione um código de barras para aceder às avaliações</string>
+    <string name="deleteLocation">delete Location</string>
+    <string name="choose_new_location">Choose new location</string>
 </resources>

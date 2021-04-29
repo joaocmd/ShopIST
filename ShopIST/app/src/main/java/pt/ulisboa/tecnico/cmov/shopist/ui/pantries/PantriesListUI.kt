@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -14,7 +16,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
@@ -52,6 +56,7 @@ class PantriesListUI : Fragment() {
 
         root.findViewById<FloatingActionButton>(R.id.newPantryButton).setOnClickListener{ onNewPantry() }
 
+        root.findViewById<SwipeRefreshLayout>(R.id.swiperRefresh).setOnRefreshListener { onRefresh(swiperRefresh) }
         return root
     }
 
@@ -91,6 +96,12 @@ class PantriesListUI : Fragment() {
                 )
             }
         }
+    }
+
+    fun onRefresh( refresh : SwipeRefreshLayout) {
+        Log.i("tessi", "tessi done")
+        updateData()
+        refresh.isRefreshing = false
     }
 
     private fun onNewPantry() {
