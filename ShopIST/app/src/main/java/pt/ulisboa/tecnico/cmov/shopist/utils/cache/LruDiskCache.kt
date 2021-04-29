@@ -84,6 +84,7 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
         } }
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun bootstrapCache(context: ContextWrapper) {
         try {
             context.openFileInput("cache").use { fis ->

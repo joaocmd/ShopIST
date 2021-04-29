@@ -413,7 +413,7 @@ class ProductUI : Fragment() {
     }
 
     private fun showDialogRating() {
-        val dialog = RatingDialog(this, personalRating) { rating ->
+        RatingDialog(this, personalRating) { rating ->
             API.getInstance(requireContext()).submitProductRating(
                 product.barcode!!,
                 globalData.deviceId,
@@ -423,7 +423,6 @@ class ProductUI : Fragment() {
                 updateRatings()
             }
         }
-        dialog.show()
     }
 
     private fun shareProduct() {
