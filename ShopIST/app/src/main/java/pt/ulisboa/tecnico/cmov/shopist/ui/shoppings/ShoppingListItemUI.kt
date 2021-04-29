@@ -21,9 +21,12 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PromptMessage
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.UserPromptDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import kotlin.random.Random
 
 class ShoppingListItemUI : Fragment() {
     // TODO: Add button to set to min and max quantity on cart
@@ -57,6 +60,15 @@ class ShoppingListItemUI : Fragment() {
         recyclerView.adapter = ShoppingListItemListAdapter(shoppingListItem)
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (shoppingListItem.product.barcode == null) {
+            shopIST.promptSettings.getPrompt(PromptMessage.ADD_BARCODE, this) {
+                readBarcode()
+            }
+        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

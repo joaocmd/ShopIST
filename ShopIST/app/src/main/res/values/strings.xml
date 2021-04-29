@@ -69,8 +69,15 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">ShopISTa</string>
-    <string name="nav_header_subtitle">hugo@work.pls</string>
     <string name="nav_header_desc">Navigation header</string>
+
+    <!-- User Prompt -->
+    <string name="user_prompt_title">Help improve the app!</string>
+    <string name="user_prompt_accept">Help now</string>
+    <string name="user_prompt_cancel">No thanks</string>
+    <string name="user_prompt_stop_remembering">Don\'t ask again</string>
+    <string name="user_prompt_on_barcode">Contribute to the app by adding prices, images or ratings!</string>
+    <string name="user_prompt_on_cart">Contribute to the app by adding a barcode to this product!</string>
 
     <!-- Global -->
     <string name="location_not_set"> Location not set </string>
@@ -123,6 +130,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="image_full_screen">Image</string>
+    <string name="nav_header_subtitle">everybody@home.dance</string>
     <string name="deleteLocation">delete Location</string>
     <string name="choose_new_location">Choose new location</string>
 

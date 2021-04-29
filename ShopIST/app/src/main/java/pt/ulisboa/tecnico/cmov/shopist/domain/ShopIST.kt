@@ -11,8 +11,10 @@ import com.google.gson.Gson
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PromptMessage
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
+import pt.ulisboa.tecnico.cmov.shopist.utils.UserPromptStorage
 import pt.ulisboa.tecnico.cmov.shopist.utils.cache.LruDiskCache
 import java.io.*
 import java.util.*
@@ -41,6 +43,7 @@ class ShopIST : Application() {
 
     private var firstTime = true
     var languageSettings = Language()
+    var promptSettings = UserPromptStorage()
     lateinit var deviceId: UUID
         private set
 
@@ -374,6 +377,7 @@ class ShopIST : Application() {
         var defaultStoreId: UUID? = null
         var deviceId: UUID? = null
         var currentLang: String? = null
+        var promptSettings: MutableMap<PromptMessage, Boolean>? = null
 
         constructor(shopIST: ShopIST) : this() {
             pantriesList = shopIST.allPantries.values.map { p -> PantryListDto(p) }.toMutableList()
@@ -389,12 +393,17 @@ class ShopIST : Application() {
                 defaultStoreId = shopIST.defaultStore!!.uuid
             }
             currentLang = languageSettings.currentLanguage?.language
+            promptSettings = shopIST.promptSettings.savedPrompts
         }
     }
 
     private fun populateShopIST(shopISTDto: ShopISTDto) {
         shopISTDto.currentLang?.let {
             languageSettings.currentLanguage = Language.languages[it]!!
+        }
+
+        shopISTDto.promptSettings?.let { settings ->
+            this.promptSettings = UserPromptStorage(settings)
         }
 
         // Set stores

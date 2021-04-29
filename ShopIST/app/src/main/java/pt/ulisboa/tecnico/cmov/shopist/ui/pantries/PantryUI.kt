@@ -22,9 +22,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.*
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 

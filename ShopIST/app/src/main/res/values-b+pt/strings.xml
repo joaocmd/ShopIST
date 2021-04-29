@@ -69,8 +69,16 @@
     <string name="navigation_drawer_open">Abrir Navegação</string>
     <string name="navigation_drawer_close">Fechar Navegação</string>
     <string name="nav_header_title">ShopISTa</string>
-    <string name="nav_header_subtitle">hugo@trabalha.sff</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_subtitle">todos@casa.dancem</string>
+    <string name="nav_header_desc">Cabeçalho de navegação</string> <!-- TODO: Remove this string -->
+
+    <!-- User Prompt -->
+    <string name="user_prompt_title">Ajude a melhorar a aplicação!</string>
+    <string name="user_prompt_accept">Ajudar agora</string>
+    <string name="user_prompt_cancel">Não, obrigado</string>
+    <string name="user_prompt_stop_remembering">Não perguntar novamente</string>
+    <string name="user_prompt_on_barcode">Contribua para a aplicação ao adicionar preços, imagens ou avaliações!</string>
+    <string name="user_prompt_on_cart">Contribua para a aplicação ao adicionar um código de barras a este produto!</string>
 
     <!-- Global -->
     <string name="location_not_set">" Localização não definida"</string>

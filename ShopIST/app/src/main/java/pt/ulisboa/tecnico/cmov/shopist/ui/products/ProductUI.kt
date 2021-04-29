@@ -32,10 +32,7 @@ import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PriceByStoreDialog
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.*
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.io.FileOutputStream
@@ -116,7 +113,6 @@ class ProductUI : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         // setEnableButtons(globalData.isAPIConnected)
 
         // Update prices from server for all stores, for this product in specific
@@ -240,7 +236,7 @@ class ProductUI : Fragment() {
                     val imageView = ImageView(requireContext())
                     imageView.id = i
                     imageView.setImageBitmap(it)
-                    var lp = LinearLayout.LayoutParams(
+                    val lp = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                     )
@@ -527,7 +523,6 @@ class ProductUI : Fragment() {
             val imageFileName = "${id}${ShopIST.IMAGE_EXTENSION}"
             val imagePath = File(localImageFolder, imageFileName)
 
-
             FileOutputStream(imagePath).use { fos ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
             }
@@ -621,6 +616,10 @@ class ProductUI : Fragment() {
                                 barcode
                             ), Toast.LENGTH_SHORT
                         ).show()
+
+                        globalData.promptSettings.getPrompt(PromptMessage.ADD_PRICE_IMAGE, this) {
+                            // Do nothing, just warn
+                        }
                     }
                 }
             }
