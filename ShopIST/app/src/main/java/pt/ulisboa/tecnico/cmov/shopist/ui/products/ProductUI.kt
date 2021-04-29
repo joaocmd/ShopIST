@@ -13,7 +13,10 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.graphics.createBitmap
 import androidx.core.os.bundleOf
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -30,6 +33,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Product
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PriceByStoreDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.RatingDialog
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
@@ -236,11 +240,20 @@ class ProductUI : Fragment() {
                     val imageView = ImageView(requireContext())
                     imageView.id = i
                     imageView.setImageBitmap(it)
-                    imageView.layoutParams = LinearLayout.LayoutParams(
+                    var lp = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT
                     )
+
+                    lp.setMargins(10, 0, 10, 0)
+
+                    imageView.layoutParams = lp
+
                     layout.addView(imageView)
+
+                    imageView.setOnClickListener { img ->
+                        displayFullScreenImage(img as ImageView)
+                    }
                 }, { })
             }
         } else {
@@ -469,6 +482,11 @@ class ProductUI : Fragment() {
         }
     }
 
+    fun displayFullScreenImage(imageView: ImageView) {
+        val dialog = ImageFullScreenDialog(this, imageView)
+        dialog.show()
+    }
+
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
@@ -501,12 +519,14 @@ class ProductUI : Fragment() {
         return true
     }
 
-    private fun storeImage(bitmap: Bitmap, callback: (imageFilename: String?) -> Unit) {
+    private fun storeImage(inBitmap: Bitmap, callback: (imageFilename: String?) -> Unit) {
 
+        var bitmap = Bitmap.createScaledBitmap(inBitmap, 300, 300, false)
         if (product.barcode !== null) {
             val id = UUID.randomUUID()
             val imageFileName = "${id}${ShopIST.IMAGE_EXTENSION}"
             val imagePath = File(localImageFolder, imageFileName)
+
 
             FileOutputStream(imagePath).use { fos ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
