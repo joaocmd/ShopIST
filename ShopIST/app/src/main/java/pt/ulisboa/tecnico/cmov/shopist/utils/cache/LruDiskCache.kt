@@ -1,5 +1,7 @@
 package pt.ulisboa.tecnico.cmov.shopist.utils.cache
 
+import android.content.Context.MODE_PRIVATE
+import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -7,9 +9,9 @@ import android.util.LruCache
 import com.android.volley.VolleyError
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import java.io.File
-import java.io.FileOutputStream
+import java.io.*
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheItem>(maxSize) {
     
@@ -76,10 +78,25 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
         )
   }
 
-    fun startupImage(key: UUID) {
-        val imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
-        if (imagePath.exists()) {
-            this.put(key, CacheItem(imagePath, true))
-        }
+    fun saveSnapShot(context: ContextWrapper) {
+        context.openFileOutput("cache", MODE_PRIVATE).use { fos -> ObjectOutputStream(fos).use {
+            it.writeObject(this.snapshot())
+        } }
+    }
+
+    fun bootstrapCache(context: ContextWrapper) {
+        try {
+            context.openFileInput("cache").use { fis ->
+                ObjectInputStream(fis).use {
+                    val map = it.readObject() as LinkedHashMap<UUID, CacheItem>
+                    // start putting from oldest to newest
+                    map.entries.reversed().forEach { (uuid, item) ->
+                        if (item.file.exists()) {
+                            this.put(uuid, item)
+                        }
+                    }
+                }
+            }
+        } catch (ignored: FileNotFoundException) { /* ignored */ }
     }
 }

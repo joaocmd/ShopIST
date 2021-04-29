@@ -43,11 +43,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
 
         // Get local cache files to the cache
-        globalData.getAllProducts().forEach {
-            it.images.forEach { id ->
-                globalData.imageCache.startupImage(UUID.fromString(id))
-            }
-        }
+        globalData.imageCache.bootstrapCache(applicationContext as ShopIST)
 
         globalData.pantries.forEach {
             if (it.isShared) {

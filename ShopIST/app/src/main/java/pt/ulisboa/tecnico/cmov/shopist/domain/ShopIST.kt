@@ -56,15 +56,13 @@ class ShopIST : Application() {
 
     private fun updateDrivingTimes() {
         _currentLocation ?: return
-        getAllLists().forEach {
-            if (it.location != null) {
-                API.getInstance(applicationContext).getRouteTime(
-                    currentLocation!!,
-                    it.location!!,
-                    { time -> it.drivingTime = time },
-                    { }
-                )
-            }
+        getAllLists().filter { it.location != null }.forEach {
+            API.getInstance(applicationContext).getRouteTime(
+                currentLocation!!,
+                it.location!!,
+                { time -> it.drivingTime = time },
+                { }
+            )
         }
         callbackDataSetChanged?.invoke()
     }
@@ -488,6 +486,7 @@ class ShopIST : Application() {
                 Log.d(TAG, "Close error.")
             }
         }
+        imageCache.saveSnapShot(this)
     }
 
     private fun getDeviceId() {
