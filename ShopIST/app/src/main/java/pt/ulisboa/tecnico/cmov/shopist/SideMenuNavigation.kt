@@ -128,6 +128,13 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         }
     }
 
+    override fun onStop() {
+        // Get local cache files to the cache
+        val globalData = applicationContext as ShopIST
+        globalData.imageCache.bootstrapCache(globalData)
+        super.onStop()
+    }
+
     private fun onChangeLanguageSetting(lang: Languages) {
         LocaleHelper.setNewLocale(baseContext, lang.language)
         finish()

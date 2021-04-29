@@ -486,7 +486,6 @@ class ShopIST : Application() {
                 Log.d(TAG, "Close error.")
             }
         }
-        imageCache.saveSnapShot(this)
     }
 
     private fun getDeviceId() {
