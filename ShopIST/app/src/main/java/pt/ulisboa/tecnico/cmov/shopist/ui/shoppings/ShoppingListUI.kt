@@ -65,10 +65,12 @@ class ShoppingListUI : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         root = inflater.inflate(R.layout.fragment_store_shopping_list, container, false)
+
+        // Hide pantry quantities
+        root.findViewById<ImageView>(R.id.pantryQuantityDisplay).visibility = View.GONE
+
         val listView: RecyclerView = root.findViewById(R.id.productsList)
-
         recyclerAdapter = ShoppingListAdapter(shoppingList)
-
         listView.layoutManager = LinearLayoutManager(context)
         listView.adapter = recyclerAdapter
 
@@ -347,6 +349,9 @@ class ShoppingListUI : Fragment() {
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.product_row, viewGroup, false)
+
+            // Hide pantry quantities
+            view.findViewById<TextView>(R.id.pantryQuantityDisplay).visibility = View.GONE
 
             return ViewHolder(view)
         }

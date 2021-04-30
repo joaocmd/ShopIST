@@ -51,6 +51,9 @@ class PantryUI : Fragment() {
         root = inflater.inflate(R.layout.fragment_pantry, container, false)
         val listView: RecyclerView = root.findViewById(R.id.productsList)
 
+        // Hide cart quantities
+        root.findViewById<ImageView>(R.id.cartQuantityDisplay).visibility = View.GONE
+
         recyclerAdapter = PantryAdapter(pantryList)
 
         listView.layoutManager = LinearLayoutManager(context)
@@ -290,6 +293,8 @@ class PantryUI : Fragment() {
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(viewGroup.context)
                 .inflate(R.layout.product_row, viewGroup, false)
+            // Hide cart quantities
+            view.findViewById<TextView>(R.id.cartQuantityDisplay).visibility = View.GONE
 
             return ViewHolder(view)
         }
