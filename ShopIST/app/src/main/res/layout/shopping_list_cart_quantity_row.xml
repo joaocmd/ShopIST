@@ -25,29 +25,29 @@
                 android:id="@+id/rowText"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="10"
                 android:gravity="center_vertical"
-                android:text="NOME PRODUTO"
-                android:layout_marginRight="10dp"
+                android:text="@string/product_name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/pantryViewLocal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/needingViewLocal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center"/>
+                android:text="0" />
 
             <!--
             <TextView

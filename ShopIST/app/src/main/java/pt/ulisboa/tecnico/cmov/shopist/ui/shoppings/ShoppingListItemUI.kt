@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,9 +53,6 @@ class ShoppingListItemUI : Fragment() {
 
         root.findViewById<Button>(R.id.cancelButton).setOnClickListener{ cancel() }
         root.findViewById<Button>(R.id.okButton).setOnClickListener{ saveReturn() }
-
-        // Set product title
-        root.findViewById<TextView>(R.id.productTitleView).text = shoppingListItem.product.name
 
         recyclerView = root.findViewById(R.id.shoppingListItemList)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -175,9 +174,7 @@ class ShoppingListItemUI : Fragment() {
                 textView.text = pantryList.name
 
                 val quantities = shoppingListItem.quantities[pantryList]!!
-                pantryView.text = quantities.pantry.toString()
                 needingView.text = quantities.needing.toString()
-                //cartView.text = quantities.cart.toString()
                 currentQuantity.text = quantities.cart.toString()
 
                 view.findViewById<View>(R.id.moreButton).setOnClickListener {

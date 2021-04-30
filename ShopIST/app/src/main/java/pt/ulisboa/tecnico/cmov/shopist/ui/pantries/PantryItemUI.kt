@@ -71,17 +71,17 @@ class PantryItemUI : Fragment() {
         needing = item.needingQuantity
         changeNeeding(0)
 
-        cartView = root.findViewById(R.id.cartView)
-        cart = item.cartQuantity
-        changeCart(0)
+        // cartView = root.findViewById(R.id.cartView)
+        // cart = item.cartQuantity
+        // changeCart(0)
 
         // Quantity Buttons
         root.findViewById<View>(R.id.incrementPantry).setOnClickListener { changePantry(1) }
         root.findViewById<View>(R.id.decrementPantry).setOnClickListener { changePantry(-1) }
         root.findViewById<View>(R.id.incrementNeeding).setOnClickListener { changeNeeding(1) }
         root.findViewById<View>(R.id.decrementNeeding).setOnClickListener { changeNeeding(-1) }
-        root.findViewById<View>(R.id.incrementCart).setOnClickListener { changeCart(1) }
-        root.findViewById<View>(R.id.decrementCart).setOnClickListener { changeCart(-1) }
+        // root.findViewById<View>(R.id.incrementCart).setOnClickListener { changeCart(1) }
+        // root.findViewById<View>(R.id.decrementCart).setOnClickListener { changeCart(-1) }
 
         // Navigation Buttons
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }

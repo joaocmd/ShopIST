@@ -7,9 +7,9 @@
     tools:context=".ui.pantries.PantryItemUI"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:layout_marginTop="40dp">
+    android:layout_marginTop="10dp">
 
-    <LinearLayout android:layout_marginTop="50dp"
+    <LinearLayout android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -30,11 +30,18 @@
 
     </LinearLayout>
 
+    <include layout="@layout/pantry_item_row_title"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:baselineAligned="false" android:gravity="center"
         android:weightSum="1">
+
         <LinearLayout
             android:paddingTop="20dp"
             android:layout_width="0dp"
@@ -110,7 +117,7 @@
                     android:text="-" />
             </LinearLayout>
 
-            <LinearLayout
+            <!-- LinearLayout
                 android:layout_width="0px"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -141,7 +148,7 @@
                     android:layout_height="@dimen/add_button_height"
                     android:layout_marginTop="5dp"
                     android:text="-" />
-            </LinearLayout>
+            </LinearLayout -->
         </LinearLayout>
     </LinearLayout>
 
