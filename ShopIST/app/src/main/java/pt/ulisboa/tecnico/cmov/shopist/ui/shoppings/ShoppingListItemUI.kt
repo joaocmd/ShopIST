@@ -50,6 +50,7 @@ class ShoppingListItemUI : Fragment() {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_store_shopping_list_item, container, false)
         shoppingListItem = shopIST.currentShoppingListItem!!
+        shoppingListItem.reset()
 
         root.findViewById<Button>(R.id.cancelButton).setOnClickListener{ cancel() }
         root.findViewById<Button>(R.id.okButton).setOnClickListener{ saveReturn() }
@@ -178,7 +179,7 @@ class ShoppingListItemUI : Fragment() {
                 val pantryList = item.pantryList
                 textView.text = pantryList.name
 
-                val quantities = shoppingListItem.quantities[pantryList]!!
+                val quantities = shoppingListItem.tempQuantities[pantryList]!!
                 needingView.text = quantities.needing.toString()
                 currentQuantity.text = quantities.cart.toString()
 

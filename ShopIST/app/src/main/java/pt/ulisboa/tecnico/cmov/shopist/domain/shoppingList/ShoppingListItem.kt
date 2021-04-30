@@ -9,12 +9,14 @@ class ShoppingListItem(val product: Product) {
 
    var items: MutableList<Item> = mutableListOf()
    val quantities: MutableMap<PantryList, Quantity> = mutableMapOf()
+   val tempQuantities: MutableMap<PantryList, Quantity> = mutableMapOf()
    lateinit var shoppingList: ShoppingList
 
    constructor(product: Product, items: Collection<Item>, shoppingList: ShoppingList) : this(product) {
       items.forEach {
          this.items.add(it)
          this.quantities[it.pantryList] = Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
+         this.tempQuantities[it.pantryList] = Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
       }
       this.items = items.sortedBy { it.pantryList.name }.toMutableList()
       this.shoppingList = shoppingList
@@ -29,18 +31,25 @@ class ShoppingListItem(val product: Product) {
    }
 
    fun add(pantryList: PantryList) {
-      quantities[pantryList]!!.cart = quantities[pantryList]!!.cart + 1
+      tempQuantities[pantryList]!!.cart = tempQuantities[pantryList]!!.cart + 1
    }
 
    fun remove(pantryList: PantryList) {
-      if (quantities[pantryList]!!.cart > 0) {
-         quantities[pantryList]!!.cart = quantities[pantryList]!!.cart - 1
+      if (tempQuantities[pantryList]!!.cart > 0) {
+         tempQuantities[pantryList]!!.cart = tempQuantities[pantryList]!!.cart - 1
+      }
+   }
+
+   fun reset() {
+      items.forEach {
+         tempQuantities[it.pantryList]!!.needing = it.needingQuantity
+         tempQuantities[it.pantryList]!!.cart = it.cartQuantity
       }
    }
 
    fun save() {
        items.forEach {
-          val cartQuantity = quantities[it.pantryList]!!.cart
+          val cartQuantity = tempQuantities[it.pantryList]!!.cart
           val cartVariation = cartQuantity - it.cartQuantity
           val needingQuantity = max(it.needingQuantity - cartVariation, 0)
 
@@ -49,6 +58,9 @@ class ShoppingListItem(val product: Product) {
 
           quantities[it.pantryList]!!.needing = needingQuantity
           quantities[it.pantryList]!!.cart = cartQuantity
+
+          tempQuantities[it.pantryList]!!.needing = needingQuantity
+          tempQuantities[it.pantryList]!!.cart = cartQuantity
        }
    }
 

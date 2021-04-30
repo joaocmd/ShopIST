@@ -274,11 +274,6 @@ class ShoppingListUI : Fragment() {
     inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
-
-        /**
-         * Provide a reference to the type of views that you are using
-         * (custom ViewHolder).
-         */
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
             private val imageView: ImageView = view.findViewById(R.id.productImageView)
             private val textView: TextView = view.findViewById(R.id.rowText)
