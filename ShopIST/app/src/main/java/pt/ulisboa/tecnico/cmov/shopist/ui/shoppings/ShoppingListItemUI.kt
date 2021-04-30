@@ -148,6 +148,12 @@ class ShoppingListItemUI : Fragment() {
     }
 
     private fun saveReturn() {
+        // Save item quantities and synchronize
+        shoppingListItem.save()
+        shoppingListItem.quantities.forEach { e ->
+            API.getInstance(requireContext()).updatePantry(e.key)
+        }
+
         (requireContext().applicationContext as ShopIST).savePersistent()
         findNavController().popBackStack()
     }
@@ -165,7 +171,6 @@ class ShoppingListItemUI : Fragment() {
 
         inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
             private val textView: TextView = view.findViewById(R.id.rowText)
-            private val pantryView: TextView = view.findViewById(R.id.pantryViewLocal)
             private val needingView: TextView = view.findViewById(R.id.needingViewLocal)
             private val currentQuantity: TextView = view.findViewById(R.id.currentQuantity)
 

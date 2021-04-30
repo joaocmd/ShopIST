@@ -41,9 +41,23 @@ class ShoppingListItem(val product: Product) {
    fun save() {
        items.forEach {
           val cartQuantity = quantities[it.pantryList]!!.cart
-          it.pantryQuantity += cartQuantity
-          it.needingQuantity = max(it.needingQuantity - cartQuantity, 0)
-          it.cartQuantity = 0
+          val cartVariation = cartQuantity - it.cartQuantity
+          val needingQuantity = max(it.needingQuantity - cartVariation, 0)
+
+          it.needingQuantity = needingQuantity
+          it.cartQuantity = cartQuantity
+
+          quantities[it.pantryList]!!.needing = needingQuantity
+          quantities[it.pantryList]!!.cart = cartQuantity
        }
+   }
+
+   fun storeToPantry() {
+      items.forEach {
+         val cartQuantity = quantities[it.pantryList]!!.cart
+         it.pantryQuantity += cartQuantity
+         it.needingQuantity = max(it.needingQuantity - cartQuantity, 0)
+         it.cartQuantity = 0
+      }
    }
 }

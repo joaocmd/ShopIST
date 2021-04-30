@@ -199,7 +199,7 @@ class ShoppingListUI : Fragment() {
     }
 
     private fun saveAndReturn() {
-        shoppingList.saveChanges()
+        shoppingList.saveToPantries()
         val pantriesToUpdate = shoppingList.getPantries().filter { p -> p.isShared }
 
         pantriesToUpdate.forEach {
@@ -315,7 +315,6 @@ class ShoppingListUI : Fragment() {
                 }
                 // Set last image
                 if (item.product.images.size > 0) {
-                    // TODO: Use cache to get image
                     // Get image from cache
                     if (item.product.barcode !== null) {
                         API.getInstance(requireContext()).getProductImages(item.product, { imageIds ->

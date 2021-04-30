@@ -49,8 +49,8 @@ class ShoppingList() {
         }
     }
 
-    fun saveChanges() {
-        items.forEach { it.save() }
+    fun saveToPantries() {
+        items.forEach { it.storeToPantry() }
     }
 
     fun getPantries(): List<PantryList> {
