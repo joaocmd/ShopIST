@@ -70,7 +70,7 @@ class PantriesListUI : Fragment() {
             getString(R.string.pantries_list))
     }
 
-    private fun updateData() {
+    private fun updateData(callback: (() -> Unit)? = null) {
         recyclerAdapter.list = globalData.pantries.toList()
         recyclerAdapter.notifyDataSetChanged()
 
@@ -78,29 +78,35 @@ class PantriesListUI : Fragment() {
             recyclerAdapter.list = globalData.pantries.toList()
             recyclerAdapter.notifyDataSetChanged()
         }
+        activity?.let { globalData.getCurrentDeviceLocation(it) {
 
-        // TODO: Update currentLocation when getting the route
-        globalData.pantries.forEach {
-            if (it.location != null && globalData.currentLocation != null) {
-                API.getInstance(requireContext()).getRouteTime(
-                    globalData.currentLocation!!,
-                    it.location!!,
-                    { time ->
-                        it.drivingTime = time
-                        globalData.callbackDataSetChanged?.invoke()
-                    },
-                    {
-                        // Ignore
-                    }
-                )
+            // TODO: Update currentLocation when getting the route
+            globalData.pantries.forEach {
+                if (it.location != null && globalData.currentLocation != null) {
+                    API.getInstance(requireContext()).getRouteTime(
+                        globalData.currentLocation!!,
+                        it.location!!,
+                        { time ->
+                            it.drivingTime = time
+                            globalData.callbackDataSetChanged?.invoke()
+                        },
+                        {
+                            // Ignore
+                        }
+                    )
+                }
             }
-        }
+
+            callback?.invoke()
+        } }
+
     }
 
     fun onRefresh( refresh : SwipeRefreshLayout) {
         Log.i("tessi", "tessi done")
-        updateData()
-        refresh.isRefreshing = false
+        updateData {
+            refresh.isRefreshing = false
+        }
     }
 
     private fun onNewPantry() {
