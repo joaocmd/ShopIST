@@ -105,6 +105,7 @@
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="barcode_read">Código de barras lido: %1$s.</string>
+    <string name="product_barcode_read">Produto encontrado: %1$s.</string>
     <string name="price">Preço (p.e.: 1.23)</string>
     <string name="choose_store">Escolha a(s) loja(s)</string>
     <string name="first_choose_store">Primeiro é necessário escolher uma loja</string>

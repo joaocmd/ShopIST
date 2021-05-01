@@ -1,17 +1,18 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import android.widget.RadioGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
+import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.PantryList
 import pt.ulisboa.tecnico.cmov.shopist.domain.Product
@@ -30,7 +31,9 @@ class AddItemUI : Fragment() {
     private lateinit var pantryQuantityView: EditText
 
     companion object {
+        const val TAG = "${ShopIST.TAG}.addItemUI"
         const val ARG_PANTRY_ID = "pantryId"
+        const val GET_BARCODE_PRODUCT = 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +51,7 @@ class AddItemUI : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_pantry_add_item, container, false)
-        val globalData = activity?.applicationContext as ShopIST
+        val globalData = requireContext().applicationContext as ShopIST
         products = globalData.getAllProducts()
 
         // Views
@@ -66,7 +69,20 @@ class AddItemUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        TopBarController.noOptionsMenu(menu, requireActivity(), getString(R.string.add_item_title))
+        TopBarController.optionsMenu(
+            menu,
+            requireActivity(),
+            getString(R.string.add_item_title),
+            listOf(TopBarItems.ScanBarcode)
+        )
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+           R.id.action_scan_barcode -> { scanBarcode() }
+           else -> return super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun onResume() {
@@ -75,21 +91,40 @@ class AddItemUI : Fragment() {
         // Update list with new products
         val globalData = activity?.applicationContext as ShopIST
         products = globalData.getAllProducts()
-        productsList.removeAllViews()
         addProductsToGroup(products, productsList)
     }
 
-    private fun addProductsToGroup(products: List<Product>, productsList: RadioGroup) {
+    private fun addProductsToGroup(products: List<Product>, radioGroup: RadioGroup) {
+        radioGroup.removeAllViews()
         for ((index, product) in products.listIterator().withIndex()) {
             val radioButton = RadioButton(context)
             radioButton.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             radioButton.text = product.name
             radioButton.id = index
-            productsList.addView(radioButton)
+            radioGroup.addView(radioButton)
         }
 
-        productsList.setOnCheckedChangeListener { _, checkedId ->
-            selectedProduct = products[checkedId]
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId >= 0) {
+                selectedProduct = products[checkedId]
+            }
+        }
+
+        checkProduct(selectedProduct)
+    }
+
+    private fun checkProduct(product: Product?) {
+        product?.let {
+            selectedProduct = product
+            val index = products.indexOf(product)
+            productsList.check(index)
+
+            Toast.makeText(
+                context, String.format(
+                    getString(R.string.product_barcode_read),
+                    product.name
+                ), Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -147,5 +182,26 @@ class AddItemUI : Fragment() {
 
     private fun onCreateNewProduct() {
         findNavController().navigate(R.id.action_nav_add_item_to_nav_create_product)
+    }
+
+    private fun scanBarcode() {
+        val intent = Intent(activity?.applicationContext, BarcodeScannerActivity::class.java)
+        startActivityForResult(intent, GET_BARCODE_PRODUCT)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == GET_BARCODE_PRODUCT) {
+            data?.let {
+                val barcode = data.getStringExtra(BarcodeScannerActivity.BARCODE)
+                val globalData = (requireContext().applicationContext) as ShopIST
+
+                // Select product associated with this barcode
+                if (barcode != null) {
+                    selectedProduct = globalData.getProductByBarcode(barcode)
+                }
+            }
+        }
+
     }
 }

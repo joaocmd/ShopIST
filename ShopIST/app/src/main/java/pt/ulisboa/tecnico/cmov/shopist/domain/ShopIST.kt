@@ -209,6 +209,12 @@ class ShopIST : Application() {
         return allProducts[uuid]
     }
 
+    fun getProductByBarcode(barcode: String): Product? {
+        return getAllProducts().find {
+            it.barcode != null && it.barcode == barcode
+        }
+    }
+
     fun getPantriesWithProduct(uuid: UUID): List<PantryList> {
         return pantries.filter {
             it.hasProduct(uuid)
