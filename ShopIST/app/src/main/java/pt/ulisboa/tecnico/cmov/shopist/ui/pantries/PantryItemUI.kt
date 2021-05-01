@@ -83,6 +83,16 @@ class PantryItemUI : Fragment() {
         // root.findViewById<View>(R.id.incrementCart).setOnClickListener { changeCart(1) }
         // root.findViewById<View>(R.id.decrementCart).setOnClickListener { changeCart(-1) }
 
+        // Deactivate buttons if shared and not connect
+        val globalData = requireActivity().applicationContext as ShopIST
+        if (!globalData.isAPIConnected && pantryList.isShared) {
+            root.findViewById<View>(R.id.incrementPantry).isEnabled = false
+            root.findViewById<View>(R.id.decrementPantry).isEnabled = false
+            root.findViewById<View>(R.id.incrementNeeding).isEnabled = false
+            root.findViewById<View>(R.id.decrementNeeding).isEnabled = false
+            root.findViewById<View>(R.id.okButton).isEnabled = false
+        }
+
         // Navigation Buttons
         root.findViewById<View>(R.id.cancelButton).setOnClickListener { cancel() }
         root.findViewById<View>(R.id.okButton).setOnClickListener { saveAndReturn() }

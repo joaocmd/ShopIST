@@ -198,6 +198,12 @@ class ShoppingListItemUI : Fragment() {
                     //cartView.text = quantities.cart.toString()
                     currentQuantity.text = quantities.cart.toString()
                 }
+
+                // Disable buttons if shared and not connect
+                if (!shopIST.isAPIConnected && pantryList.isShared) {
+                    view.findViewById<View>(R.id.moreButton).isEnabled = false
+                    view.findViewById<View>(R.id.lessButton).isEnabled = false
+                }
             }
         }
 
