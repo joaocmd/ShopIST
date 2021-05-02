@@ -59,6 +59,12 @@ class ShoppingListUI : Fragment() {
         setHasOptionsMenu(true)
     }
 
+    private fun setTotals() {
+        root.findViewById<TextView>(R.id.totalNeedingQuantityDisplay).text = store.itemQuantityTotal(globalData.pantries.toList()).toString()
+        root.findViewById<TextView>(R.id.totalCartQuantityDisplay).text = store.itemCheckoutTotal(globalData.pantries.toList()).toString()
+        root.findViewById<TextView>(R.id.totalMoneyNeeded).text = store.itemPriceTotal(globalData.pantries.toList()).toString() + "€"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,6 +75,8 @@ class ShoppingListUI : Fragment() {
         // Hide pantry quantities
         root.findViewById<ImageView>(R.id.pantryQuantityDisplay).visibility = View.GONE
         root.findViewById<View>(R.id.transferOneItem).visibility = View.GONE
+
+        setTotals()
 
         val listView: RecyclerView = root.findViewById(R.id.productsList)
         recyclerAdapter = ShoppingListAdapter(shoppingList)
@@ -281,13 +289,27 @@ class ShoppingListUI : Fragment() {
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
             private val needingQuantityView : TextView = view.findViewById(R.id.needingQuantityDisplay)
             private val cartQuantityView : TextView = view.findViewById(R.id.cartQuantityDisplay)
+            private val moneyView: TextView = view.findViewById(R.id.moneyNeeded)
 
+            private fun changePrice(item: ShoppingListItem) {
+
+                val quantities = item.getAllQuantities()
+                val price = item.product.prices[store]
+                if(price != null) {
+                    moneyView.text = (price.toDouble() * quantities.cart).toString() + "€"
+                }
+                else {
+                    moneyView.text = "---"
+                }
+            }
             fun bind(item: ShoppingListItem) {
                 textView.text = item.product.getTranslatedName()
                 val quantities = item.getAllQuantities()
                 pantryQuantityView.text = quantities.pantry.toString()
                 needingQuantityView.text = quantities.needing.toString()
                 cartQuantityView.text = quantities.cart.toString()
+
+                changePrice(item)
 
                 view.setOnLongClickListener {
                     view.findNavController().navigate(

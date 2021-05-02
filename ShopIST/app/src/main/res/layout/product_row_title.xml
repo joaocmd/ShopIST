@@ -71,7 +71,77 @@
                 android:gravity="center">
 
             </ImageView>
+            <ImageView
+                android:id="@+id/moneyNeeded"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:src="@drawable/ic_baseline_attach_money_24"
+                android:gravity="center">
+
+            </ImageView>
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/total"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/totalRowText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/total"
+                android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            >
+            <TextView
+                android:id="@+id/totalNeedingQuantityDisplay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0"
+                android:textColor="@color/red_bad"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center">
+
+            </TextView>
+            <TextView
+                android:id="@+id/totalCartQuantityDisplay"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/green_good"
+                android:text="0"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center">
+
+            </TextView>
+            <TextView
+                android:id="@+id/totalMoneyNeeded"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.5"
+                android:text="0"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:gravity="center">
+
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

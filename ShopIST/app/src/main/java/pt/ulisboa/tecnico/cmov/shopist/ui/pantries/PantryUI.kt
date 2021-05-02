@@ -5,10 +5,7 @@ import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -55,6 +52,8 @@ class PantryUI : Fragment() {
 
         // Hide cart quantities
         root.findViewById<ImageView>(R.id.cartQuantityDisplay).visibility = View.GONE
+        root.findViewById<View>(R.id.moneyNeeded).visibility = View.GONE
+        root.findViewById<LinearLayout>(R.id.total).visibility = View.GONE
 
         recyclerAdapter = PantryAdapter(pantryList)
 
@@ -323,6 +322,7 @@ class PantryUI : Fragment() {
                 .inflate(R.layout.product_row, viewGroup, false)
             // Hide cart quantities
             view.findViewById<TextView>(R.id.cartQuantityDisplay).visibility = View.GONE
+            view.findViewById<TextView>(R.id.moneyNeeded).visibility = View.GONE
 
             return ViewHolder(view)
         }
