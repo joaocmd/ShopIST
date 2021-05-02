@@ -527,6 +527,7 @@ class ProductUI : Fragment() {
             }
             product.addImage(id.toString())
 
+            Log.d(TAG, "Begin image send")
             // Send to server
             API.getInstance(requireContext()).postProductImage(product, bitmap, id, { imageId ->
                 Log.d(TAG, "Image: $imageId")

@@ -1,9 +1,11 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -236,6 +238,7 @@ class PantryUI : Fragment() {
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+            private var transferItem: Button = view.findViewById(R.id.transferOneItem)
             private val imageView: ImageView = view.findViewById(R.id.productImageView)
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
@@ -271,6 +274,31 @@ class PantryUI : Fragment() {
 
                 imageView.setOnClickListener {
                     displayFullScreenImage(it as ImageView)
+                }
+
+                transferItem.setOnClickListener {
+                    if(item.pantryQuantity == 0) return@setOnClickListener
+
+                    item.pantryQuantity = item.pantryQuantity - 1
+                    item.needingQuantity = item.needingQuantity + 1
+
+                    if (pantryList.isShared) {
+                        API.getInstance(requireContext()).updatePantry(pantryList)
+                    }
+
+                    (requireActivity().applicationContext as ShopIST).savePersistent()
+                    pantryQuantityView.text = item.pantryQuantity.toString()
+                    needingQuantityView.text = item.needingQuantity.toString()
+                    if(item.pantryQuantity == 0) {
+                        (it as Button).background.setTint(context!!.getColor(R.color.gray_not_usable))
+                        //android:backgroundTint="@color/gray_not_usable"
+                    }
+                    //do stuff
+                }
+
+                if(item.pantryQuantity == 0) {
+                    transferItem.background.setTint(context!!.getColor(R.color.gray_not_usable))
+                    //android:backgroundTint="@color/gray_not_usable"
                 }
 
                 // view.setOnLongClickListener {

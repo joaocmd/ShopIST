@@ -68,6 +68,7 @@ class ShoppingListUI : Fragment() {
 
         // Hide pantry quantities
         root.findViewById<ImageView>(R.id.pantryQuantityDisplay).visibility = View.GONE
+        root.findViewById<View>(R.id.transferOneItem).visibility = View.GONE
 
         val listView: RecyclerView = root.findViewById(R.id.productsList)
         recyclerAdapter = ShoppingListAdapter(shoppingList)
@@ -346,6 +347,7 @@ class ShoppingListUI : Fragment() {
 
             // Hide pantry quantities
             view.findViewById<TextView>(R.id.pantryQuantityDisplay).visibility = View.GONE
+            view.findViewById<TextView>(R.id.transferOneItem).visibility = View.GONE
 
             return ViewHolder(view)
         }

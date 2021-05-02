@@ -64,6 +64,13 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:text="5"
                 android:gravity="center" />
+            <Button
+                android:id="@+id/transferOneItem"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="->"
+                android:layout_weight="1"
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/needingQuantityDisplay"
