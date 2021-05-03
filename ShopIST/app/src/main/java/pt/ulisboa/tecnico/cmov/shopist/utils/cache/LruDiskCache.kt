@@ -36,7 +36,12 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
     }
 
     fun putImage(key: UUID, bitmap: Bitmap, local: Boolean)  {
-        val file = File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        val file = if (local) {
+            File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        } else {
+            File(shopIST.getImageCacheFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        }
+
         FileOutputStream(file).use {
             try {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)

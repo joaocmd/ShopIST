@@ -131,7 +131,7 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
     override fun onStop() {
         // Get local cache files to the cache
         val globalData = applicationContext as ShopIST
-        globalData.imageCache.bootstrapCache(globalData)
+        globalData.imageCache.saveSnapShot(globalData)
         super.onStop()
     }
 
