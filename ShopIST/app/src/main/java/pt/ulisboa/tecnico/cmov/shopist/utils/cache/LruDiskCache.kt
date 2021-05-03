@@ -37,9 +37,9 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
 
     fun putImage(key: UUID, bitmap: Bitmap, local: Boolean)  {
         val file = if (local) {
-            File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+            File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         } else {
-            File(shopIST.getImageCacheFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+            File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         }
 
         FileOutputStream(file).use {
@@ -63,7 +63,16 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
 			return
         }
 
-       val imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        // FIXME: these probably aren't needed because if they are present they are added on bootstrap
+        var imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        if (imagePath.exists()) {
+            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+            this.put(key, CacheItem(imagePath, true))
+            onSuccessListener(imageBitmap)
+            return
+        }
+
+        imagePath = File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         if (imagePath.exists()) {
             val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
             this.put(key, CacheItem(imagePath, true))

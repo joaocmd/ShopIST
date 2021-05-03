@@ -278,15 +278,6 @@ class ShopIST : Application() {
 
     fun getImageFolder(): File {
         val cw = ContextWrapper(applicationContext)
-        val folder = cw.getDir(IMAGE_FOLDER, Context.MODE_PRIVATE)
-        if (!folder.exists()) {
-            folder.mkdir()
-        }
-        return folder
-    }
-
-    fun getImageCacheFolder(): File {
-        val cw = ContextWrapper(applicationContext)
         val folder = File("${cw.cacheDir.absolutePath}/$IMAGE_FOLDER")
         if (!folder.exists()) {
             folder.mkdir()
