@@ -297,7 +297,7 @@ class API constructor(context: Context) {
         onSuccessListener: (response: Long) -> Unit,
         onErrorListener: (error: VolleyError) -> Unit
     ) {
-        val url = "${directionsURL}/Driving?wp.0=${orig.toApiString()}&wp.1=${dest.toApiString()}&key=$bingKey"
+        val url = "$baseURL/driving?orig=${orig.toApiString()}&dest=${dest.toApiString()}"
 
         val stringRequest = StringRequest(
             Request.Method.GET, url,
