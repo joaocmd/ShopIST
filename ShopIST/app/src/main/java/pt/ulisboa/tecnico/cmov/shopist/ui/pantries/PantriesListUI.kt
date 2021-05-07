@@ -80,8 +80,10 @@ class PantriesListUI : Fragment() {
         }
         activity?.let { globalData.getCurrentDeviceLocation(it) {
 
+            Log.i("getAllPantries", "ola2")
             // TODO: Update currentLocation when getting the route
             globalData.pantries.forEach {
+                /*
                 if (it.location != null && globalData.currentLocation != null) {
                     API.getInstance(requireContext()).getRouteTime(
                         globalData.currentLocation!!,
@@ -95,8 +97,19 @@ class PantriesListUI : Fragment() {
                         }
                     )
                 }
-            }
+                */
 
+                Log.i("getAllPantries", "ola1")
+                if (it.isShared) {
+                    // Check for updates
+                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                        Log.i("getAllPantries", "ola")
+                        globalData.populateFromServer(result)
+                    }, {
+                    })
+                }
+            }
+            globalData.getAllLists()
             callback?.invoke()
         } }
 
