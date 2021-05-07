@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentActivity
 class TopBarController {
     companion object {
         val items: Map<TopBarItems, Int> = mapOf(
-            TopBarItems.ScanBarcode to R.id.action_scan_barcode,
+            TopBarItems.Barcode to R.id.action_scan_barcode,
             TopBarItems.SeeMore     to R.id.action_see_more,
             TopBarItems.Delete      to R.id.action_delete,
             TopBarItems.Edit        to R.id.action_edit,
@@ -16,7 +16,7 @@ class TopBarController {
         )
 
         fun optionsMenu(menu: Menu, app: FragmentActivity, title: String, topBarItems: List<TopBarItems>) {
-            menu.findItem(R.id.action_scan_barcode).isVisible = topBarItems.contains(TopBarItems.ScanBarcode)
+            menu.findItem(R.id.action_scan_barcode).isVisible = topBarItems.contains(TopBarItems.Barcode)
             menu.findItem(R.id.action_see_more).isVisible = topBarItems.contains(TopBarItems.SeeMore)
             menu.findItem(R.id.action_delete).isVisible = topBarItems.contains(TopBarItems.Delete)
             menu.findItem(R.id.action_edit).isVisible = topBarItems.contains(TopBarItems.Edit)
@@ -67,7 +67,7 @@ class TopBarController {
 }
 
 enum class TopBarItems {
-    ScanBarcode,
+    Barcode,
     SeeMore,
     Delete,
     Edit,

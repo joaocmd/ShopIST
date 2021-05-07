@@ -6,12 +6,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
@@ -21,6 +23,8 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.AddItemUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
@@ -165,7 +169,7 @@ class ShoppingListUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menuRoot = menu
-        val items = mutableListOf(TopBarItems.Edit, TopBarItems.Delete)
+        val items = mutableListOf(TopBarItems.Edit, TopBarItems.Delete, TopBarItems.Barcode)
         if (store.location != null) {
             items.add(TopBarItems.Directions)
         }
@@ -183,6 +187,10 @@ class ShoppingListUI : Fragment() {
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 mapIntent.setPackage("com.google.android.apps.maps")
                 startActivity(mapIntent)
+            }
+            R.id.action_scan_barcode -> {
+                val intent = Intent(activity?.applicationContext, BarcodeScannerActivity::class.java)
+                startActivityForResult(intent, AddItemUI.GET_BARCODE_PRODUCT)
             }
             R.id.action_delete -> confirmDeleteStore()
             else -> return super.onOptionsItemSelected(item)
@@ -280,6 +288,20 @@ class ShoppingListUI : Fragment() {
         dialog.show()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == AddItemUI.GET_BARCODE_PRODUCT) {
+            data?.let {
+                data.getStringExtra(BarcodeScannerActivity.BARCODE)?.let { barcode ->
+                    shoppingList.items.find {item -> item.product.barcode == barcode }?.let { item ->
+                        (requireActivity().applicationContext as ShopIST).currentShoppingListItem = item
+                        findNavController()
+                            .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
+                    } }
+            }
+        }
+    }
+
     inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
@@ -323,7 +345,7 @@ class ShoppingListUI : Fragment() {
 
                 view.setOnClickListener {
                     // set current item because we can't pass object references in bundles
-                    (activity?.applicationContext as ShopIST).currentShoppingListItem = item
+                    (requireActivity().applicationContext as ShopIST).currentShoppingListItem = item
                     findNavController()
                         .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
                 }

@@ -13,10 +13,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.core.graphics.createBitmap
 import androidx.core.os.bundleOf
-import androidx.core.view.marginLeft
-import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -490,7 +487,7 @@ class ProductUI : Fragment() {
 
         TopBarController.optionsMenu(
             menu, requireActivity(), product.getTranslatedName(),
-            listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Share, TopBarItems.Delete)
+            listOf(TopBarItems.Edit, TopBarItems.Barcode, TopBarItems.Share, TopBarItems.Delete)
         )
     }
 
