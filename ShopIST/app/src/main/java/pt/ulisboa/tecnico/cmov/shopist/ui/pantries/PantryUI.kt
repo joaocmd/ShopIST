@@ -253,7 +253,14 @@ class PantryUI : Fragment() {
                             PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
                         )
                     )
-                } }
+                } ?: Toast.makeText(
+                        context, String.format(
+                            getString(R.string.no_such_product_with_barcode),
+                            barcode,
+                            pantryList.name
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }

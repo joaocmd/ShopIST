@@ -293,16 +293,25 @@ class ShoppingListUI : Fragment() {
         if (resultCode == AppCompatActivity.RESULT_OK && requestCode == AddItemUI.GET_BARCODE_PRODUCT) {
             data?.let {
                 data.getStringExtra(BarcodeScannerActivity.BARCODE)?.let { barcode ->
-                    shoppingList.items.find {item -> item.product.barcode == barcode }?.let { item ->
-                        (requireActivity().applicationContext as ShopIST).currentShoppingListItem = item
-                        findNavController()
-                            .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
-                    } }
-            }
+                    shoppingList.items.find { item -> item.product.barcode == barcode }
+                        ?.let { item ->
+                            (requireActivity().applicationContext as ShopIST).currentShoppingListItem =
+                                item
+                            findNavController()
+                                .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
+                        } ?: Toast.makeText(
+                        context, String.format(
+                            getString(R.string.no_such_product_with_barcode),
+                            barcode,
+                            shoppingList.store?.name
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
         }
     }
+}
 
-    inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
+inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
