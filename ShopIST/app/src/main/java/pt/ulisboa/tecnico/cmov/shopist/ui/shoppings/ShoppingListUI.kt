@@ -346,7 +346,8 @@ inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
                     view.findNavController().navigate(
                         R.id.action_nav_store_shopping_list_to_nav_view_product,
                         bundleOf(
-                            ProductUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                            ProductUI.ARG_PRODUCT_ID to item.product.uuid.toString(),
+                            ProductUI.ARG_STORE_ID to storeId.toString()
                         )
                     )
                     true

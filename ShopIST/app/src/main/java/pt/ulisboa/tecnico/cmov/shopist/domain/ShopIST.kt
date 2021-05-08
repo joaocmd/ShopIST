@@ -234,7 +234,7 @@ class ShopIST : Application() {
         return allStores[uuid]!!
     }
 
-    fun getClosestStore(currLocation: LatLng): Store? {
+    fun getClosestStoreTo(currLocation: LatLng): Store? {
         val closestStore = stores
             .filter { it.location != null }
             .minByOrNull { it.getDistance(currLocation) }
