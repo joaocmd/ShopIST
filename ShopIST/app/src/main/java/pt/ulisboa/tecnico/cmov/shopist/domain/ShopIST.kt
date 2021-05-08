@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
+import android.net.*
 import android.util.Log
 import android.widget.Toast
 import com.android.volley.VolleyError
@@ -57,19 +58,6 @@ class ShopIST : Application() {
             updateDrivingTimes()
         }
 
-    private fun updateDrivingTimes() {
-        _currentLocation ?: return
-        getAllLists().filter { it.location != null }.forEach {
-            API.getInstance(applicationContext).getRouteTime(
-                currentLocation!!,
-                it.location!!,
-                { time -> it.drivingTime = time },
-                { }
-            )
-        }
-        callbackDataSetChanged?.invoke()
-    }
-
     private var allPantries: MutableMap<UUID, PantryList> = mutableMapOf()
     private var allProducts: MutableMap<UUID, Product> = mutableMapOf()
     private var allStores: MutableMap<UUID, Store> = mutableMapOf()
@@ -80,6 +68,7 @@ class ShopIST : Application() {
     var pantryToOpen: PantryList? = null
     var productToOpen: Product? = null
     var isAPIConnected = false
+    var hasWiFi = false
     var callbackDataSetChanged: (() -> Unit)? = null
 
     val pantries: Array<PantryList>
@@ -253,6 +242,19 @@ class ShopIST : Application() {
         else closestStore
     }
 
+    private fun updateDrivingTimes() {
+        _currentLocation ?: return
+        getAllLists().filter { it.location != null }.forEach {
+            API.getInstance(applicationContext).getRouteTime(
+                currentLocation!!,
+                it.location!!,
+                { time -> it.drivingTime = time },
+                { }
+            )
+        }
+        callbackDataSetChanged?.invoke()
+    }
+
     fun getShoppingList(uuid: UUID): ShoppingList {
         return ShoppingList(allStores[uuid]!!, allPantries.values)
     }
@@ -302,10 +304,52 @@ class ShopIST : Application() {
         }
     }
 
+    private fun downloadFirstImageForProducts() {
+        allProducts.values.filter { p -> p.isShared }.forEach { p ->
+            if (!hasWiFi) return
+            API.getInstance(this).getProduct(p.uuid, { pDto ->
+                pDto.images?.let {
+                    p.images = it
+
+                    if (hasWiFi) {
+                        imageCache.getAsImage(UUID.fromString(p.getLastImageId()), {}, {})
+                    }
+                }
+            } ,{
+                // Ignored
+            })
+        }
+    }
+
     //--------------
+
+    private fun setNetworkChangeCallback() {
+        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        connectivityManager?.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network : Network) {
+                Log.d(TAG, "Has internet")
+                hasWiFi = !connectivityManager.isActiveNetworkMetered
+                val currentActive = connectivityManager.activeNetwork
+
+                if (hasWiFi && currentActive != null) {
+                    downloadFirstImageForProducts()
+                }
+            }
+
+            override fun onLost(network : Network) {
+                Log.d(TAG,"Lost a network")
+                hasWiFi = !connectivityManager.isActiveNetworkMetered
+                val currentActive = connectivityManager.activeNetwork
+                if (currentActive == null) {
+                    isAPIConnected = false
+                }
+            }
+        })
+    }
 
     fun startUp() {
         getDeviceId()
+        setNetworkChangeCallback()
 
         // Load previous data
         if (!firstTime) {

@@ -90,7 +90,7 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
                 onErrorListener(it)
             }
         )
-  }
+    }
 
     fun saveSnapShot(context: ContextWrapper) {
         context.openFileOutput("cache", MODE_PRIVATE).use { fos -> ObjectOutputStream(fos).use {
