@@ -31,12 +31,27 @@ class ShoppingListItem(val product: Product) {
    }
 
    fun add(pantryList: PantryList) {
-      tempQuantities[pantryList]!!.cart = tempQuantities[pantryList]!!.cart + 1
+      val quant = quantities[pantryList]
+      if (quant!!.needing + quant.cart> tempQuantities[pantryList]!!.cart) {
+         tempQuantities[pantryList]!!.cart = tempQuantities[pantryList]!!.cart + 1
+      }
    }
 
    fun remove(pantryList: PantryList) {
       if (tempQuantities[pantryList]!!.cart > 0) {
          tempQuantities[pantryList]!!.cart = tempQuantities[pantryList]!!.cart - 1
+      }
+   }
+
+   fun maximum(pantryList: PantryList) {
+      val quant = quantities[pantryList]
+      tempQuantities[pantryList]!!.cart = //tempQuantities[pantryList]!!.cart + 1
+         quant!!.needing + quant.cart
+   }
+
+   fun minimum(pantryList: PantryList) {
+      if (tempQuantities[pantryList]!!.cart > 0) {
+         tempQuantities[pantryList]!!.cart = 0
       }
    }
 

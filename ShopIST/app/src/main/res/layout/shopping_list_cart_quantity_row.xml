@@ -63,12 +63,24 @@
                 android:orientation="horizontal"
                 android:layout_weight="3">
 
-                <Button
-                    android:id="@+id/lessButton"
-                    android:layout_width="@dimen/add_button_width"
-                    android:layout_height="@dimen/add_button_height"
-                    android:text="@string/minus"
-                    android:layout_gravity="center"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/lessButton"
+                        android:layout_width="@dimen/add_button_width"
+                        android:layout_height="@dimen/add_button_height"
+                        android:text="@string/minus"
+                        android:layout_gravity="center"/>
+                    <Button
+                        android:id="@+id/minButton"
+                        android:layout_width="@dimen/add_button_width"
+                        android:layout_height="@dimen/add_button_height"
+                        android:padding="0dp"
+                        android:text="@string/min"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/currentQuantity"
@@ -76,14 +88,26 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="0"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
                     android:gravity="center" />
-
-                <Button
-                    android:id="@+id/moreButton"
-                    android:layout_width="@dimen/add_button_width"
-                    android:layout_height="@dimen/add_button_height"
-                    android:text="@string/plus"
-                    android:layout_gravity="center"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <Button
+                        android:id="@+id/moreButton"
+                        android:layout_width="@dimen/add_button_width"
+                        android:layout_height="@dimen/add_button_height"
+                        android:text="@string/plus"
+                        android:layout_gravity="center"/>
+                    <Button
+                        android:id="@+id/maxButton"
+                        android:layout_width="@dimen/add_button_width"
+                        android:layout_height="@dimen/add_button_height"
+                        android:padding="0dp"
+                        android:text="@string/max"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

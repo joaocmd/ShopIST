@@ -194,6 +194,21 @@ class ShoppingListItemUI : Fragment() {
                     //cartView.text = quantities.cart.toString()
                     currentQuantity.text = quantities.cart.toString()
                 }
+                view.findViewById<View>(R.id.maxButton).setOnClickListener {
+                    item.product.barcode?.let {
+                        shopIST.productOrder.add(it)
+                    }
+                    // Add and update view
+                    shoppingListItem.maximum(item.pantryList)
+                    //cartView.text = quantities.cart.toString()
+                    currentQuantity.text = quantities.cart.toString()
+                }
+                view.findViewById<View>(R.id.minButton).setOnClickListener {
+                    // Subtract and update view
+                    shoppingListItem.minimum(item.pantryList)
+                    //cartView.text = quantities.cart.toString()
+                    currentQuantity.text = quantities.cart.toString()
+                }
 
                 // Disable buttons if shared and not connect
                 if (!shopIST.isAPIConnected && pantryList.isShared) {
