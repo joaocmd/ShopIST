@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.pantries
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +14,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -65,11 +68,18 @@ class PantryUI : Fragment() {
         listView.adapter = recyclerAdapter
 
         root.findViewById<FloatingActionButton>(R.id.newItemButton).setOnClickListener { onNewItem() }
+        root.findViewById<SwipeRefreshLayout>(R.id.swiperRefresh).setOnRefreshListener { onRefresh(swiperRefresh) }
+
         return root
     }
 
     override fun onResume() {
         super.onResume()
+        updateData()
+    }
+
+    private fun updateData(callback: (() -> Unit)? = null) {
+
         val globalData = (requireActivity().applicationContext as ShopIST)
         pantryList = globalData.getPantryList(pantryList.uuid)
         recyclerAdapter.notifyDataSetChanged()
@@ -114,6 +124,15 @@ class PantryUI : Fragment() {
                     }, {})
                 }
             }
+        }
+
+        callback?.invoke()
+    }
+
+    fun onRefresh( refresh : SwipeRefreshLayout) {
+        Log.i("tessi", "tessi done")
+        updateData {
+            refresh.isRefreshing = false
         }
     }
 

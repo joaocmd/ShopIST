@@ -8,11 +8,15 @@ import android.view.Window
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils
 import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
+import java.sql.Time
+import java.time.LocalDateTime
 import java.util.*
 
 class SplashScreenActivity : AppCompatActivity() {
@@ -88,9 +92,23 @@ class SplashScreenActivity : AppCompatActivity() {
          * cases when a location is not available.
          */
         try {
-            locationUtils.getNewLocation { location ->
-                (applicationContext as ShopIST).currentLocation = location!!.toLatLng()
-                if (!hasPantryToOpen && !hasProductToOpen) dismiss()
+            var that = this;
+            locationUtils.getLastLocation { lastLocation ->
+                if(lastLocation != null) {
+                    Log.i("location","last location is indeed available")
+                    (applicationContext as ShopIST).currentLocation = lastLocation.toLatLng()
+
+                    runBlocking {
+                        launch {
+                            (applicationContext as ShopIST).getCurrentDeviceLocation(that)
+                            if (!hasPantryToOpen && !hasProductToOpen) dismiss()
+                        }
+                    }
+                }
+                else {
+                    (applicationContext as ShopIST).getCurrentDeviceLocation(that)
+                    if (!hasPantryToOpen && !hasProductToOpen) dismiss()
+                }
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)

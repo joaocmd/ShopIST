@@ -1,5 +1,6 @@
 package pt.ulisboa.tecnico.cmov.shopist.domain
 
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.ContextWrapper
@@ -13,9 +14,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PromptMessage
-import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
-import pt.ulisboa.tecnico.cmov.shopist.utils.UserPromptStorage
+import pt.ulisboa.tecnico.cmov.shopist.utils.*
 import pt.ulisboa.tecnico.cmov.shopist.utils.cache.LruDiskCache
 import java.io.*
 import java.util.*
@@ -43,6 +42,7 @@ class ShopIST : Application() {
     }
 
     private var firstTime = true
+
     var languageSettings = Language()
     var promptSettings = UserPromptStorage()
     lateinit var deviceId: UUID
@@ -163,6 +163,14 @@ class ShopIST : Application() {
         // allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
 
         savePersistent()
+    }
+
+    fun getCurrentDeviceLocation(act : Activity, callback: (() -> Unit)? = null){
+        Log.i("location","new location")
+        (LocationUtils(act)).getNewLocation { location ->
+            currentLocation = location!!.toLatLng()
+            callback?.invoke()
+        }
     }
 
     fun addProduct(product: Product) {

@@ -70,37 +70,32 @@ class PantriesListUI : Fragment() {
             getString(R.string.pantries_list))
     }
 
-    private fun updateData() {
-        recyclerAdapter.list = globalData.pantries.toList()
-        recyclerAdapter.notifyDataSetChanged()
-
+    private fun updateData(callback: (() -> Unit)? = null) {
         globalData.callbackDataSetChanged = {
             recyclerAdapter.list = globalData.pantries.toList()
             recyclerAdapter.notifyDataSetChanged()
         }
-
-        // TODO: Update currentLocation when getting the route
-        globalData.pantries.forEach {
-            if (it.location != null && globalData.currentLocation != null) {
-                API.getInstance(requireContext()).getRouteTime(
-                    globalData.currentLocation!!,
-                    it.location!!,
-                    { time ->
-                        it.drivingTime = time
+        activity?.let { globalData.getCurrentDeviceLocation(it) {
+            globalData.pantries.forEach {
+                if (it.isShared) {
+                    // Check for updates
+                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                        globalData.populateFromServer(result)
                         globalData.callbackDataSetChanged?.invoke()
-                    },
-                    {
-                        // Ignore
-                    }
-                )
+                    }, {
+                    })
+                }
             }
-        }
+            callback?.invoke()
+        } }
+
     }
 
     fun onRefresh( refresh : SwipeRefreshLayout) {
         Log.i("tessi", "tessi done")
-        updateData()
-        refresh.isRefreshing = false
+        updateData {
+            refresh.isRefreshing = false
+        }
     }
 
     private fun onNewPantry() {

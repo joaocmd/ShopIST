@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kotlinx.android.synthetic.main.fragment_stores_list.*
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -89,8 +92,78 @@ class ShoppingListUI : Fragment() {
 
         // Checkout button
         root.findViewById<View>(R.id.okButton).setOnClickListener { confirmCheckout() }
+        root.findViewById<SwipeRefreshLayout>(R.id.swiperRefresh2).setOnRefreshListener { onRefresh(swiperRefresh2) }
 
         return root
+    }
+
+    private fun updateData(callback: (() -> Unit)? = null) {
+
+        getPrices()
+
+        // Verify if some product should not appear in this list
+        shoppingList.items.removeIf {
+            !it.product.hasStore(store.uuid)
+        }
+
+        recyclerAdapter.notifyDataSetChanged()
+        globalData.callbackDataSetChanged = {
+            // shoppingList = globalData.getShoppingList(storeId)
+            recyclerAdapter.shoppingList = globalData.getShoppingList(shoppingList.store!!.uuid)
+            recyclerAdapter.notifyDataSetChanged()
+        }
+
+        setEnableButtons(globalData.isAPIConnected)
+
+
+        globalData.pantries.forEach {
+            if (it.isShared) {
+                // Check for updates
+                API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                    globalData.populateFromServer(result)
+                    globalData.callbackDataSetChanged?.invoke()
+                }, {
+                })
+            }
+        }
+/*
+        // Get product order
+        store.location?.let { storeLocation ->
+            API.getInstance(requireContext()).getProductOrder(
+                storeLocation,
+                shoppingList.items.map { it.product },
+                { order ->
+                    val newOrder = shoppingList.items
+                        .sortedWith { s1, s2 ->
+                            val s1Barcode = s1.product.barcode
+                            val s2Barcode = s2.product.barcode
+                            when {
+                                s1Barcode == null && s2Barcode == null -> 0
+                                s2Barcode == null -> -1
+                                s1Barcode == null -> 1
+                                else -> order.indexOf(s1Barcode) - order.indexOf(s2Barcode)
+                            }
+                        }
+
+                    shoppingList.items = newOrder.toMutableList()
+
+                    globalData.callbackDataSetChanged?.invoke()
+                },
+                {
+                    // Ignore
+                }
+            )
+        }
+    */
+        callback?.invoke()
+        // TODO: Get one image for each product
+    }
+
+    fun onRefresh( refresh : SwipeRefreshLayout) {
+    Log.i("tessi", "tessi done")
+        updateData {
+            refresh.isRefreshing = false
+        }
     }
 
     private fun setEnableButtons(enabled: Boolean) {
@@ -119,51 +192,7 @@ class ShoppingListUI : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        getPrices()
-
-        // Verify if some product should not appear in this list
-        shoppingList.items.removeIf {
-            !it.product.hasStore(store.uuid)
-        }
-
-        recyclerAdapter.notifyDataSetChanged()
-        globalData.callbackDataSetChanged = {
-            // shoppingList = globalData.getShoppingList(storeId)
-            recyclerAdapter.shoppingList = shoppingList
-            recyclerAdapter.notifyDataSetChanged()
-        }
-
-        setEnableButtons(globalData.isAPIConnected)
-
-        // Get product order
-        store.location?.let { storeLocation ->
-            API.getInstance(requireContext()).getProductOrder(
-                storeLocation,
-                shoppingList.items.map { it.product },
-                { order ->
-                    val newOrder = shoppingList.items
-                        .sortedWith { s1, s2 ->
-                            val s1Barcode = s1.product.barcode
-                            val s2Barcode = s2.product.barcode
-                            when {
-                                s1Barcode == null && s2Barcode == null -> 0
-                                s2Barcode == null -> -1
-                                s1Barcode == null -> 1
-                                else -> order.indexOf(s1Barcode) - order.indexOf(s2Barcode)
-                            }
-                        }
-
-                    shoppingList.items = newOrder.toMutableList()
-
-                    globalData.callbackDataSetChanged?.invoke()
-                },
-                {
-                    // Ignore
-                }
-            )
-        }
-
-        // TODO: Get one image for each product
+        updateData()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
