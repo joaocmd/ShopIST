@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -16,7 +17,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import kotlinx.android.synthetic.main.fragment_stores_list.*
 import kotlinx.android.synthetic.main.stores_list_row.view.*
 import pt.ulisboa.tecnico.cmov.shopist.R
@@ -55,6 +58,7 @@ class StoresListUI : Fragment() {
         recyclerView.adapter = recyclerAdapter
 
         root.findViewById<FloatingActionButton>(R.id.newShoppingListButton).setOnClickListener { onNewShoppingList() }
+        root.findViewById<SwipeRefreshLayout>(R.id.swiperRefresh2).setOnRefreshListener { onRefresh(swiperRefresh2) }
 
         return root
     }
@@ -73,7 +77,7 @@ class StoresListUI : Fragment() {
         )
     }
 
-    private fun updateData() {
+    private fun updateData(callback: (() -> Unit)? = null) {
         val globalData = activity?.applicationContext as ShopIST
         recyclerAdapter.list = globalData.stores
         recyclerAdapter.notifyDataSetChanged()
@@ -83,7 +87,8 @@ class StoresListUI : Fragment() {
             recyclerAdapter.notifyDataSetChanged()
         }
 
-        globalData.stores.forEach {
+        //globalData.stores.forEach {
+            /*
             // Route time
             if (it.location != null && globalData.currentLocation != null) {
                 API.getInstance(requireContext()).getRouteTime(
@@ -100,7 +105,32 @@ class StoresListUI : Fragment() {
                     }
                 )
             }
-        }
+
+                if (it.isShared) {
+                    // Check for updates
+                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                        globalData.populateFromServer(result)
+                        globalData.callbackDataSetChanged?.invoke()
+                    }, {
+                    })
+                }
+
+             */
+        //}
+
+        activity?.let { globalData.getCurrentDeviceLocation(it) {
+
+            globalData.pantries.forEach {
+                if (it.isShared) {
+                    // Check for updates
+                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                        globalData.populateFromServer(result)
+                        globalData.callbackDataSetChanged?.invoke()
+                    }, {
+                    })
+                }
+            }
+        } }
 
         API.getInstance(requireContext()).beaconEstimates(globalData.stores.toList(), {
             it.forEach { s ->
@@ -111,6 +141,15 @@ class StoresListUI : Fragment() {
         }, {
             // Ignore, can't get beacon estimates data
         })
+
+        callback?.invoke()
+    }
+
+    fun onRefresh( refresh : SwipeRefreshLayout) {
+        Log.i("tessi", "tessi done")
+        updateData {
+            refresh.isRefreshing = false
+        }
     }
 
     private fun onNewShoppingList() {

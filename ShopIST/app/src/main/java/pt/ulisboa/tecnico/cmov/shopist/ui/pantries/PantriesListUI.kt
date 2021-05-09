@@ -71,45 +71,21 @@ class PantriesListUI : Fragment() {
     }
 
     private fun updateData(callback: (() -> Unit)? = null) {
-        recyclerAdapter.list = globalData.pantries.toList()
-        recyclerAdapter.notifyDataSetChanged()
-
         globalData.callbackDataSetChanged = {
             recyclerAdapter.list = globalData.pantries.toList()
             recyclerAdapter.notifyDataSetChanged()
         }
         activity?.let { globalData.getCurrentDeviceLocation(it) {
-
-            Log.i("getAllPantries", "ola2")
-            // TODO: Update currentLocation when getting the route
             globalData.pantries.forEach {
-                /*
-                if (it.location != null && globalData.currentLocation != null) {
-                    API.getInstance(requireContext()).getRouteTime(
-                        globalData.currentLocation!!,
-                        it.location!!,
-                        { time ->
-                            it.drivingTime = time
-                            globalData.callbackDataSetChanged?.invoke()
-                        },
-                        {
-                            // Ignore
-                        }
-                    )
-                }
-                */
-
-                Log.i("getAllPantries", "ola1")
                 if (it.isShared) {
                     // Check for updates
                     API.getInstance(requireContext()).getPantry(it.uuid, { result ->
-                        Log.i("getAllPantries", "ola")
                         globalData.populateFromServer(result)
+                        globalData.callbackDataSetChanged?.invoke()
                     }, {
                     })
                 }
             }
-            globalData.getAllLists()
             callback?.invoke()
         } }
 
