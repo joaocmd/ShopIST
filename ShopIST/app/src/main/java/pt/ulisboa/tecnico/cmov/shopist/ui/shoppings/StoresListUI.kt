@@ -87,37 +87,6 @@ class StoresListUI : Fragment() {
             recyclerAdapter.notifyDataSetChanged()
         }
 
-        //globalData.stores.forEach {
-            /*
-            // Route time
-            if (it.location != null && globalData.currentLocation != null) {
-                API.getInstance(requireContext()).getRouteTime(
-                    globalData.currentLocation!!,
-                    it.location!!,
-                    { time ->
-                        it.drivingTime = time
-                        if (globalData.callbackDataSetChanged !== null) {
-                            globalData.callbackDataSetChanged!!()
-                        }
-                    },
-                    {
-                        // Ignore, can't get route time data
-                    }
-                )
-            }
-
-                if (it.isShared) {
-                    // Check for updates
-                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
-                        globalData.populateFromServer(result)
-                        globalData.callbackDataSetChanged?.invoke()
-                    }, {
-                    })
-                }
-
-             */
-        //}
-
         activity?.let { globalData.getCurrentDeviceLocation(it) {
 
             globalData.pantries.forEach {
