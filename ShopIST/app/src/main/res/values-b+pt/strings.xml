@@ -127,4 +127,6 @@
     <string name="deleteLocation">delete Location</string>
     <string name="choose_new_location">Choose new location</string>
     <string name="remove_rating">Remover Avaliação</string>
+    <string name="total">Total</string>
+    <string name="no_such_product_with_barcode">Nenhum produto com código de barras %s encontrado em %s</string>
 </resources>

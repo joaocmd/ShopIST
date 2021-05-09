@@ -5,9 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_pantries_list.*
+import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
@@ -34,6 +34,10 @@ class PantryUI : Fragment() {
     private lateinit var menuRoot: Menu
     private lateinit var pantryList: PantryList
     private lateinit var recyclerAdapter: PantryAdapter
+
+    companion object {
+        const val ARG_PANTRY_ID = "pantryId"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +59,8 @@ class PantryUI : Fragment() {
 
         // Hide cart quantities
         root.findViewById<ImageView>(R.id.cartQuantityDisplay).visibility = View.GONE
+        root.findViewById<View>(R.id.moneyNeeded).visibility = View.GONE
+        root.findViewById<LinearLayout>(R.id.total).visibility = View.GONE
 
         recyclerAdapter = PantryAdapter(pantryList)
 
@@ -132,7 +138,7 @@ class PantryUI : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        val items = mutableListOf(TopBarItems.Share, TopBarItems.Edit, TopBarItems.Delete)
+        val items = mutableListOf(TopBarItems.Barcode, TopBarItems.Share, TopBarItems.Edit, TopBarItems.Delete)
         if (pantryList.location != null) {
             items.add(TopBarItems.Directions)
         }
@@ -154,6 +160,10 @@ class PantryUI : Fragment() {
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 mapIntent.setPackage("com.google.android.apps.maps")
                 startActivity(mapIntent)
+            }
+            R.id.action_scan_barcode -> {
+                val intent = Intent(activity?.applicationContext, BarcodeScannerActivity::class.java)
+                startActivityForResult(intent, AddItemUI.GET_BARCODE_PRODUCT)
             }
             R.id.action_delete -> confirmDeletePantryList()
             else -> return super.onOptionsItemSelected(item)
@@ -231,8 +241,7 @@ class PantryUI : Fragment() {
             getString(R.string.confirm_pantry_delete),
             {
                 deletePantryList()
-            }, {
-            }
+            }, { }
         )
     }
 
@@ -250,10 +259,36 @@ class PantryUI : Fragment() {
         dialog.show()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == AddItemUI.GET_BARCODE_PRODUCT) {
+            data?.let {
+                data.getStringExtra(BarcodeScannerActivity.BARCODE)?.let { barcode ->
+                pantryList.items.find {item -> item.product.barcode == barcode }?.let { item ->
+                    findNavController().navigate(
+                        R.id.action_nav_pantry_to_pantryItem,
+                        bundleOf(
+                            PantryItemUI.ARG_PANTRY_ID to pantryList.uuid.toString(),
+                            PantryItemUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                        )
+                    )
+                } ?: Toast.makeText(
+                        context, String.format(
+                            getString(R.string.no_such_product_with_barcode),
+                            barcode,
+                            pantryList.name
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
     inner class PantryAdapter(var pantryList: PantryList) :
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+            private var transferItem: Button = view.findViewById(R.id.transferOneItem)
             private val imageView: ImageView = view.findViewById(R.id.productImageView)
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
@@ -291,11 +326,30 @@ class PantryUI : Fragment() {
                     displayFullScreenImage(it as ImageView)
                 }
 
-                // view.setOnLongClickListener {
-                //     // set long click change top menu so that we're able to delete items
-                //     // it can also simply appear on the menu, though
-                //     true
-                // }
+                transferItem.setOnClickListener {
+                    if(item.pantryQuantity == 0) return@setOnClickListener
+
+                    item.pantryQuantity = item.pantryQuantity - 1
+                    item.needingQuantity = item.needingQuantity + 1
+
+                    if (pantryList.isShared) {
+                        API.getInstance(requireContext()).updatePantry(pantryList)
+                    }
+
+                    (requireActivity().applicationContext as ShopIST).savePersistent()
+                    pantryQuantityView.text = item.pantryQuantity.toString()
+                    needingQuantityView.text = item.needingQuantity.toString()
+                    if(item.pantryQuantity == 0) {
+                        (it as Button).background.setTint(context!!.getColor(R.color.gray_not_usable))
+                        //android:backgroundTint="@color/gray_not_usable"
+                    }
+                    //do stuff
+                }
+
+                if(item.pantryQuantity == 0) {
+                    transferItem.background.setTint(context!!.getColor(R.color.gray_not_usable))
+                    //android:backgroundTint="@color/gray_not_usable"
+                }
 
                 // Set last image
                 if (item.product.images.size > 0) {
@@ -313,6 +367,7 @@ class PantryUI : Fragment() {
                 .inflate(R.layout.product_row, viewGroup, false)
             // Hide cart quantities
             view.findViewById<TextView>(R.id.cartQuantityDisplay).visibility = View.GONE
+            view.findViewById<TextView>(R.id.moneyNeeded).visibility = View.GONE
 
             return ViewHolder(view)
         }
@@ -322,18 +377,5 @@ class PantryUI : Fragment() {
         }
 
         override fun getItemCount() = pantryList.items.size
-    }
-
-
-    companion object {
-        const val ARG_PANTRY_ID = "pantryId"
-
-        @JvmStatic
-        fun newInstance(pantryId: String) =
-            PantryUI().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PANTRY_ID, pantryId)
-                }
-            }
     }
 }

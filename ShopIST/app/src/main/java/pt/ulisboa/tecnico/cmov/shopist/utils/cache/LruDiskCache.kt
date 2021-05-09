@@ -36,7 +36,12 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
     }
 
     fun putImage(key: UUID, bitmap: Bitmap, local: Boolean)  {
-        val file = File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        val file = if (local) {
+            File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        } else {
+            File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        }
+
         FileOutputStream(file).use {
             try {
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
@@ -58,7 +63,16 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
 			return
         }
 
-       val imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        // FIXME: these probably aren't needed because if they are present they are added on bootstrap
+        var imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        if (imagePath.exists()) {
+            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+            this.put(key, CacheItem(imagePath, true))
+            onSuccessListener(imageBitmap)
+            return
+        }
+
+        imagePath = File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         if (imagePath.exists()) {
             val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
             this.put(key, CacheItem(imagePath, true))
@@ -76,7 +90,7 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
                 onErrorListener(it)
             }
         )
-  }
+    }
 
     fun saveSnapShot(context: ContextWrapper) {
         context.openFileOutput("cache", MODE_PRIVATE).use { fos -> ObjectOutputStream(fos).use {

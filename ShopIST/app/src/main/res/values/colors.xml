@@ -10,6 +10,7 @@
 
     <color name="red_bad">#821e1e</color>
     <color name="green_good">#67a327</color>
+    <color name="gray_not_usable">#c9c9c7</color>
 
     <color name="section_divider">#94928d</color>
 </resources>

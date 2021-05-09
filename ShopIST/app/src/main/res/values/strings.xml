@@ -135,5 +135,7 @@
     <string name="deleteLocation">delete Location</string>
     <string name="choose_new_location">Choose new location</string>
     <string name="remove_rating">Remove Rating</string>
+    <string name="total">Total</string>
+    <string name="no_such_product_with_barcode">No such product with barcode %s found in %s</string>
 
 </resources>

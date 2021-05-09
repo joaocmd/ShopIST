@@ -13,10 +13,7 @@ import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.core.graphics.createBitmap
 import androidx.core.os.bundleOf
-import androidx.core.view.marginLeft
-import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -46,6 +43,7 @@ class ProductUI : Fragment() {
     private lateinit var menuRoot: Menu
     private lateinit var product: Product
     private lateinit var stores: List<Store>
+    private var passedStore: Store? = null
     private var priceStore: Store? = null
     private lateinit var globalData: ShopIST
 
@@ -58,6 +56,7 @@ class ProductUI : Fragment() {
     companion object {
         const val TAG = "${ShopIST.TAG}.productUI"
         const val ARG_PRODUCT_ID = "productId"
+        const val ARG_STORE_ID = "storeId"
         const val GET_BARCODE_PRODUCT = 0
         const val IMAGE_CAMERA = 1
         const val IMAGE_PICK_GALLERY = 2
@@ -68,6 +67,13 @@ class ProductUI : Fragment() {
         globalData = requireActivity().applicationContext as ShopIST
         arguments?.let {
             val productId = UUID.fromString(it.getString(ARG_PRODUCT_ID))
+            val storeId = it.getString(ARG_STORE_ID)
+            passedStore = storeId.let { passedId ->
+                when {
+                    passedId != null -> globalData.getStore(UUID.fromString(passedId))
+                    else -> null
+                }
+            }
 
             globalData.getProduct(productId)?.let { p ->
                 product = p
@@ -121,7 +127,7 @@ class ProductUI : Fragment() {
             product.stores.mapNotNull { it.location },
             { res ->
                 res.forEach {
-                    globalData.getClosestStore(it.location)?.let { s ->
+                    globalData.getClosestStoreTo(it.location)?.let { s ->
                         product.setPrice(s, it.price)
                     }
                 }
@@ -334,14 +340,21 @@ class ProductUI : Fragment() {
             spinner.adapter = adapter
         }
 
-        // Set current store if has location
-        globalData.currentLocation?.let {
-            globalData.getClosestStore(it)?.let { s ->
-                val idx = stores.indexOf(s)
-                if (idx >= 0) {
-                    spinner.setSelection(idx)
+        // Set current store if has location or a store was passed in the bundle
+        var idx = -1
+        if (passedStore != null) {
+            idx = stores.indexOf(passedStore)
+        }
+        if (idx < 0) {
+            globalData.currentLocation?.let {
+                globalData.getClosestStoreTo(it)?.let { s ->
+                    idx = stores.indexOf(s)
                 }
             }
+        }
+
+        if (idx >= 0) {
+            spinner.setSelection(idx)
         }
 
         // On store selected
@@ -490,7 +503,7 @@ class ProductUI : Fragment() {
 
         TopBarController.optionsMenu(
             menu, requireActivity(), product.getTranslatedName(),
-            listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Share, TopBarItems.Delete)
+            listOf(TopBarItems.Edit, TopBarItems.Barcode, TopBarItems.Share, TopBarItems.Delete)
         )
     }
 
@@ -527,6 +540,7 @@ class ProductUI : Fragment() {
             }
             product.addImage(id.toString())
 
+            Log.d(TAG, "Begin image send")
             // Send to server
             API.getInstance(requireContext()).postProductImage(product, bitmap, id, { imageId ->
                 Log.d(TAG, "Image: $imageId")

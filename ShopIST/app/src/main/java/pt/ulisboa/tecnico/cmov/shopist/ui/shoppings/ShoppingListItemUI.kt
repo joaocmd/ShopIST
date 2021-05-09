@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.core.view.marginEnd
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,11 +22,9 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PromptMessage
-import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.UserPromptDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import kotlin.random.Random
 
 class ShoppingListItemUI : Fragment() {
     // TODO: Add button to set to min and max quantity on cart
@@ -74,7 +70,7 @@ class ShoppingListItemUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.optionsMenu(menu, requireActivity(),
-            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.ScanBarcode, TopBarItems.Delete))
+            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.Barcode, TopBarItems.Delete))
 
         TopBarController.setOnlineOptions(menu, shopIST.isAPIConnected)
         if (shoppingListItem.product.isShared) {

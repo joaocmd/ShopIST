@@ -56,8 +56,7 @@ export default class {
         if (result.equation[1] == NaN) {
             return null
         } else {
-            // TODO: Verify with teacher if we need to divide by two
-            return result.predict(this.itemsInLine())[1]
+            return Math.max(0, result.predict(this.itemsInLine())[1])
         }
     }
 

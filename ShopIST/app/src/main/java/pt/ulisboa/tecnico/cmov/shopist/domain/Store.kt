@@ -67,4 +67,33 @@ class Store(var name: String) : Locatable {
 
         return counter
     }
+
+    fun itemCheckoutTotal(allPantries: Collection<PantryList>): Number {
+        var counter = 0
+        for (pantry in allPantries) {
+            for (item in pantry.items) {
+                if(item.cartQuantity > 0) {
+                    if (item.product.hasStore(this.uuid)) {
+                        counter += item.cartQuantity
+                    }
+                }
+            }
+        }
+
+        return counter
+    }
+
+    fun itemPriceTotal(allPantries: Collection<PantryList>): Number {
+        var totalPrice : Double = 0.0
+        for (pantry in allPantries) {
+            for (item in pantry.items) {
+                val price = item.product.prices[this]
+                if(item.cartQuantity > 0 && price != null) {
+                    totalPrice += item.cartQuantity.toDouble() * price.toDouble()
+                }
+            }
+        }
+
+        return totalPrice
+    }
 }

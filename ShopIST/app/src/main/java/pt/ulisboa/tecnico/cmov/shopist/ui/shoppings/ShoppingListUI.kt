@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.android.synthetic.main.fragment_stores_list.*
+import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
@@ -24,6 +26,8 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingList
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ImageFullScreenDialog
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.AddItemUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryItemUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
@@ -62,6 +66,12 @@ class ShoppingListUI : Fragment() {
         setHasOptionsMenu(true)
     }
 
+    private fun setTotals() {
+        root.findViewById<TextView>(R.id.totalNeedingQuantityDisplay).text = store.itemQuantityTotal(globalData.pantries.toList()).toString()
+        root.findViewById<TextView>(R.id.totalCartQuantityDisplay).text = store.itemCheckoutTotal(globalData.pantries.toList()).toString()
+        root.findViewById<TextView>(R.id.totalMoneyNeeded).text = store.itemPriceTotal(globalData.pantries.toList()).toString() + "€"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -71,6 +81,9 @@ class ShoppingListUI : Fragment() {
 
         // Hide pantry quantities
         root.findViewById<ImageView>(R.id.pantryQuantityDisplay).visibility = View.GONE
+        root.findViewById<View>(R.id.transferOneItem).visibility = View.GONE
+
+        setTotals()
 
         val listView: RecyclerView = root.findViewById(R.id.productsList)
         recyclerAdapter = ShoppingListAdapter(shoppingList)
@@ -185,7 +198,7 @@ class ShoppingListUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         menuRoot = menu
-        val items = mutableListOf(TopBarItems.Edit, TopBarItems.Delete)
+        val items = mutableListOf(TopBarItems.Edit, TopBarItems.Delete, TopBarItems.Barcode)
         if (store.location != null) {
             items.add(TopBarItems.Directions)
         }
@@ -203,6 +216,10 @@ class ShoppingListUI : Fragment() {
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 mapIntent.setPackage("com.google.android.apps.maps")
                 startActivity(mapIntent)
+            }
+            R.id.action_scan_barcode -> {
+                val intent = Intent(activity?.applicationContext, BarcodeScannerActivity::class.java)
+                startActivityForResult(intent, AddItemUI.GET_BARCODE_PRODUCT)
             }
             R.id.action_delete -> confirmDeleteStore()
             else -> return super.onOptionsItemSelected(item)
@@ -300,7 +317,30 @@ class ShoppingListUI : Fragment() {
         dialog.show()
     }
 
-    inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == AddItemUI.GET_BARCODE_PRODUCT) {
+            data?.let {
+                data.getStringExtra(BarcodeScannerActivity.BARCODE)?.let { barcode ->
+                    shoppingList.items.find { item -> item.product.barcode == barcode }
+                        ?.let { item ->
+                            (requireActivity().applicationContext as ShopIST).currentShoppingListItem =
+                                item
+                            findNavController()
+                                .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
+                        } ?: Toast.makeText(
+                        context, String.format(
+                            getString(R.string.no_such_product_with_barcode),
+                            barcode,
+                            shoppingList.store?.name
+                        ), Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
+    }
+}
+
+inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
         RecyclerView.Adapter<ShoppingListAdapter.ViewHolder>() {
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -309,7 +349,19 @@ class ShoppingListUI : Fragment() {
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)
             private val needingQuantityView : TextView = view.findViewById(R.id.needingQuantityDisplay)
             private val cartQuantityView : TextView = view.findViewById(R.id.cartQuantityDisplay)
+            private val moneyView: TextView = view.findViewById(R.id.moneyNeeded)
 
+            private fun changePrice(item: ShoppingListItem) {
+
+                val quantities = item.getAllQuantities()
+                val price = item.product.prices[store]
+                if(price != null) {
+                    moneyView.text = (price.toDouble() * quantities.cart).toString() + "€"
+                }
+                else {
+                    moneyView.text = "---"
+                }
+            }
             fun bind(item: ShoppingListItem) {
                 textView.text = item.product.getTranslatedName()
                 val quantities = item.getAllQuantities()
@@ -317,11 +369,14 @@ class ShoppingListUI : Fragment() {
                 needingQuantityView.text = quantities.needing.toString()
                 cartQuantityView.text = quantities.cart.toString()
 
+                changePrice(item)
+
                 view.setOnLongClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_store_shopping_list_to_nav_view_product,
                         bundleOf(
-                            ProductUI.ARG_PRODUCT_ID to item.product.uuid.toString()
+                            ProductUI.ARG_PRODUCT_ID to item.product.uuid.toString(),
+                            ProductUI.ARG_STORE_ID to storeId.toString()
                         )
                     )
                     true
@@ -329,7 +384,7 @@ class ShoppingListUI : Fragment() {
 
                 view.setOnClickListener {
                     // set current item because we can't pass object references in bundles
-                    (activity?.applicationContext as ShopIST).currentShoppingListItem = item
+                    (requireActivity().applicationContext as ShopIST).currentShoppingListItem = item
                     findNavController()
                         .navigate(R.id.action_nav_store_shopping_list_to_nav_store_shopping_list_item)
                 }
@@ -375,6 +430,7 @@ class ShoppingListUI : Fragment() {
 
             // Hide pantry quantities
             view.findViewById<TextView>(R.id.pantryQuantityDisplay).visibility = View.GONE
+            view.findViewById<TextView>(R.id.transferOneItem).visibility = View.GONE
 
             return ViewHolder(view)
         }

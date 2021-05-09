@@ -73,13 +73,13 @@ class AddItemUI : Fragment() {
             menu,
             requireActivity(),
             getString(R.string.add_item_title),
-            listOf(TopBarItems.ScanBarcode)
+            listOf(TopBarItems.Barcode)
         )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-           R.id.action_scan_barcode -> { scanBarcode() }
+           R.id.action_scan_barcode -> scanBarcode()
            else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -202,6 +202,5 @@ class AddItemUI : Fragment() {
                 }
             }
         }
-
     }
 }
