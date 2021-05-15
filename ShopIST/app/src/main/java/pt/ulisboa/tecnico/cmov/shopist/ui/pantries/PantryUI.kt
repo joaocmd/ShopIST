@@ -98,15 +98,6 @@ class PantryUI : Fragment() {
                 globalData.populateFromServer(result)
                 pantryList = globalData.getPantryList(pantryList.uuid)
 
-                // Get one image for each product
-                pantryList.getProducts().forEach {
-                    if (it.images.size > 0) {
-                        globalData.imageCache.getAsImage(UUID.fromString(it.getLastImageId()), {
-                            globalData.callbackDataSetChanged?.invoke()
-                        }, {})
-                    }
-                }
-
                 // FIXME: When loading the pantry from the server, when it translates to the current language, the text will flick from the original one to the translated one
                 globalData.callbackDataSetChanged?.invoke()
             }, {
@@ -115,15 +106,6 @@ class PantryUI : Fragment() {
                     setEnableButtons(globalData.isAPIConnected)
                 }
             })
-        } else {
-            pantryList.getProducts().forEach {
-                if (it.images.size > 0) {
-                    val uuid = UUID.fromString(it.getLastImageId())
-                    globalData.imageCache.getAsImage(uuid, {
-                        globalData.callbackDataSetChanged?.invoke()
-                    }, {})
-                }
-            }
         }
 
         callback?.invoke()
