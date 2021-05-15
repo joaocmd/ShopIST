@@ -336,7 +336,7 @@ class PantryUI : Fragment() {
                 if (item.product.images.size > 0) {
                     if (item.product.barcode != null) {
                         // Update images from server
-                        val context = requireContext()
+                        val context = requireContext().applicationContext
                         API.getInstance(context).getProductImages(item.product, { images ->
                             item.product.images = images.toMutableList()
 
