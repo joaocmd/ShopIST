@@ -8,7 +8,7 @@ data class PantryListDto(val uuid: UUID, val name: String, val items: MutableLis
     constructor(p: PantryList) : this(
         p.uuid,
         p.name,
-        p.items.map { i -> ItemDto(i, 1) }.toMutableList(),
+        p.items.map { i -> ItemDto(i) }.toMutableList(),
         p.location,
         p.isShared
     )

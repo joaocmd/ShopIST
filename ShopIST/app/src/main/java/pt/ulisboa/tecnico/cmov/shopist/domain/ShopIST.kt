@@ -158,9 +158,9 @@ class ShopIST : Application() {
         }}
 
         // Set pantry
-        allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
-        // val pantry = allPantries[dto.pantry.uuid]
-        // allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
+        // allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
+        val pantry = allPantries[dto.pantry.uuid]
+        allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
 
         savePersistent()
     }

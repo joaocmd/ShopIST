@@ -32,8 +32,6 @@ import javax.net.ssl.SSLHandshakeException
 class API constructor(context: Context) {
     private val queue: RequestQueue = Volley.newRequestQueue(context.applicationContext)
     private val baseURL = context.resources.getString(R.string.api_base_url)
-    private val directionsURL = context.resources.getString(R.string.directions_api_url)
-    private val bingKey = context.resources.getString(R.string.bing_maps_key)
     private val globalData = context as ShopIST
 
     companion object {

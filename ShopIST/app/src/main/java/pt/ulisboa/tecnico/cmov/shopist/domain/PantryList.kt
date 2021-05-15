@@ -32,21 +32,15 @@ class PantryList(var name: String) : Locatable {
                 return PantryList(update, products)
             }
             p1.name = update.name
+
+            val previousItems = p1._items.toList()
+            p1._items.clear()
             update.items.forEach {
-                when (it.opType) {
-                    // Add operation
-                    (1) -> {
-                        if (p1.hasProduct(it.productUUID)) {
-                            val item = p1.getItem(it.productUUID)
-                            Item.updateItem(item, it, products, p1)
-                        } else {
-                            p1.addItem(Item(it, products, p1))
-                        }
-                    }
-                    // Remove operation
-                    (-1) -> {
-                        p1.removeItem(it.productUUID)
-                    }
+                val existingItem = p1.itemsHasProduct(previousItems, it.productUUID)
+                if (existingItem != null) {
+                    Item.updateItem(existingItem, it, products, p1)
+                } else {
+                    p1.addItem(Item(it, products, p1))
                 }
             }
             p1.isShared = update.isShared
@@ -57,6 +51,11 @@ class PantryList(var name: String) : Locatable {
 
     fun addItem(item: Item) {
         _items.add(item)
+    }
+
+    private fun itemsHasProduct(items: List<Item>, uuid: UUID): Item? {
+        val found = items.filter { item -> item.product.uuid == uuid }
+        return found.firstOrNull()
     }
 
     fun hasProduct(product: Product): Boolean {
