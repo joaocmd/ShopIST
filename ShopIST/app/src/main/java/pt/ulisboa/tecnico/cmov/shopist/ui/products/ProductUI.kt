@@ -95,7 +95,7 @@ class ProductUI : Fragment() {
 
         // Set product titles and buttons
         root.findViewById<TextView>(R.id.productName).text = product.name
-        // FIXME: Improve this layout
+
         val barcodeShown = if (product.barcode !== null) product.barcode else getString(R.string.not_available)
         root.findViewById<TextView>(R.id.barcodeValue).text =
             String.format(getString(R.string.barcode_value), barcodeShown)
@@ -517,7 +517,8 @@ class ProductUI : Fragment() {
             val pantriesToUpdate = globalData.getPantriesWithProduct(product.uuid)
 
             globalData.removeProduct(product.uuid)
-            // TODO: What happens if the server does not respond? the pantry stays without the item?
+
+            // Undefined behavior: What happens if the server does not respond? the pantry stays without the item?
             pantriesToUpdate.forEach { pantryList ->
                 API.getInstance(requireContext()).updatePantry(pantryList)
             }
@@ -582,7 +583,7 @@ class ProductUI : Fragment() {
             API.getInstance(requireContext()).postProductImage(product, bitmap, id, { imageId ->
                 Log.d(TAG, "Image: $imageId")
             }, {
-                // TODO: Cancel adding
+                // Ignore
             })
 
             // Store information about the image
