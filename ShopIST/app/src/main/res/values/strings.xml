@@ -16,6 +16,7 @@
     <string name="price_above_zero">Type a price above 0.</string>
     <string name="barcode_value">Barcode: %s</string>
     <string name="share_product_message">Hi! Here\'s the link for the product \"%s\":%n %s</string>
+    <string name="share_product_message_in_store">Hi! Here\'s the link for the product \"%s\" found in the store \"%s\":%n %s</string>
     <string name="cannot_get_product">Cannot get product.</string>
     <string name="confirm_product_delete">Confirm Delete Product</string>
     <string name="product_add_barcode">Insert Barcode</string>

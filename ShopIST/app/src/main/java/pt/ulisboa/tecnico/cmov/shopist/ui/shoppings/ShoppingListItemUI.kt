@@ -3,6 +3,7 @@ package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -30,6 +31,8 @@ import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
+import java.net.URI
+import java.util.*
 
 class ShoppingListItemUI : Fragment() {
 
@@ -165,12 +168,40 @@ class ShoppingListItemUI : Fragment() {
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
         TopBarController.optionsMenu(menu, requireActivity(),
-            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.Barcode, TopBarItems.Delete))
+            shoppingListItem.product.name, listOf(TopBarItems.Edit, TopBarItems.Share, TopBarItems.Barcode, TopBarItems.Delete))
 
         TopBarController.setOnlineOptions(menu, shopIST.isAPIConnected)
         if (shoppingListItem.product.isShared) {
             TopBarController.setSharedOptions(menu, shopIST.isAPIConnected)
         }
+    }
+
+    private fun shareProduct() {
+        val product = shoppingListItem.product
+        val globalData = activity?.applicationContext as ShopIST
+
+        API.getInstance(requireContext()).postProduct(product, {
+            // Stores product as shared
+            product.share()
+            globalData.addProduct(product)
+            globalData.savePersistent()
+
+            // Share code with the user
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(
+                    Intent.EXTRA_TEXT, getString(R.string.share_product_message_in_store).format(
+                        product.name, shoppingListItem.shoppingList.store?.name, ShopIST.createUri(product)
+                    )
+                )
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+        }, {
+            Toast.makeText(context, getString(R.string.error_getting_link), Toast.LENGTH_SHORT)
+                .show()
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -186,6 +217,7 @@ class ShoppingListItemUI : Fragment() {
                     )
                 )
             }
+            R.id.action_share -> shareProduct()
             R.id.action_delete -> deleteItemShoppingList()
             else -> return super.onOptionsItemSelected(item)
         }

@@ -4,6 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
 import android.util.LruCache
 import com.android.volley.VolleyError
@@ -54,6 +55,50 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
                 Log.e(TAG, e.message, e)
             }
         }
+    }
+
+
+    fun getAsImageURI(
+        key: UUID,
+        onSuccessListener: (image: Uri?) -> Unit,
+        onErrorListener: (error: VolleyError) -> Unit
+    ) {
+        val inCache = this.get(key)
+        if (inCache != null && inCache.file.exists()) {
+            onSuccessListener(Uri.parse(inCache.file.absolutePath))
+            return
+        }
+
+        // FIXME Improve: These probably aren't needed because if they are present they are added on bootstrap
+        var imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        if (imagePath.exists()) {
+            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+            this.put(key, CacheItem(imagePath, true))
+            onSuccessListener(Uri.parse(imagePath.absolutePath))
+            return
+        }
+
+        imagePath = File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
+        if (imagePath.exists()) {
+            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+            this.put(key, CacheItem(imagePath, true))
+            onSuccessListener(Uri.parse(imagePath.absolutePath))
+            return
+        }
+
+        // request from server
+        API.getInstance(shopIST).getProductImage(key,
+            { bitmap ->
+                putImage(key, bitmap, false)
+                val inCache = this.get(key)
+                if (inCache != null && inCache.file.exists()) {
+                    onSuccessListener(Uri.parse(inCache.file.absolutePath))
+                }
+            },
+            { 	// If can't find on server and doesn't have locally
+                onErrorListener(it)
+            }
+        )
     }
 
     fun getAsImage(

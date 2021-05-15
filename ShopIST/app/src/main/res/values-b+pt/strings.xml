@@ -16,6 +16,7 @@
     <string name="price_above_zero">Escreva um preço maior que 0.</string>
     <string name="barcode_value">Código de Barras: %s</string>
     <string name="share_product_message">Olá! Aqui está o link do produto \"%s\":%n %s</string>
+    <string name="share_product_message_in_store">Olá! Aqui está o link do produto \"%s\" encontrado na loja \"%s\":%n %s</string>
     <string name="cannot_get_product">Não é possível obter o produto.</string>
     <string name="confirm_product_delete">Deseja apagar o produto?</string>
     <string name="product_add_barcode">Insira o Código de Barras</string>
