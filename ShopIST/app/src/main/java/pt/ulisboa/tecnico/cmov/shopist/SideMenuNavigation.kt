@@ -48,9 +48,7 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_MEDIA_LOCATION,
-            Manifest.permission.ACCESS_NETWORK_STATE
+            Manifest.permission.ACCESS_FINE_LOCATION
         )
         private const val REQUEST_CODE_PERMISSIONS = 10
     }

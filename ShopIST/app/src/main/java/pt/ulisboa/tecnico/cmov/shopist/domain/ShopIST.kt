@@ -156,8 +156,10 @@ class ShopIST : Application() {
 
     fun getCurrentDeviceLocation(act : Activity, callback: (() -> Unit)? = null){
         (LocationUtils(act)).getNewLocation { location ->
-            currentLocation = location!!.toLatLng()
-            callback?.invoke()
+            location?.let {
+                currentLocation = it.toLatLng()
+                callback?.invoke()
+            }
         }
     }
 
