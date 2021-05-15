@@ -30,6 +30,7 @@ class Store(var name: String) : Locatable {
                 return createStore(update)
             }
             s1.name = update.name
+            s1.uuid = update.uuid
             s1.location = update.location
             s1.isShared = update.isShared
             return s1
