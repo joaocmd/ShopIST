@@ -126,24 +126,14 @@ class ShopIST : Application() {
 
     fun populateFromServer(dto: PantryUpdateDto) {
         // Set stores
-        dto.stores.forEach { s -> allStores[s.uuid] = Store.createStore(s) }
-        // dto.stores.forEach { s ->
-        //     run {
-        //         val s1 = allStores[s.uuid]
-        //         allStores[s.uuid] = Store.updateStore(s1, s)
-        //     }
-        // }
+        dto.stores.forEach { s ->
+            run {
+                val s1 = allStores[s.uuid]
+                allStores[s.uuid] = Store.updateStore(s1, s)
+            }
+        }
 
         // Set products
-        // dto.products.forEach { p ->
-        //     val product = Product.createProduct(p, allStores)
-        //     product.getText(getLang(), applicationContext) {
-        //         product.translatedText = it
-        //         product.hasTranslated = true
-        //         callbackDataSetChanged?.invoke()
-        //     }
-        //     allProducts[p.uuid] = product
-        // }
         dto.products.forEach { p ->
             run {
                 val p1 = allProducts[p.uuid]
@@ -158,7 +148,6 @@ class ShopIST : Application() {
         }}
 
         // Set pantry
-        // allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
         val pantry = allPantries[dto.pantry.uuid]
         allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
 

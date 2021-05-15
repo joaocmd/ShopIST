@@ -336,12 +336,13 @@ class PantryUI : Fragment() {
                 if (item.product.images.size > 0) {
                     if (item.product.barcode != null) {
                         // Update images from server
-                        API.getInstance(requireContext()).getProductImages(item.product, { images ->
+                        val context = requireContext()
+                        API.getInstance(context).getProductImages(item.product, { images ->
                             item.product.images = images.toMutableList()
 
                             if (item.product.images.size > 0) {
                                 val uuid = UUID.fromString(item.product.getLastImageId())
-                                val globalData = (requireContext().applicationContext as ShopIST)
+                                val globalData = (context as ShopIST)
                                 globalData.imageCache.getAsImage(uuid, {
                                     view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
                                 }, {})
