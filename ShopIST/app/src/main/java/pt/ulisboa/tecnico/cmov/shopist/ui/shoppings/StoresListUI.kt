@@ -135,7 +135,6 @@ class StoresListUI : Fragment() {
             view
         ) {
             private val textView: TextView = view.findViewById(R.id.rowText)
-            //private val drivingTimeImage: ImageView = view.findViewById(R.id.drivingTimeImage)
             private val drivingTimeText: TextView = view.findViewById(R.id.drivingTime)
             private val checkoutTime: TextView = view.findViewById(R.id.checkoutTime)
             private val itemPercentage: TextView = view.findViewById(R.id.itemPercentage)
@@ -149,7 +148,6 @@ class StoresListUI : Fragment() {
                     drivingTimeText.text = "---"
                 }
 
-                //use store.checkouttime
                 if ( store.queueTime != null) {
                     checkoutTime.text = DateUtils.formatElapsedTime(store.queueTime!!)
                 } else {
@@ -157,21 +155,16 @@ class StoresListUI : Fragment() {
                 }
 
                 val globalData = activity.applicationContext as ShopIST
-                // val percentage = store.itemPercentage(globalData.pantries.toList())
                 val itemQuantityTotal = store.itemQuantityTotal(globalData.pantries.toList())
                 itemPercentage.text = itemQuantityTotal.toString()
 
                 /* TODO: HUGO FIX THIS! */
                 val startColor = Color.parseColor("#821e1e")
                 val endColor = Color.parseColor("#67a327")
-                // Log.i("Error", startColor.toString())
-                // Log.i("Error", endColor.toString())
 
                 val color = ColorUtils.blendARGB(startColor, endColor, 1f)
 
-                itemPercentage.setTextColor(
-                    color
-                )
+                itemPercentage.setTextColor(color)
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {
                     view.findNavController().navigate(

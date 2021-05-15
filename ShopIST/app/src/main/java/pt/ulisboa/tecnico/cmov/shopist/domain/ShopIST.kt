@@ -256,11 +256,13 @@ class ShopIST : Application() {
             API.getInstance(applicationContext).getRouteTime(
                 currentLocation!!,
                 it.location!!,
-                { time -> it.drivingTime = time },
+                { time ->
+                    it.drivingTime = time
+                    callbackDataSetChanged?.invoke()
+                },
                 { }
             )
         }
-        callbackDataSetChanged?.invoke()
     }
 
     fun getShoppingList(uuid: UUID): ShoppingList {
