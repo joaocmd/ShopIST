@@ -33,11 +33,6 @@ import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.io.File
 import java.util.*
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ShoppingListUI.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ShoppingListUI : Fragment() {
 
     private lateinit var root: View

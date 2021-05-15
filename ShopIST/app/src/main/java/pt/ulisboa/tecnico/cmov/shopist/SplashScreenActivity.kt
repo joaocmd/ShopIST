@@ -15,8 +15,6 @@ import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils
 import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
-import java.sql.Time
-import java.time.LocalDateTime
 import java.util.*
 
 class SplashScreenActivity : AppCompatActivity() {

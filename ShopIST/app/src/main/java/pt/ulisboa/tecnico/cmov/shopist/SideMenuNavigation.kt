@@ -1,9 +1,11 @@
 package pt.ulisboa.tecnico.cmov.shopist
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Messenger
@@ -12,6 +14,8 @@ import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -40,6 +44,16 @@ import java.util.*
 
 
 class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListener {
+
+    companion object {
+        private val REQUIRED_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_MEDIA_LOCATION,
+            Manifest.permission.ACCESS_NETWORK_STATE
+        )
+        private const val REQUEST_CODE_PERMISSIONS = 10
+    }
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -110,6 +124,14 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     override fun onResume() {
         super.onResume()
+
+        if (!allPermissionsGranted()) {
+            ActivityCompat.requestPermissions(
+                this,
+                REQUIRED_PERMISSIONS,
+                REQUEST_CODE_PERMISSIONS
+            )
+        }
 
         // TODO: Detect change of location and open the corresponding list
 
@@ -200,12 +222,18 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
         }
     }
 
-    private var beaconToken: UUID? = null
-    private var currentBeacon: String? = null
+    /* Permission verifiers */
+    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+        ContextCompat.checkSelfPermission(
+            baseContext, it) == PackageManager.PERMISSION_GRANTED
+    }
 
     /*
      * Termite listeners
      */
+    private var beaconToken: UUID? = null
+    private var currentBeacon: String? = null
+
     override fun onPeersAvailable(peers: SimWifiP2pDeviceList) {
         peers.deviceList.find { it.deviceName.startsWith("ShopIST-") }.let {
             if (it != null) {
