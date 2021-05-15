@@ -219,14 +219,16 @@ class API constructor(context: Context) {
         queue.add(setRetryPolicy(stringRequest))
     }
 
-    fun updatePantry(pantry: PantryList) {
+    fun updatePantry(pantry: PantryList, callback: (() -> Unit)? = null) {
         if (!pantry.isShared) {
             return
         }
         postNewPantry(pantry, {
             Log.d(ShopIST.TAG, "Pantry sent for update")
+            callback?.invoke()
         }, {
             Log.d(ShopIST.TAG, "Could not send pantry")
+            callback?.invoke()
         })
     }
 

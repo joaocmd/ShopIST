@@ -138,4 +138,7 @@
     <string name="total">Total</string>
     <string name="no_such_product_with_barcode">No such product with barcode %s found in %s</string>
 
+    <string name="total_price">Price:</string>
+    <string name="product_add_price_one_store">Add price</string>
+    <string name="change_price">Change Price</string>
 </resources>

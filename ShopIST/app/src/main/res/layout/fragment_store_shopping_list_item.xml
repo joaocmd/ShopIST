@@ -9,11 +9,55 @@
     android:orientation="vertical"
     android:layout_marginTop="10dp">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        >
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_price"
+                android:layout_marginRight="5dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+            <TextView
+                android:id="@+id/priceValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25€"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/changePrice"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_price">
+
+        </Button>
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/section_divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/section_divider_height"
+        android:background="@color/section_divider"
+        android:layout_marginBottom="@dimen/section_divider_margin"
+        android:layout_marginTop="@dimen/section_divider_margin" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:orientation="vertical">
 
@@ -24,18 +68,31 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="10"
+                    android:layout_marginEnd="10dp"/>
                 <ImageView
                     android:id="@+id/needingQuantityDisplay"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_baseline_directions_run_24"
-                    android:layout_marginStart="140dp"
+
                     android:gravity="center"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3">
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="0"/>
 
                 <ImageView
                     android:id="@+id/cartQuantityDisplay"
@@ -43,9 +100,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:src="@drawable/ic_baseline_add_shopping_cart_24"
-                    android:layout_marginEnd="20dp"
                     android:gravity="center"/>
-
+                <View
+                    android:layout_width="50dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="0"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

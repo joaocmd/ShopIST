@@ -129,4 +129,6 @@
     <string name="remove_rating">Remover Avaliação</string>
     <string name="total">Total</string>
     <string name="no_such_product_with_barcode">Nenhum produto com código de barras %s encontrado em %s</string>
+    <string name="total_price">Preço:</string>
+    <string name="product_add_price_one_store">Adicionar preço</string>
 </resources>

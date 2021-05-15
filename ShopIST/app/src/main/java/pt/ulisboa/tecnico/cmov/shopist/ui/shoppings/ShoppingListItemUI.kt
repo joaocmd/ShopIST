@@ -1,29 +1,34 @@
 package pt.ulisboa.tecnico.cmov.shopist.ui.shoppings
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.TopBarItems
 import pt.ulisboa.tecnico.cmov.shopist.domain.Item
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
+import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.Quantity
 import pt.ulisboa.tecnico.cmov.shopist.domain.shoppingList.ShoppingListItem
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.ConfirmationDialog
 import pt.ulisboa.tecnico.cmov.shopist.ui.dialogs.PromptMessage
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantriesListUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.CreateProductUI
+import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
 class ShoppingListItemUI : Fragment() {
@@ -32,6 +37,7 @@ class ShoppingListItemUI : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var shoppingListItem: ShoppingListItem
     private lateinit var shopIST: ShopIST
+    private lateinit var totalPrice : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +54,10 @@ class ShoppingListItemUI : Fragment() {
         shoppingListItem = shopIST.currentShoppingListItem!!
         shoppingListItem.reset()
 
+        totalPrice = root.findViewById<TextView>(R.id.priceValue)
+        changePrice()
+
+        root.findViewById<Button>(R.id.changePrice).setOnClickListener{ showDialogAddPrice() }
         root.findViewById<Button>(R.id.cancelButton).setOnClickListener{ cancel() }
         root.findViewById<Button>(R.id.okButton).setOnClickListener{ saveReturn() }
 
@@ -56,6 +66,92 @@ class ShoppingListItemUI : Fragment() {
         recyclerView.adapter = ShoppingListItemListAdapter(shoppingListItem)
 
         return root
+    }
+
+    private fun changePrice() {
+
+        val quantities = shoppingListItem.getAllQuantities()
+        val price = shoppingListItem.product.prices[shoppingListItem.shoppingList.store]
+        if(price != null) {
+            totalPrice.text = (price.toDouble()).toString() + "€"
+        }
+        else {
+            totalPrice.text = "---"
+        }
+    }
+
+    private fun showDialogAddPrice() {
+        // Inflate layout for dialog
+        val inflater = requireActivity().layoutInflater
+        val alert = AlertDialog.Builder(requireContext())
+        alert.setTitle(getString(R.string.product_add_price_one_store))
+
+        val alertRoot = inflater.inflate(R.layout.dialog_price_product_one_store, null)
+        alert.setView(alertRoot)
+        alert.setPositiveButton(getString(R.string.ok), null)
+        alert.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+            dialog.dismiss()
+        }
+
+
+        // Override Success button to make sure the user meets the conditions
+        val dialog = alert.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(object :
+            View.OnClickListener {
+            override fun onClick(v: View?) {
+                val priceText = alertRoot.findViewById<EditText>(R.id.productPrice).text.toString()
+                try {
+                    if (priceText.isEmpty() || priceText.toDouble() <= 0) {
+                        Toast.makeText(
+                            context,
+                            getString(R.string.price_above_zero),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return
+                    }
+                } catch (e: NumberFormatException) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.price_above_zero),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.d(ProductUI.TAG, "Invalid number inserted: \'$priceText\'")
+                    return
+                }
+
+                val price = priceText.toDouble()
+                val priceStore = shoppingListItem.shoppingList.store
+                val product = shoppingListItem.product
+
+                if (priceStore !== null && product.barcode !== null) {
+                    // Set price and send to server
+                    product.setPrice(priceStore!!, price)
+
+                    changePrice()
+                    API.getInstance(requireContext()).submitPriceProduct(price, product,
+                        priceStore!!, {
+                            Log.d(ProductUI.TAG, "Product price sent")
+                        }, {
+                            Log.d(ProductUI.TAG, "Could not send price")
+                        })
+
+                    (requireActivity().applicationContext as ShopIST).savePersistent()
+                    dialog.dismiss()
+                } else if (priceStore == null) {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.first_choose_store),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    // Set local price
+                    product.setPrice(priceStore!!, price)
+
+                    changePrice()
+                    dialog.dismiss()
+                }
+            }
+        })
     }
 
     override fun onResume() {
@@ -164,7 +260,8 @@ class ShoppingListItemUI : Fragment() {
     //--
 
     inner class ShoppingListItemListAdapter(
-        var shoppingListItem: ShoppingListItem
+        var shoppingListItem: ShoppingListItem,
+        var touchingDown : Boolean = false
     ) :
         RecyclerView.Adapter<ShoppingListItemListAdapter.ViewHolder>() {
 
@@ -173,6 +270,7 @@ class ShoppingListItemUI : Fragment() {
             private val needingView: TextView = view.findViewById(R.id.needingViewLocal)
             private val currentQuantity: TextView = view.findViewById(R.id.currentQuantity)
 
+            @SuppressLint("ClickableViewAccessibility")
             fun bind(item: Item) {
                 val pantryList = item.pantryList
                 textView.text = pantryList.name
@@ -184,19 +282,27 @@ class ShoppingListItemUI : Fragment() {
                 currentQuantity.text = quantities.cart.toString()
 
                 view.findViewById<View>(R.id.moreButton).setOnClickListener {
-                    item.product.barcode?.let {
-                        shopIST.productOrder.add(it)
-                    }
-                    // Add and update view
-                    shoppingListItem.add(item.pantryList)
-                    //cartView.text = quantities.cart.toString()
-                    currentQuantity.text = quantities.cart.toString()
+                    addCart(item, currentQuantity, quantities)
                 }
+
+                view.findViewById<View>(R.id.moreButton).setOnTouchListener { view, motionEvent ->
+                    onTouchButton(view, motionEvent) {
+                        lifecycleScope.launch {
+                            addCartWhileHeld(item, currentQuantity, quantities)
+                        }
+                    }
+                }
+
                 view.findViewById<View>(R.id.lessButton).setOnClickListener {
-                    // Subtract and update view
-                    shoppingListItem.remove(item.pantryList)
-                    //cartView.text = quantities.cart.toString()
-                    currentQuantity.text = quantities.cart.toString()
+                    subCart(item, currentQuantity, quantities)
+                }
+
+                view.findViewById<View>(R.id.lessButton).setOnTouchListener { view, motionEvent ->
+                    onTouchButton(view, motionEvent) {
+                        lifecycleScope.launch {
+                            subCartWhileHeld(item, currentQuantity, quantities)
+                        }
+                    }
                 }
 
                 // Disable buttons if shared and not connect
@@ -205,6 +311,62 @@ class ShoppingListItemUI : Fragment() {
                     view.findViewById<View>(R.id.lessButton).isEnabled = false
                 }
             }
+        }
+
+        private suspend fun addCartWhileHeld(item: Item, currentQuantity: TextView, quantities : Quantity) {
+            var counterUntilWorking = 5;
+            var currentCounter = 0;
+            while(touchingDown) {
+                currentCounter++
+                if(currentCounter > counterUntilWorking) {
+                    addCart(item, currentQuantity, quantities)
+                }
+                delay(100L)
+            }
+        }
+
+        private suspend fun subCartWhileHeld(item: Item, currentQuantity: TextView, quantities : Quantity) {
+            var counterUntilWorking = 5;
+            var currentCounter = 0;
+            while(touchingDown) {
+                currentCounter++
+                if(currentCounter > counterUntilWorking) {
+                    subCart(item, currentQuantity, quantities)
+                }
+                delay(100L)
+            }
+        }
+
+        private fun addCart(item: Item, currentQuantity: TextView, quantities : Quantity) {
+
+            item.product.barcode?.let {
+                shopIST.productOrder.add(it)
+            }
+            // Add and update view
+            shoppingListItem.add(item.pantryList)
+            //cartView.text = quantities.cart.toString()
+            currentQuantity.text = quantities.cart.toString()
+        }
+        private fun subCart(item: Item, currentQuantity: TextView, quantities : Quantity) {
+
+            // Subtract and update view
+            shoppingListItem.remove(item.pantryList)
+            //cartView.text = quantities.cart.toString()
+            currentQuantity.text = quantities.cart.toString()
+        }
+
+
+        private fun onTouchButton(view: View, motionEvent: MotionEvent, callback: (() -> Unit) ): Boolean {
+            when(motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    touchingDown = true
+                    callback.invoke()
+                }
+                MotionEvent.ACTION_UP -> {
+                    touchingDown = false
+                }
+            }
+            return false
         }
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
