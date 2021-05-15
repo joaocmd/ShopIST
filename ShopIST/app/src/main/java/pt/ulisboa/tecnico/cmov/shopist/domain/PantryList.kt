@@ -36,12 +36,13 @@ class PantryList(var name: String) : Locatable {
             val previousItems = p1._items.toList()
             p1._items.clear()
             update.items.forEach {
-                val existingItem = p1.itemsHasProduct(previousItems, it.productUUID)
-                if (existingItem != null) {
-                    Item.updateItem(existingItem, it, products, p1)
+                var currentItem = p1.itemsHasProduct(previousItems, it.productUUID)
+                if (currentItem != null) {
+                    Item.updateItem(currentItem, it, products, p1)
                 } else {
-                    p1.addItem(Item(it, products, p1))
+                    currentItem = Item(it, products, p1)
                 }
+                p1.addItem(currentItem)
             }
             p1.isShared = update.isShared
             p1.location = update.location

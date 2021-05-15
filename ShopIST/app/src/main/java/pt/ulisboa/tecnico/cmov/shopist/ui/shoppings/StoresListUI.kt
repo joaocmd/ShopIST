@@ -114,8 +114,7 @@ class StoresListUI : Fragment() {
         callback?.invoke()
     }
 
-    fun onRefresh( refresh : SwipeRefreshLayout) {
-        Log.i("tessi", "tessi done")
+    private fun onRefresh(refresh : SwipeRefreshLayout) {
         updateData {
             refresh.isRefreshing = false
         }

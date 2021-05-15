@@ -31,7 +31,7 @@ class Item(
             i.pantryList = pantryList
             i.pantryQuantity = itemDto.pantryQuantity
             // i.cartQuantity = itemDto.cartQuantity // Not updated since cart quantities are local
-            i.needingQuantity = itemDto.pantryQuantity
+            i.needingQuantity = itemDto.needingQuantity
             return i
         }
     }
