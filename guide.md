@@ -77,3 +77,10 @@ Passo 3:
 
 - Smart Sorting
 	- João verificar ordem nova (filipinos, boneco, croissant)
+
+
+# Termite Commands
+
+`cd D:\dani_\Documents\GitHub\CMov\lab04\Termite-Cli`
+`.\termite.bat`
+`load D:\dani_\Documents\GitHub\CMov-Project\Termite-scripts\checkpoint_first_checkout.termite`

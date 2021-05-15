@@ -668,6 +668,8 @@ class ProductUI : Fragment() {
 
                         globalData.savePersistent()
 
+                        // TODO: Send all images, ratings and prices to server
+
                         API.getInstance(requireContext()).postProduct(product, {
                             Log.d(TAG, "Product sent for update")
                         }, {

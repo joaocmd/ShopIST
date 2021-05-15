@@ -48,8 +48,8 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
 
         FileOutputStream(file).use {
             try {
-                this.put(key, CacheItem(file, local))
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+                this.put(key, CacheItem(file, local))
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
             }

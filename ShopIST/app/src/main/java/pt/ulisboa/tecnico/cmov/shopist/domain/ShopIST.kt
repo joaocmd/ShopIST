@@ -38,7 +38,7 @@ class ShopIST : Application() {
         const val IMAGE_FOLDER = "photos"
         const val LOCAL_IMAGE_FOLDER = "local_photos"
 
-        const val IMAGE_CACHE_SIZE = 10 * 1024 // 10 MiB (cache size in KiB)
+        const val IMAGE_CACHE_SIZE = 400 // FIXME: 10 * 1024 // 10 MiB (cache size in KiB)
     }
 
     private var firstTime = true
