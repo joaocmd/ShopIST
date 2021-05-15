@@ -667,7 +667,6 @@ class ProductUI : Fragment() {
 
                         globalData.savePersistent()
 
-                        // TODO: Send all images to server
                         // Send local prices
                         product.prices.forEach { (store, price) ->
                             API.getInstance(requireContext()).submitPriceProduct(price, product, store, {
@@ -676,6 +675,19 @@ class ProductUI : Fragment() {
                                 // Ignore
                             })
                         }
+
+                        // Send local photos
+                        product.images.forEach { imageId ->
+                            val imagePath = File(globalData.getLocalImageFolder(), "${imageId}${ShopIST.IMAGE_EXTENSION}")
+                            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath) ?: return
+                            API.getInstance((requireContext())).postProductImage(product, imageBitmap, UUID.fromString(imageId), {
+                                // Sent and done
+                            }, {
+                                // Ignore
+                            })
+                        }
+
+                        globalData.callbackDataSetChanged?.invoke()
 
                         Toast.makeText(
                             context, String.format(

@@ -415,11 +415,13 @@ inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
                     })
                 }
                 else if (item.product.images.size > 0) {
-                    val imageFileName = item.product.getLastImageName()
-                    val imagePath = File(globalData.getImageFolder(), imageFileName)
-                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-                    imageView.setImageBitmap(imageBitmap)
-                    imageView.visibility = View.VISIBLE
+                    val uuid = UUID.fromString(item.product.getLastImageId())
+                    val globalData = (requireContext().applicationContext as ShopIST)
+                    globalData.imageCache.getAsImage(uuid, {
+                        val imageView = view.findViewById<ImageView>(R.id.productImageView)
+                        imageView.setImageBitmap(it)
+                        imageView.visibility = View.VISIBLE
+                    }, {})
                 }
             }
         }
