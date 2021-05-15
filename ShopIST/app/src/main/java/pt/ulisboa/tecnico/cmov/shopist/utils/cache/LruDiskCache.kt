@@ -62,9 +62,9 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
         onErrorListener: (error: VolleyError) -> Unit
 	) {
         val inCache = this.get(key)
-        if (inCache != null) {
+        if (inCache != null && inCache.file.exists()) {
             onSuccessListener(BitmapFactory.decodeFile(inCache.file.absolutePath))
-			return
+            return
         }
 
         // FIXME Improve: These probably aren't needed because if they are present they are added on bootstrap
