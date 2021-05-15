@@ -429,7 +429,7 @@ inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
 
             // Hide pantry quantities
             view.findViewById<TextView>(R.id.pantryQuantityDisplay).visibility = View.GONE
-            view.findViewById<TextView>(R.id.transferOneItem).visibility = View.GONE
+            view.findViewById<ImageButton>(R.id.transferOneItem).visibility = View.GONE
 
             return ViewHolder(view)
         }
