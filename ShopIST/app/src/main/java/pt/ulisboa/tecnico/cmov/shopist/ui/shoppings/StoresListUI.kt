@@ -26,6 +26,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreatePantryUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
@@ -87,12 +88,12 @@ class StoresListUI : Fragment() {
             recyclerAdapter.notifyDataSetChanged()
         }
 
+        val context = requireContext()
         activity?.let { globalData.getCurrentDeviceLocation(it) {
-
-            globalData.pantries.forEach {
-                if (it.isShared) {
+            globalData.pantries.forEach { pantry ->
+                if (pantry.isShared) {
                     // Check for updates
-                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                    API.getInstance(context).getPantry(pantry.uuid, { result ->
                         globalData.populateFromServer(result)
                         globalData.callbackDataSetChanged?.invoke()
                     }, {
@@ -177,6 +178,14 @@ class StoresListUI : Fragment() {
                         R.id.action_nav_stores_list_to_nav_store_shopping_list,
                         bundleOf(ShoppingListUI.ARG_STORE_ID to store.uuid.toString())
                     )
+                }
+
+                cardView.setOnLongClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_shoppings_list_to_nav_create_shopping_list,
+                        bundleOf(CreateShoppingListUI.ARG_STORE_ID to store.uuid.toString())
+                    )
+                    true
                 }
             }
         }

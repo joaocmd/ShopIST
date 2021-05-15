@@ -176,6 +176,8 @@ class ShoppingListItemUI : Fragment() {
                 textView.text = pantryList.name
 
                 val quantities = shoppingListItem.tempQuantities[pantryList]!!
+                // Set initial value to needing value if not added any
+                if (quantities.cart == 0) quantities.cart = quantities.needing
                 needingView.text = quantities.needing.toString()
                 currentQuantity.text = quantities.cart.toString()
 
