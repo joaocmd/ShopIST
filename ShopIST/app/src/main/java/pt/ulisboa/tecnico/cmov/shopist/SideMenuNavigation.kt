@@ -37,9 +37,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.Store
 import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.PantryUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.ui.shoppings.ShoppingListUI
-import pt.ulisboa.tecnico.cmov.shopist.utils.API
-import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
-import pt.ulisboa.tecnico.cmov.shopist.utils.QueueBroadcastReceiver
+import pt.ulisboa.tecnico.cmov.shopist.utils.*
 import java.util.*
 
 
@@ -55,6 +53,7 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var firstStart = true
 
     // WiFi Direct variables
     private var mManager: SimWifiP2pManager? = null
@@ -104,6 +103,7 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
                     )
                 )
                 globalData.pantryToOpen = null
+                return
             }
             globalData.productToOpen !== null -> {
                 findNavController(R.id.nav_host_fragment).navigate(
@@ -113,9 +113,10 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
                     )
                 )
                 globalData.productToOpen = null
+                return
             }
-            globalData.currentLocation !== null -> {
-                openCorrespondingList(globalData.currentLocation!!)
+            else -> {
+                firstStart = false
             }
         }
     }
@@ -131,7 +132,18 @@ class SideMenuNavigation : AppCompatActivity(), SimWifiP2pManager.PeerListListen
             )
         }
 
-        // TODO: Detect change of location and open the corresponding list
+        // Detect change of location and open the corresponding list
+        val globalData = applicationContext as ShopIST
+        if (!firstStart && globalData.currentLocation != null) {
+            LocationUtils(this).getLastLocation { lastLocation ->
+                lastLocation?.let {
+                    globalData.currentLocation = lastLocation.toLatLng()
+                    openCorrespondingList(globalData.currentLocation!!)
+                }
+            }
+        }
+
+        firstStart = false
 
         // Start WiFi Direct
         val intent = Intent(applicationContext, SimWifiP2pService::class.java)

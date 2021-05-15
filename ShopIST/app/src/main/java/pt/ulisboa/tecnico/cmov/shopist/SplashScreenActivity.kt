@@ -8,14 +8,13 @@ import android.view.Window
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocaleHelper
 import pt.ulisboa.tecnico.cmov.shopist.utils.LocationUtils
 import pt.ulisboa.tecnico.cmov.shopist.utils.toLatLng
 import java.util.*
+
 
 class SplashScreenActivity : AppCompatActivity() {
 
@@ -27,48 +26,49 @@ class SplashScreenActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         this.requestWindowFeature(Window.FEATURE_NO_TITLE)
         supportActionBar?.hide()
+
         setContentView(R.layout.activity_splash_screen)
-
-        progressCircle = findViewById(R.id.progressBar)
-        progressCircle.visibility = View.VISIBLE
-
-        receivedUriIntent()
 
         API.getInstance(applicationContext).ping()
 
-        val globalData = applicationContext as ShopIST
-        if (globalData.pantries.isEmpty()) {
-            globalData.startUp()
-        }
+        receivedUriIntent()
 
-        // Get local cache files to the cache
-        globalData.imageCache.bootstrapCache(applicationContext as ShopIST)
+        val runnable = Runnable {
 
-        globalData.pantries.forEach {
-            if (it.isShared) {
-                // Check for updates
-                API.getInstance(applicationContext).getPantry(it.uuid, { result ->
-                    globalData.populateFromServer(result)
-                    globalData.callbackDataSetChanged?.invoke()
-                }, {
-                })
+            val globalData = applicationContext as ShopIST
+            if (globalData.pantries.isEmpty()) {
+                globalData.startUp()
+            }
+
+            // Get local cache files to the cache
+            globalData.imageCache.bootstrapCache(applicationContext as ShopIST)
+
+            globalData.pantries.forEach {
+                if (it.isShared) {
+                    // Check for updates
+                    API.getInstance(applicationContext).getPantry(it.uuid, { result ->
+                        globalData.populateFromServer(result)
+                        globalData.callbackDataSetChanged?.invoke()
+                    }, {
+                    })
+                }
+            }
+
+            LocaleHelper.setLocale(baseContext)
+            // Set current language
+            val currentLang = globalData.getLang()
+
+            // Get translations at start
+            globalData.getAllProducts().forEach { p ->
+                p.getText(currentLang, applicationContext) {
+                    p.translatedText = it
+                    p.hasTranslatedToLanguage = currentLang
+                }
             }
         }
-
-        LocaleHelper.setLocale(baseContext)
-        // Set current language
-        val currentLang = globalData.getLang()
-
-        // Get translations at start
-        globalData.getAllProducts().forEach { p ->
-            p.getText(currentLang, applicationContext) {
-                p.translatedText = it
-                p.hasTranslatedToLanguage = currentLang
-            }
-        }
+        Thread(runnable).start()
     }
 
     override fun onResume() {
@@ -90,22 +90,12 @@ class SplashScreenActivity : AppCompatActivity() {
          * cases when a location is not available.
          */
         try {
-            var that = this;
+            val globalData = applicationContext as ShopIST
             locationUtils.getLastLocation { lastLocation ->
-                if(lastLocation != null) {
-                    (applicationContext as ShopIST).currentLocation = lastLocation.toLatLng()
-
-                    runBlocking {
-                        launch {
-                            (applicationContext as ShopIST).getCurrentDeviceLocation(that)
-                            if (!hasPantryToOpen && !hasProductToOpen) dismiss()
-                        }
-                    }
+                lastLocation?.let {
+                    globalData.currentLocation = it.toLatLng()
                 }
-                else {
-                    (applicationContext as ShopIST).getCurrentDeviceLocation(that)
-                    if (!hasPantryToOpen && !hasProductToOpen) dismiss()
-                }
+                if (!hasPantryToOpen && !hasProductToOpen) dismiss()
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message!!)
@@ -114,9 +104,8 @@ class SplashScreenActivity : AppCompatActivity() {
 
     private fun receivedUriIntent(): Boolean {
         if (intent?.action == Intent.ACTION_VIEW) {
+            val shopIst = (applicationContext as ShopIST)
             try {
-                val shopIst = (applicationContext as ShopIST)
-
                 val urlArgs = intent.data.toString().split("/")
                 if (urlArgs.size != 5) {
                     return false
