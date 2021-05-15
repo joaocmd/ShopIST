@@ -25,6 +25,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.GetProductRatingResponseDt
 import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.SubmitProductRatingDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.sorting.SubmitOrderDto
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.util.*
 import javax.net.ssl.SSLHandshakeException
 
@@ -300,13 +301,13 @@ class API constructor(context: Context) {
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-                val responseObj = JsonParser.parseString(response).asJsonObject
-                val duration = responseObj
-                    .getAsJsonArray("resourceSets")[0].asJsonObject
-                    .getAsJsonArray("resources")[0].asJsonObject
-                    .get("travelDuration").asLong
-
-                onSuccessListener(duration)
+                try {
+                    val duration = JsonParser.parseString(response).asJsonObject
+                        .get("duration").asLong
+                    onSuccessListener(duration)
+                } catch (e: Exception) {
+                    // ...
+                }
             },
             {
                 onErrorListener(it)
