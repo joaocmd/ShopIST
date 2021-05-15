@@ -25,11 +25,9 @@ class LocaleHelper {
             val langString = settings.getString(c.getString(R.string.my_lang), null)
 
             if (langString != null) {
-                Log.i("lang", langString)
                 return langString
             }
 
-            Log.i("lang", "lang is null")
             return Locale.getDefault().language
         }
 
@@ -45,9 +43,6 @@ class LocaleHelper {
         }
 
         private fun updateResources(c: Context, language: String) {
-            Log.i("lang", "Updating resources")
-            Log.i("lang", Locale.getDefault().toString())
-            Log.i("lang", language)
 
             val locale = Locale(language)
             Locale.setDefault(locale)
@@ -57,9 +52,6 @@ class LocaleHelper {
             //val newContext = c.createConfigurationContext(newConfig)
             c.resources.updateConfiguration(newConfig, c.resources.displayMetrics)
 
-            Log.i("lang", Locale.getDefault().toString())
-            Log.i("lang", language)
-            Log.i("lang", "Finish Updating resources")
         }
     }
 }

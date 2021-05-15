@@ -269,7 +269,7 @@ class PantryUI : Fragment() {
         RecyclerView.Adapter<PantryAdapter.ViewHolder>() {
 
         inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-            private var transferItem: Button = view.findViewById(R.id.transferOneItem)
+            private var transferItem: ImageButton = view.findViewById(R.id.transferOneItem)
             private val imageView: ImageView = view.findViewById(R.id.productImageView)
             private val textView: TextView = view.findViewById(R.id.rowText)
             private val pantryQuantityView : TextView = view.findViewById(R.id.pantryQuantityDisplay)

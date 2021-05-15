@@ -95,7 +95,6 @@ class SplashScreenActivity : AppCompatActivity() {
             var that = this;
             locationUtils.getLastLocation { lastLocation ->
                 if(lastLocation != null) {
-                    Log.i("location","last location is indeed available")
                     (applicationContext as ShopIST).currentLocation = lastLocation.toLatLng()
 
                     runBlocking {
