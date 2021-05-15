@@ -10,136 +10,148 @@
     android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-    <RelativeLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swiperRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <HorizontalScrollView
-                android:id="@+id/horizontal_scroll"
-                android:visibility="gone"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="match_parent">
 
                 <LinearLayout
-                    android:id="@+id/productImageLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal" />
-
-            </HorizontalScrollView>
-
-            <ImageView
-                android:id="@+id/productImage"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                app:srcCompat="@drawable/ic_image_add"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_image_add" />
-
-            <TextView
-                android:id="@+id/productName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:ems="10"
-                android:hint="@string/create_product_item_name"
-                android:text=""
-                android:visibility="invisible" />
-
-            <TextView
-                android:id="@+id/barcodeValue"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:ems="10"
-                android:hint="barcode"
-                android:layout_marginBottom="20dp" />
-
-            <TextView
-                android:id="@+id/product_rating_disabled"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/connect_to_the_internet_and_add_or_add_a_barcode_to_access_user_ratings" />
-
-            <LinearLayout
-                android:id="@+id/product_rating"
-                android:layout_width="match_parent"
-                android:layout_height="199dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="62dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:weightSum="2">
+                    android:layout_above="@+id/buttons">
+
+                    <HorizontalScrollView
+                        android:id="@+id/horizontal_scroll"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp">
+
+                        <LinearLayout
+                            android:id="@+id/productImageLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal" />
+
+                    </HorizontalScrollView>
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/productImage"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
+                        android:layout_height="200dp"
+                        app:srcCompat="@drawable/ic_image_add"
+                        tools:src="@tools:sample/avatars" />
 
-                        android:src="@drawable/ic_baseline_star_rate_24" />
+                    <ImageButton
+                        android:id="@+id/imageButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_image_add" />
 
                     <TextView
-                        android:id="@+id/rating_text"
+                        android:id="@+id/productName"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_gravity="center"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:ems="10"
+                        android:hint="@string/create_product_item_name"
+                        android:text=""
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/barcodeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:ems="10"
+                        android:hint="barcode"
+                        android:layout_marginBottom="20dp" />
+
+                    <TextView
+                        android:id="@+id/product_rating_disabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="---"
-                        android:textAlignment="center"
-                        android:textSize="36sp" />
+                        android:text="@string/connect_to_the_internet_and_add_or_add_a_barcode_to_access_user_ratings" />
+
+                    <LinearLayout
+                        android:id="@+id/product_rating"
+                        android:layout_width="match_parent"
+                        android:layout_height="199dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="62dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:weightSum="2">
+
+                            <ImageView
+                                android:id="@+id/imageView2"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+
+                                android:src="@drawable/ic_baseline_star_rate_24" />
+
+                            <TextView
+                                android:id="@+id/rating_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:text="---"
+                                android:textAlignment="center"
+                                android:textSize="24sp" />
+                        </LinearLayout>
+
+                        <com.github.mikephil.charting.charts.HorizontalBarChart
+                            android:id="@+id/histogram"
+                            android:layout_width="285dp"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/white" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:id="@+id/histogram"
-                    android:layout_width="285dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white" />
-            </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/buttons"
+                    android:layout_alignParentBottom="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <View
+                        android:id="@+id/section_divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/section_divider_height"
+                        android:background="@color/section_divider"
+                        android:layout_marginBottom="@dimen/section_divider_margin"
+                        android:layout_marginTop="@dimen/section_divider_margin" />
+
+                    <Button
+                        android:id="@+id/addPriceButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/product_add_price" />
+
+                    <Button
+                        android:id="@+id/seePricesButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/product_see_prices" />
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <View
-                android:id="@+id/section_divider"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/section_divider_height"
-                android:background="@color/section_divider"
-                android:layout_marginBottom="@dimen/section_divider_margin"
-                android:layout_marginTop="@dimen/section_divider_margin" />
-
-            <Button
-                android:id="@+id/addPriceButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/product_add_price" />
-
-            <Button
-                android:id="@+id/seePricesButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/product_see_prices" />
-        </LinearLayout>
-    </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,12 +16,14 @@ import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import kotlinx.android.synthetic.main.fragment_pantries_list.*
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -112,6 +114,8 @@ class ProductUI : Fragment() {
             showDialogRating()
         }
 
+        root.findViewById<SwipeRefreshLayout>(R.id.swiperRefresh).setOnRefreshListener { onRefresh(swiperRefresh) }
+
         prepareChart()
 
         return root
@@ -119,8 +123,13 @@ class ProductUI : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
+        updateData()
         // setEnableButtons(globalData.isAPIConnected)
 
+    }
+
+    private fun updateData(callback: (() -> Unit)? = null) {
         // Update prices from server for all stores, for this product in specific
         API.getInstance(requireContext()).getPricesForProduct(
             product,
@@ -142,6 +151,14 @@ class ProductUI : Fragment() {
 
         // Update images
         showImages()
+
+        callback?.invoke()
+    }
+
+    private fun onRefresh(refresh : SwipeRefreshLayout) {
+        updateData {
+            refresh.isRefreshing = false
+        }
     }
 
     private fun updateRatings() {
