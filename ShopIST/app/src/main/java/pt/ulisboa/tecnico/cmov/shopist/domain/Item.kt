@@ -18,7 +18,7 @@ class Item(
         pantryList,
         i.pantryQuantity,
         i.needingQuantity,
-        0
+        i.cartQuantity
     )
 
     companion object {

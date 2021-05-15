@@ -16,7 +16,8 @@ class ShoppingList() {
         val tempItems: MutableMap<Product, MutableList<Item>> = mutableMapOf()
         for (pantry in allPantries) {
             for (item in pantry.items) {
-                if (item.product.hasStore(store.uuid) && item.needingQuantity > 0) {
+                if (item.product.hasStore(store.uuid) &&
+                    (item.needingQuantity > 0 || item.cartQuantity > 0)) {
                     if (tempItems.containsKey(item.product)) {
                         tempItems[item.product]!!.add(item)
                     } else {

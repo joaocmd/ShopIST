@@ -111,6 +111,7 @@ class ShoppingListUI : Fragment() {
             // shoppingList = globalData.getShoppingList(storeId)
             recyclerAdapter.shoppingList = globalData.getShoppingList(shoppingList.store!!.uuid)
             recyclerAdapter.notifyDataSetChanged()
+            setTotals()
         }
 
         setEnableButtons(globalData.isAPIConnected)

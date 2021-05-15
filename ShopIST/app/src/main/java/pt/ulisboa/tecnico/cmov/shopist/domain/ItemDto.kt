@@ -11,6 +11,6 @@ data class ItemDto(val productUUID: UUID,
         item.product.uuid,
         item.pantryQuantity,
         item.needingQuantity,
-        0, // Cart quantity not sent because it is local
+        item.cartQuantity,
     )
 }

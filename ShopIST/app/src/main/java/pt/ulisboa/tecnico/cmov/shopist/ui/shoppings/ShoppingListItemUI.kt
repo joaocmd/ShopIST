@@ -151,7 +151,9 @@ class ShoppingListItemUI : Fragment() {
             API.getInstance(requireContext()).updatePantry(e.key)
         }
 
-        (requireContext().applicationContext as ShopIST).savePersistent()
+        val globalData = (requireContext().applicationContext as ShopIST)
+        globalData.callbackDataSetChanged?.invoke()
+        globalData.savePersistent()
         findNavController().popBackStack()
     }
 
