@@ -42,7 +42,7 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
             File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         }
 
-        if (this.get(key) == null) {
+        if (this.get(key) != null) {
             return
         }
 
