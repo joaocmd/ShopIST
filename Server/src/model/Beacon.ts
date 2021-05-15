@@ -46,6 +46,9 @@ export default class {
 
     estimateCurrentTime(): number | null {
         // converts { peopleAhead: x, timeTaken: y} to [x, y]
+        if (this.itemsInLine() === 0) {
+            return 0
+        }
         const formattedData = this.regressionData.map(r => [r.itemsAhead, r.timeTaken] as DataPoint)
 
         const result = regression.linear(formattedData)
