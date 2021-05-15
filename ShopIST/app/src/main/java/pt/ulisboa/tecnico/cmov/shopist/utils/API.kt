@@ -598,7 +598,8 @@ class API constructor(context: Context) {
             Request.Method.GET, url,
             { response ->
                 setConnection(null)
-                val imageBytes = Base64.decode(response, Base64.DEFAULT)
+                val imageJSON = JsonParser.parseString(response).asJsonObject
+                val imageBytes = Base64.decode(imageJSON.get("image").asString, Base64.DEFAULT)
                 val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 onSuccessListener(bitmap)
             },
