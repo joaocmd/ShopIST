@@ -240,7 +240,7 @@ class ProductUI : Fragment() {
                 if (product.images.size > 0) {
                     root.findViewById<ImageView>(R.id.productImage).visibility = View.GONE
                     root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.VISIBLE
-                    product.images.forEachIndexed { i: Int, s: String ->
+                    product.getOrderedImages().forEachIndexed { i: Int, s: String ->
                         val uuid = UUID.fromString(s)
                         globalData.imageCache.getAsImage(uuid, {
                             val imageView = ImageView(requireContext())
@@ -272,7 +272,7 @@ class ProductUI : Fragment() {
         if (product.images.size > 0) {
             root.findViewById<ImageView>(R.id.productImage).visibility = View.GONE
             root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.VISIBLE
-            product.images.forEachIndexed { i: Int, s: String ->
+            product.getOrderedImages().forEachIndexed { i: Int, s: String ->
                 val uuid = UUID.fromString(s)
                 globalData.imageCache.getAsImage(uuid, {
                     val imageView = ImageView(requireContext())
