@@ -1,2 +1,4 @@
 notes.md
 *.log
+.vscode/
+.idea/
