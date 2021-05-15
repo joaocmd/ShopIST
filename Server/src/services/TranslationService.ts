@@ -1,11 +1,9 @@
 import fetch from 'cross-fetch'
 
-// FIXME: Remove this
 const TRANSLATION_API_KEY = process.env.TRANSLATION_API_KEY
 const TRANSLATION_API_URL = "https://translation.googleapis.com/language/translate/v2"
 
-// FIXME: This is off but working
-const isTranslationAvailable = false
+const isTranslationAvailable = true
 const translations: Record<string, Record<string, Record<string, string>>> = {}
 /* Example:
 	translations = {
