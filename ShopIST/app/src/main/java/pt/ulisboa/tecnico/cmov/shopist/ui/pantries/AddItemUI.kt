@@ -99,7 +99,7 @@ class AddItemUI : Fragment() {
         for ((index, product) in products.listIterator().withIndex()) {
             val radioButton = RadioButton(context)
             radioButton.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            radioButton.text = product.name
+            radioButton.text = product.getTranslatedName()
             radioButton.id = index
             radioGroup.addView(radioButton)
         }

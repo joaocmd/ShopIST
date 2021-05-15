@@ -293,7 +293,7 @@ class ShopIST : Application() {
     }
 
     fun getLang(): Languages {
-        return when (LocaleHelper.getLanguage(baseContext)) {
+        return when (LocaleHelper.getLanguage(baseContext).toUpperCase()) {
             "EN" -> Languages.EN
             "PT" -> Languages.PT
             else -> Languages.EN
