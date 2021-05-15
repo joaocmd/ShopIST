@@ -41,6 +41,7 @@ class ShoppingListUI : Fragment() {
     private lateinit var storeId: UUID
     private lateinit var recyclerAdapter: ShoppingListAdapter
     private lateinit var globalData: ShopIST
+    private var currentOrder: List<String>? = null
 
     private lateinit var menuRoot: Menu
 
@@ -103,14 +104,29 @@ class ShoppingListUI : Fragment() {
 
         recyclerAdapter.notifyDataSetChanged()
         globalData.callbackDataSetChanged = {
-            // shoppingList = globalData.getShoppingList(storeId)
-            recyclerAdapter.shoppingList = globalData.getShoppingList(shoppingList.store!!.uuid)
+            shoppingList = globalData.getShoppingList(shoppingList.store!!.uuid)
+            globalData.currentShoppingList = shoppingList
+            recyclerAdapter.shoppingList = shoppingList
+
+            currentOrder?.let { order ->
+                val newOrder = shoppingList.items
+                    .sortedWith { s1, s2 ->
+                        val s1Barcode = s1.product.barcode
+                        val s2Barcode = s2.product.barcode
+                        when {
+                            s1Barcode == null && s2Barcode == null -> 0
+                            s2Barcode == null -> -1
+                            s1Barcode == null -> 1
+                            else -> order.indexOf(s1Barcode) - order.indexOf(s2Barcode)
+                        }
+                    }
+                shoppingList.items = newOrder.toMutableList()
+            }
             recyclerAdapter.notifyDataSetChanged()
             setTotals()
         }
 
         setEnableButtons(globalData.isAPIConnected)
-
 
         globalData.pantries.forEach {
             if (it.isShared) {
@@ -129,19 +145,7 @@ class ShoppingListUI : Fragment() {
                 storeLocation,
                 shoppingList.items.map { it.product },
                 { order ->
-                    val newOrder = shoppingList.items
-                        .sortedWith { s1, s2 ->
-                            val s1Barcode = s1.product.barcode
-                            val s2Barcode = s2.product.barcode
-                            when {
-                                s1Barcode == null && s2Barcode == null -> 0
-                                s2Barcode == null -> -1
-                                s1Barcode == null -> 1
-                                else -> order.indexOf(s1Barcode) - order.indexOf(s2Barcode)
-                            }
-                        }
-
-                    shoppingList.items = newOrder.toMutableList()
+                    currentOrder = order
                     globalData.callbackDataSetChanged?.invoke()
                 },
                 {
@@ -151,7 +155,6 @@ class ShoppingListUI : Fragment() {
         }
 
         callback?.invoke()
-        // TODO: Get one image for each product
     }
 
     private fun onRefresh(refresh : SwipeRefreshLayout) {

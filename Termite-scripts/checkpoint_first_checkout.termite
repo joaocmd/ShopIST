@@ -7,7 +7,7 @@ binddevice Android1 e1
 wait
 move Android1 (ShopIST-001)
 commit
-wait 40
+wait 8
 move Android1 ()
 commit
 wait
