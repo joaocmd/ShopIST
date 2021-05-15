@@ -75,11 +75,11 @@ class PantriesListUI : Fragment() {
             recyclerAdapter.list = globalData.pantries.toList()
             recyclerAdapter.notifyDataSetChanged()
         }
-        activity?.let { globalData.getCurrentDeviceLocation(it) {
+        activity?.let { activity -> globalData.getCurrentDeviceLocation(activity) {
             globalData.pantries.forEach {
                 if (it.isShared) {
                     // Check for updates
-                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                    API.getInstance(activity.applicationContext).getPantry(it.uuid, { result ->
                         globalData.populateFromServer(result)
                         globalData.callbackDataSetChanged?.invoke()
                     }, {
