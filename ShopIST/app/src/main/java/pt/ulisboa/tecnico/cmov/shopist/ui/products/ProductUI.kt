@@ -332,7 +332,6 @@ class ProductUI : Fragment() {
                         photoFile!!
                     )
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
-                    // TODO: Verify if camera permission is denied
                     startActivityForResult(intent, IMAGE_CAMERA)
                 }
                 getString(R.string.choose_from_gallery) -> {

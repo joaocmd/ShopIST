@@ -32,7 +32,6 @@ import pt.ulisboa.tecnico.cmov.shopist.ui.products.ProductUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 
 class ShoppingListItemUI : Fragment() {
-    // TODO: Add button to set to min and max quantity on cart
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var shoppingListItem: ShoppingListItem
@@ -201,7 +200,7 @@ class ShoppingListItemUI : Fragment() {
                 // Remove item from shopping list
                 if (shoppingListItem.product.isShared) {
                     shoppingListItem.shoppingList.removeItem(shoppingListItem.product.uuid)
-                    // TODO: What happens if the server can't accept it? The product will remain equal, is that bad?
+
                     API.getInstance(requireContext()).postProduct(shoppingListItem.product, {
                         saveReturn()
                     }, {

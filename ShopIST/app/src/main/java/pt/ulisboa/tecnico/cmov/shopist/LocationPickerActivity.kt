@@ -29,7 +29,7 @@ class LocationPickerActivity : AppCompatActivity(),
         private const val DEFAULT_ZOOM = 15
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 
-        private const val TAG = "shopist.MapsActivity"
+        private const val TAG = "${ShopIST.TAG}.MapsActivity"
         const val LATITUDE = "$TAG.LAT"
         const val LONGITUDE = "$TAG.LON"
     }
@@ -37,8 +37,6 @@ class LocationPickerActivity : AppCompatActivity(),
     private lateinit var map: GoogleMap
     private lateinit var locationUtils: LocationUtils
     private var locationPermissionGranted = false
-    // TODO: Try to make the default location somewhere according to the country?
-    private val defaultLocation = LatLng(38.73795412879115, -9.137816238437372)
     private var lastKnownLocation: Location? = null
     private var selectedMarker: Marker? = null
 

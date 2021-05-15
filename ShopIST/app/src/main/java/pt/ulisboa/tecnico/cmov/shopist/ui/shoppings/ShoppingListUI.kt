@@ -296,7 +296,6 @@ class ShoppingListUI : Fragment() {
             val productsToUpdate = globalData.getProductsWithStore(store.uuid)
             globalData.removeStore(store.uuid)
 
-            // TODO: What happens if we can't reach the server? Do the products stay the same?
             productsToUpdate.forEach {
                 API.getInstance(requireContext()).postProduct(it, {}, {})
             }
@@ -359,6 +358,7 @@ inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
                     moneyView.text = "---"
                 }
             }
+
             fun bind(item: ShoppingListItem) {
                 textView.text = item.product.getTranslatedName()
                 val quantities = item.getAllQuantities()
