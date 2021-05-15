@@ -277,12 +277,8 @@ class ShopIST : Application() {
 
     fun getAllLists(): List<Locatable> {
         val res = mutableListOf<Locatable>()
-        allPantries.forEach {
-            res.add(it.value)
-        }
-        allStores.forEach {
-            res.add(it.value)
-        }
+        res.addAll(allPantries.values)
+        res.addAll(allStores.values)
         return res
     }
 
