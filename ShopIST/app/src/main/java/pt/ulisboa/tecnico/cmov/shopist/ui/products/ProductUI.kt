@@ -667,13 +667,15 @@ class ProductUI : Fragment() {
 
                         globalData.savePersistent()
 
-                        // TODO: Send all images, ratings and prices to server
-
-                        API.getInstance(requireContext()).postProduct(product, {
-                            Log.d(TAG, "Product sent for update")
-                        }, {
-                            Log.d(TAG, "Could not send product")
-                        })
+                        // TODO: Send all images to server
+                        // Send local prices
+                        product.prices.forEach { (store, price) ->
+                            API.getInstance(requireContext()).submitPriceProduct(price, product, store, {
+                                // Sent and done
+                            }, {
+                                // Ignore
+                            })
+                        }
 
                         Toast.makeText(
                             context, String.format(

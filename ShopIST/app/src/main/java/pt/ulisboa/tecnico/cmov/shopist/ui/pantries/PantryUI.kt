@@ -333,34 +333,32 @@ class PantryUI : Fragment() {
                 }
 
                 // Set last image
-                if (item.product.images.size > 0) {
-                    if (item.product.barcode != null) {
-                        // Update images from server
-                        val context = requireContext().applicationContext
-                        API.getInstance(context).getProductImages(item.product, { images ->
-                            item.product.images = images.toMutableList()
+                if (item.product.barcode != null) {
+                    // Update images from server
+                    val context = requireContext().applicationContext
+                    API.getInstance(context).getProductImages(item.product, { images ->
+                        item.product.images = images.toMutableList()
 
-                            if (item.product.images.size > 0) {
-                                val uuid = UUID.fromString(item.product.getLastImageId())
-                                val globalData = (context as ShopIST)
-                                globalData.imageCache.getAsImage(uuid, {
-                                    val imageView = view.findViewById<ImageView>(R.id.productImageView)
-                                    imageView.setImageBitmap(it)
-                                    imageView.visibility = View.VISIBLE
-                                }, {})
-                            }
-                        }, {
-                            // Ignore
-                        })
-                    } else {
-                        val uuid = UUID.fromString(item.product.getLastImageId())
-                        val globalData = (requireContext().applicationContext as ShopIST)
-                        globalData.imageCache.getAsImage(uuid, {
-                            val imageView = view.findViewById<ImageView>(R.id.productImageView)
-                            imageView.setImageBitmap(it)
-                            imageView.visibility = View.VISIBLE
-                        }, {})
-                    }
+                        if (item.product.images.size > 0) {
+                            val uuid = UUID.fromString(item.product.getLastImageId())
+                            val globalData = (context as ShopIST)
+                            globalData.imageCache.getAsImage(uuid, {
+                                val imageView = view.findViewById<ImageView>(R.id.productImageView)
+                                imageView.setImageBitmap(it)
+                                imageView.visibility = View.VISIBLE
+                            }, {})
+                        }
+                    }, {
+                        // Ignore
+                    })
+                } else if (item.product.images.size > 0) {
+                    val uuid = UUID.fromString(item.product.getLastImageId())
+                    val globalData = (requireContext().applicationContext as ShopIST)
+                    globalData.imageCache.getAsImage(uuid, {
+                        val imageView = view.findViewById<ImageView>(R.id.productImageView)
+                        imageView.setImageBitmap(it)
+                        imageView.visibility = View.VISIBLE
+                    }, {})
                 }
             }
         }
