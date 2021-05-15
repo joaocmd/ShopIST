@@ -392,33 +392,36 @@ inner class ShoppingListAdapter(var shoppingList: ShoppingList) :
                     displayFullScreenImage(it as ImageView)
                 }
                 // Set last image
-                if (item.product.images.size > 0) {
-                    // Get image from cache
-                    if (item.product.barcode !== null) {
-                        API.getInstance(requireContext()).getProductImages(item.product, { imageIds ->
-                            val lastImage = imageIds[imageIds.size-1]
+                if (item.product.barcode != null) {
+                    API.getInstance(requireContext()).getProductImages(item.product, { imageIds ->
+                        item.product.images = imageIds.toMutableList()
+
+                        if (imageIds.isNotEmpty()) {
+                            val lastImage = item.product.getLastImageId()
 
                             // Get image from cache
                             globalData.imageCache.getAsImage(UUID.fromString(lastImage), { image ->
-                                root.findViewById<ImageView>(R.id.productImageView).setImageBitmap(image)
+                                imageView.setImageBitmap(image)
+                                imageView.visibility = View.VISIBLE
                             }, { })
-
-                            item.product.images = imageIds.toMutableList()
-                        }, {
-                            // Verify if locally we have the image
-                            if (item.product.images.size > 0) {
-                                val imageFileName = item.product.getLastImageName()
-                                val imagePath = File(globalData.getImageFolder(), imageFileName)
-                                val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-                                view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
-                            }
-                        })
-                    } else {
-                        val imageFileName = item.product.getLastImageName()
-                        val imagePath = File(globalData.getImageFolder(), imageFileName)
-                        val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
-                        view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(imageBitmap)
-                    }
+                        }
+                    }, {
+                        // Verify if locally we have the image
+                        if (item.product.images.size > 0) {
+                            val imageFileName = item.product.getLastImageName()
+                            val imagePath = File(globalData.getImageFolder(), imageFileName)
+                            val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+                            imageView.setImageBitmap(imageBitmap)
+                            imageView.visibility = View.VISIBLE
+                        }
+                    })
+                }
+                else if (item.product.images.size > 0) {
+                    val imageFileName = item.product.getLastImageName()
+                    val imagePath = File(globalData.getImageFolder(), imageFileName)
+                    val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
+                    imageView.setImageBitmap(imageBitmap)
+                    imageView.visibility = View.VISIBLE
                 }
             }
         }

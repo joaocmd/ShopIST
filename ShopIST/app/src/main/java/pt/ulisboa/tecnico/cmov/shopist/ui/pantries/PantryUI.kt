@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_pantries_list.*
+import kotlinx.android.synthetic.main.fragment_pantries_list.swiperRefresh
+import kotlinx.android.synthetic.main.fragment_product.*
 import pt.ulisboa.tecnico.cmov.shopist.BarcodeScannerActivity
 import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
@@ -344,7 +346,9 @@ class PantryUI : Fragment() {
                                 val uuid = UUID.fromString(item.product.getLastImageId())
                                 val globalData = (context as ShopIST)
                                 globalData.imageCache.getAsImage(uuid, {
-                                    view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
+                                    val imageView = view.findViewById<ImageView>(R.id.productImageView)
+                                    imageView.setImageBitmap(it)
+                                    imageView.visibility = View.VISIBLE
                                 }, {})
                             }
                         }, {
@@ -354,7 +358,9 @@ class PantryUI : Fragment() {
                         val uuid = UUID.fromString(item.product.getLastImageId())
                         val globalData = (requireContext().applicationContext as ShopIST)
                         globalData.imageCache.getAsImage(uuid, {
-                            view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
+                            val imageView = view.findViewById<ImageView>(R.id.productImageView)
+                            imageView.setImageBitmap(it)
+                            imageView.visibility = View.VISIBLE
                         }, {})
                     }
                 }
