@@ -25,6 +25,7 @@ import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.GetProductRatingResponseDt
 import pt.ulisboa.tecnico.cmov.shopist.domain.ratings.SubmitProductRatingDto
 import pt.ulisboa.tecnico.cmov.shopist.domain.sorting.SubmitOrderDto
 import java.io.ByteArrayOutputStream
+import java.lang.Exception
 import java.util.*
 import javax.net.ssl.SSLHandshakeException
 
@@ -32,8 +33,6 @@ import javax.net.ssl.SSLHandshakeException
 class API constructor(context: Context) {
     private val queue: RequestQueue = Volley.newRequestQueue(context.applicationContext)
     private val baseURL = context.resources.getString(R.string.api_base_url)
-    private val directionsURL = context.resources.getString(R.string.directions_api_url)
-    private val bingKey = context.resources.getString(R.string.bing_maps_key)
     private val globalData = context as ShopIST
 
     companion object {
@@ -302,13 +301,13 @@ class API constructor(context: Context) {
         val stringRequest = StringRequest(
             Request.Method.GET, url,
             { response ->
-                val responseObj = JsonParser.parseString(response).asJsonObject
-                val duration = responseObj
-                    .getAsJsonArray("resourceSets")[0].asJsonObject
-                    .getAsJsonArray("resources")[0].asJsonObject
-                    .get("travelDuration").asLong
-
-                onSuccessListener(duration)
+                try {
+                    val duration = JsonParser.parseString(response).asJsonObject
+                        .get("duration").asLong
+                    onSuccessListener(duration)
+                } catch (e: Exception) {
+                    // ...
+                }
             },
             {
                 onErrorListener(it)
@@ -599,7 +598,8 @@ class API constructor(context: Context) {
             Request.Method.GET, url,
             { response ->
                 setConnection(null)
-                val imageBytes = Base64.decode(response, Base64.DEFAULT)
+                val imageJSON = JsonParser.parseString(response).asJsonObject
+                val imageBytes = Base64.decode(imageJSON.get("image").asString, Base64.DEFAULT)
                 val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 onSuccessListener(bitmap)
             },

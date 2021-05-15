@@ -5,7 +5,7 @@ const handler = async (req: express.Request, res: express.Response) => {
     try {
         let params = req.query
         let text = await DrivingTimeService.getDrivingTime(params.orig as string, params.dest as string)
-		res.status(200).send(text)
+        res.status(200).send({ duration: text })
     } catch (error) {
         res.status(400).send({ status: 400, error })
     }
@@ -13,7 +13,7 @@ const handler = async (req: express.Request, res: express.Response) => {
 
 const config = {
     method: 'GET',
-    path: ''
+    path: '/'
 }
 
 export default {

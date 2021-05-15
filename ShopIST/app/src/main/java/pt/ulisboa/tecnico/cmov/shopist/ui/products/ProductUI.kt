@@ -233,10 +233,46 @@ class ProductUI : Fragment() {
         val layout = root.findViewById<LinearLayout>(R.id.productImageLayout)
         layout.removeAllViews()
 
+        if (product.barcode != null) {
+            API.getInstance(requireContext()).getProductImages(product, { images ->
+                product.images = images.toMutableList()
+
+                if (product.images.size > 0) {
+                    root.findViewById<ImageView>(R.id.productImage).visibility = View.GONE
+                    root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.VISIBLE
+                    product.getOrderedImages().forEachIndexed { i: Int, s: String ->
+                        val uuid = UUID.fromString(s)
+                        globalData.imageCache.getAsImage(uuid, {
+                            val imageView = ImageView(requireContext())
+                            imageView.id = i
+                            imageView.setImageBitmap(it)
+                            val lp = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT
+                            )
+
+                            lp.setMargins(10, 0, 10, 0)
+
+                            imageView.layoutParams = lp
+
+                            layout.addView(imageView)
+
+                            imageView.setOnClickListener { img ->
+                                displayFullScreenImage(img as ImageView)
+                            }
+                        }, { })
+                    }
+                }
+            }, {
+                // Ignore
+            })
+            return
+        }
+
         if (product.images.size > 0) {
             root.findViewById<ImageView>(R.id.productImage).visibility = View.GONE
             root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.VISIBLE
-            product.images.forEachIndexed { i: Int, s: String ->
+            product.getOrderedImages().forEachIndexed { i: Int, s: String ->
                 val uuid = UUID.fromString(s)
                 globalData.imageCache.getAsImage(uuid, {
                     val imageView = ImageView(requireContext())
@@ -283,6 +319,7 @@ class ProductUI : Fragment() {
                         photoFile!!
                     )
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
+                    // TODO: Verify if camera permission is denied
                     startActivityForResult(intent, IMAGE_CAMERA)
                 }
                 getString(R.string.choose_from_gallery) -> {

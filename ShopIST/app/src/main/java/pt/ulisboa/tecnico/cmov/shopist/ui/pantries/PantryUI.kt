@@ -98,15 +98,6 @@ class PantryUI : Fragment() {
                 globalData.populateFromServer(result)
                 pantryList = globalData.getPantryList(pantryList.uuid)
 
-                // Get one image for each product
-                pantryList.getProducts().forEach {
-                    if (it.images.size > 0) {
-                        globalData.imageCache.getAsImage(UUID.fromString(it.getLastImageId()), {
-                            globalData.callbackDataSetChanged?.invoke()
-                        }, {})
-                    }
-                }
-
                 // FIXME: When loading the pantry from the server, when it translates to the current language, the text will flick from the original one to the translated one
                 globalData.callbackDataSetChanged?.invoke()
             }, {
@@ -115,22 +106,12 @@ class PantryUI : Fragment() {
                     setEnableButtons(globalData.isAPIConnected)
                 }
             })
-        } else {
-            pantryList.getProducts().forEach {
-                if (it.images.size > 0) {
-                    val uuid = UUID.fromString(it.getLastImageId())
-                    globalData.imageCache.getAsImage(uuid, {
-                        globalData.callbackDataSetChanged?.invoke()
-                    }, {})
-                }
-            }
         }
 
         callback?.invoke()
     }
 
-    fun onRefresh( refresh : SwipeRefreshLayout) {
-        Log.i("tessi", "tessi done")
+    private fun onRefresh(refresh : SwipeRefreshLayout) {
         updateData {
             refresh.isRefreshing = false
         }
@@ -353,11 +334,28 @@ class PantryUI : Fragment() {
 
                 // Set last image
                 if (item.product.images.size > 0) {
-                    val uuid = UUID.fromString(item.product.getLastImageId())
-                    val globalData = (requireContext().applicationContext as ShopIST)
-                    globalData.imageCache.getAsImage(uuid, {
-                        view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
-                    }, {})
+                    if (item.product.barcode != null) {
+                        // Update images from server
+                        API.getInstance(requireContext()).getProductImages(item.product, { images ->
+                            item.product.images = images.toMutableList()
+
+                            if (item.product.images.size > 0) {
+                                val uuid = UUID.fromString(item.product.getLastImageId())
+                                val globalData = (requireContext().applicationContext as ShopIST)
+                                globalData.imageCache.getAsImage(uuid, {
+                                    view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
+                                }, {})
+                            }
+                        }, {
+                            // Ignore
+                        })
+                    } else {
+                        val uuid = UUID.fromString(item.product.getLastImageId())
+                        val globalData = (requireContext().applicationContext as ShopIST)
+                        globalData.imageCache.getAsImage(uuid, {
+                            view.findViewById<ImageView>(R.id.productImageView).setImageBitmap(it)
+                        }, {})
+                    }
                 }
             }
         }

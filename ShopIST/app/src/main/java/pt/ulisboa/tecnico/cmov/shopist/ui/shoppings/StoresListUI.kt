@@ -26,6 +26,7 @@ import pt.ulisboa.tecnico.cmov.shopist.R
 import pt.ulisboa.tecnico.cmov.shopist.TopBarController
 import pt.ulisboa.tecnico.cmov.shopist.domain.ShopIST
 import pt.ulisboa.tecnico.cmov.shopist.domain.Store
+import pt.ulisboa.tecnico.cmov.shopist.ui.pantries.CreatePantryUI
 import pt.ulisboa.tecnico.cmov.shopist.utils.API
 import java.util.*
 
@@ -87,12 +88,12 @@ class StoresListUI : Fragment() {
             recyclerAdapter.notifyDataSetChanged()
         }
 
+        val context = requireContext()
         activity?.let { globalData.getCurrentDeviceLocation(it) {
-
-            globalData.pantries.forEach {
-                if (it.isShared) {
+            globalData.pantries.forEach { pantry ->
+                if (pantry.isShared) {
                     // Check for updates
-                    API.getInstance(requireContext()).getPantry(it.uuid, { result ->
+                    API.getInstance(context).getPantry(pantry.uuid, { result ->
                         globalData.populateFromServer(result)
                         globalData.callbackDataSetChanged?.invoke()
                     }, {
@@ -114,8 +115,7 @@ class StoresListUI : Fragment() {
         callback?.invoke()
     }
 
-    fun onRefresh( refresh : SwipeRefreshLayout) {
-        Log.i("tessi", "tessi done")
+    private fun onRefresh(refresh : SwipeRefreshLayout) {
         updateData {
             refresh.isRefreshing = false
         }
@@ -135,7 +135,6 @@ class StoresListUI : Fragment() {
             view
         ) {
             private val textView: TextView = view.findViewById(R.id.rowText)
-            //private val drivingTimeImage: ImageView = view.findViewById(R.id.drivingTimeImage)
             private val drivingTimeText: TextView = view.findViewById(R.id.drivingTime)
             private val checkoutTime: TextView = view.findViewById(R.id.checkoutTime)
             private val itemPercentage: TextView = view.findViewById(R.id.itemPercentage)
@@ -149,7 +148,6 @@ class StoresListUI : Fragment() {
                     drivingTimeText.text = "---"
                 }
 
-                //use store.checkouttime
                 if ( store.queueTime != null) {
                     checkoutTime.text = DateUtils.formatElapsedTime(store.queueTime!!)
                 } else {
@@ -157,27 +155,30 @@ class StoresListUI : Fragment() {
                 }
 
                 val globalData = activity.applicationContext as ShopIST
-                // val percentage = store.itemPercentage(globalData.pantries.toList())
                 val itemQuantityTotal = store.itemQuantityTotal(globalData.pantries.toList())
                 itemPercentage.text = itemQuantityTotal.toString()
 
                 /* TODO: HUGO FIX THIS! */
                 val startColor = Color.parseColor("#821e1e")
                 val endColor = Color.parseColor("#67a327")
-                // Log.i("Error", startColor.toString())
-                // Log.i("Error", endColor.toString())
 
                 val color = ColorUtils.blendARGB(startColor, endColor, 1f)
 
-                itemPercentage.setTextColor(
-                    color
-                )
+                itemPercentage.setTextColor(color)
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {
                     view.findNavController().navigate(
                         R.id.action_nav_stores_list_to_nav_store_shopping_list,
                         bundleOf(ShoppingListUI.ARG_STORE_ID to store.uuid.toString())
                     )
+                }
+
+                cardView.setOnLongClickListener {
+                    view.findNavController().navigate(
+                        R.id.action_nav_shoppings_list_to_nav_create_shopping_list,
+                        bundleOf(CreateShoppingListUI.ARG_STORE_ID to store.uuid.toString())
+                    )
+                    true
                 }
             }
         }

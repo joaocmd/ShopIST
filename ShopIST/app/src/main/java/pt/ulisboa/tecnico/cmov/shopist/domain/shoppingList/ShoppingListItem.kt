@@ -15,8 +15,11 @@ class ShoppingListItem(val product: Product) {
    constructor(product: Product, items: Collection<Item>, shoppingList: ShoppingList) : this(product) {
       items.forEach {
          this.items.add(it)
-         this.quantities[it.pantryList] = Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
-         this.tempQuantities[it.pantryList] = Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
+         this.quantities[it.pantryList] =
+            Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
+
+         this.tempQuantities[it.pantryList] =
+             Quantity(it.pantryQuantity, it.needingQuantity, it.cartQuantity)
       }
       this.items = items.sortedBy { it.pantryList.name }.toMutableList()
       this.shoppingList = shoppingList

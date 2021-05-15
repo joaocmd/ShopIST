@@ -158,9 +158,9 @@ class ShopIST : Application() {
         }}
 
         // Set pantry
-        allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
-        // val pantry = allPantries[dto.pantry.uuid]
-        // allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
+        // allPantries[dto.pantry.uuid] = PantryList(dto.pantry, allProducts)
+        val pantry = allPantries[dto.pantry.uuid]
+        allPantries[dto.pantry.uuid] = PantryList.updatePantry(pantry, dto.pantry, allProducts)
 
         savePersistent()
     }
@@ -256,11 +256,13 @@ class ShopIST : Application() {
             API.getInstance(applicationContext).getRouteTime(
                 currentLocation!!,
                 it.location!!,
-                { time -> it.drivingTime = time },
+                { time ->
+                    it.drivingTime = time
+                    callbackDataSetChanged?.invoke()
+                },
                 { }
             )
         }
-        callbackDataSetChanged?.invoke()
     }
 
     fun getShoppingList(uuid: UUID): ShoppingList {
@@ -277,12 +279,8 @@ class ShopIST : Application() {
 
     fun getAllLists(): List<Locatable> {
         val res = mutableListOf<Locatable>()
-        allPantries.forEach {
-            res.add(it.value)
-        }
-        allStores.forEach {
-            res.add(it.value)
-        }
+        res.addAll(allPantries.values)
+        res.addAll(allStores.values)
         return res
     }
 

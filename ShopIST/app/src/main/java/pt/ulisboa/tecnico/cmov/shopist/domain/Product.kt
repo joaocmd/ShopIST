@@ -66,7 +66,11 @@ class Product(var name: String, originLang: Languages?): Translatable(name, orig
         images.add(name)
     }
 
-    fun getLastImageIndex(): Int {
+    fun getOrderedImages(): List<String> {
+        return images.reversed()
+    }
+
+    private fun getLastImageIndex(): Int {
         return images.size - 1
     }
 

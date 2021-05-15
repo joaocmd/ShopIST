@@ -42,10 +42,14 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
             File(shopIST.getImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         }
 
+        if (this.get(key) != null) {
+            return
+        }
+
         FileOutputStream(file).use {
             try {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
                 this.put(key, CacheItem(file, local))
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
             } catch (e: Exception) {
                 Log.e(TAG, e.message, e)
             }
@@ -58,12 +62,12 @@ class LruDiskCache(maxSize: Int, val shopIST: ShopIST) : LruCache<UUID, CacheIte
         onErrorListener: (error: VolleyError) -> Unit
 	) {
         val inCache = this.get(key)
-        if (inCache != null) {
+        if (inCache != null && inCache.file.exists()) {
             onSuccessListener(BitmapFactory.decodeFile(inCache.file.absolutePath))
-			return
+            return
         }
 
-        // FIXME: these probably aren't needed because if they are present they are added on bootstrap
+        // FIXME Improve: These probably aren't needed because if they are present they are added on bootstrap
         var imagePath = File(shopIST.getLocalImageFolder().absolutePath, "$key${ShopIST.IMAGE_EXTENSION}")
         if (imagePath.exists()) {
             val imageBitmap = BitmapFactory.decodeFile(imagePath.absolutePath)

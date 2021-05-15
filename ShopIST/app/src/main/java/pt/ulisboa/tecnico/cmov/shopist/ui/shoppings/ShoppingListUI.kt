@@ -111,6 +111,7 @@ class ShoppingListUI : Fragment() {
             // shoppingList = globalData.getShoppingList(storeId)
             recyclerAdapter.shoppingList = globalData.getShoppingList(shoppingList.store!!.uuid)
             recyclerAdapter.notifyDataSetChanged()
+            setTotals()
         }
 
         setEnableButtons(globalData.isAPIConnected)
@@ -126,7 +127,7 @@ class ShoppingListUI : Fragment() {
                 })
             }
         }
-/*
+
         // Get product order
         store.location?.let { storeLocation ->
             API.getInstance(requireContext()).getProductOrder(
@@ -146,7 +147,6 @@ class ShoppingListUI : Fragment() {
                         }
 
                     shoppingList.items = newOrder.toMutableList()
-
                     globalData.callbackDataSetChanged?.invoke()
                 },
                 {
@@ -154,13 +154,12 @@ class ShoppingListUI : Fragment() {
                 }
             )
         }
-    */
+
         callback?.invoke()
         // TODO: Get one image for each product
     }
 
-    fun onRefresh( refresh : SwipeRefreshLayout) {
-    Log.i("tessi", "tessi done")
+    private fun onRefresh(refresh : SwipeRefreshLayout) {
         updateData {
             refresh.isRefreshing = false
         }

@@ -2,11 +2,12 @@ package pt.ulisboa.tecnico.cmov.shopist.domain
 
 import java.util.*
 
-class Item(val product: Product,
-           val pantryList: PantryList,
-           var pantryQuantity: Int,
-           var needingQuantity: Int,
-           var cartQuantity: Int) {
+class Item(
+    var product: Product,
+    var pantryList: PantryList,
+    var pantryQuantity: Int,
+    var needingQuantity: Int,
+    var cartQuantity: Int) {
 
     constructor(
         i: ItemDto,
@@ -26,9 +27,11 @@ class Item(val product: Product,
             if (i == null) {
                 return Item(itemDto, products, pantryList)
             }
+            i.product = products[itemDto.productUUID]!!
+            i.pantryList = pantryList
             i.pantryQuantity = itemDto.pantryQuantity
-            i.cartQuantity = itemDto.cartQuantity
-            i.needingQuantity = itemDto.pantryQuantity
+            // i.cartQuantity = itemDto.cartQuantity // Not updated since cart quantities are local
+            i.needingQuantity = itemDto.needingQuantity
             return i
         }
     }
