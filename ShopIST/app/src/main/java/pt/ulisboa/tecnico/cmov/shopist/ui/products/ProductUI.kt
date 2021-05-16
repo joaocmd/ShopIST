@@ -244,10 +244,10 @@ class ProductUI : Fragment() {
 
     private fun showImages() {
         val layout = root.findViewById<LinearLayout>(R.id.productImageLayout)
-        layout.removeAllViews()
 
         if (product.barcode != null) {
             API.getInstance(requireContext()).getProductImages(product, { images ->
+                layout.removeAllViews()
                 product.images = images.toMutableList()
 
                 if (product.images.size > 0) {
