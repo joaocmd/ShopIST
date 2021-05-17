@@ -3,7 +3,7 @@ import BeaconService from "../../services/BeaconService"
 
 const handler = (req: express.Request, res: express.Response) => {
     try {
-		const body = req.body
+        const body = req.body
         const result = BeaconService.getTimeEstimates(body.stores)
         res.send(result)
     } catch (error) {

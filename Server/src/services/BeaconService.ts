@@ -41,7 +41,7 @@ export default class BeaconService {
         return Object.entries(stores).reduce((acc: Record<string, number>, store) => {
             const [uuid, location] = store
             const estimate = this.getTimeEstimate(location)
-            if (estimate !== null) {
+            if (estimate !== null && estimate !== undefined) {
                 acc[uuid] = estimate
             }
             return acc
