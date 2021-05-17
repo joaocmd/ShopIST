@@ -283,6 +283,7 @@ class ProductUI : Fragment() {
         }
 
         if (product.images.size > 0) {
+            layout.removeAllViews()
             root.findViewById<ImageView>(R.id.productImage).visibility = View.GONE
             root.findViewById<HorizontalScrollView>(R.id.horizontal_scroll).visibility = View.VISIBLE
             product.getOrderedImages().forEachIndexed { i: Int, s: String ->

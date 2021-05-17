@@ -103,6 +103,7 @@ class StoresListUI : Fragment() {
         } }
 
         API.getInstance(requireContext()).beaconEstimates(globalData.stores.toList(), {
+            globalData.stores.forEach { store -> store.queueTime = null }
             it.forEach { s ->
                 val store = globalData.getStore(UUID.fromString(s.key))
                 store.queueTime = (s.value / 1000).toLong() // comes in milliseconds
