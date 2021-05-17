@@ -29,7 +29,6 @@ export default class {
     submitOrder(barcodes: string[]) {
         this.fillNew(barcodes)
 
-        // FIXME: why can't I use for i in barcodes?
         for (let i = 0; i < barcodes.length; i++) {
             for (let j = i + 1; j < barcodes.length; j++) {
                 const [a, b] = [barcodes[i], barcodes[j]]
@@ -45,7 +44,6 @@ export default class {
         this.fillNew(barcodes)
 
         // Can't use regular sort because this relation is not transitive
-        // FIXME: why can't I use for i in barcodes?
         for (let i = 0; i < barcodes.length; i++) {
             for (let j = i + 1; j < barcodes.length; j++) {
                 const a = barcodes[i]

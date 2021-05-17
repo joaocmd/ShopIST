@@ -3,7 +3,6 @@ import Location from "../model/Location"
 
 const products: Record<string, ProductPrice[]> = {}
 
-// TODO: Set this as global for every distance calculation
 const MAX_DISTANCE = 100
 
 export default class ProductPriceService {

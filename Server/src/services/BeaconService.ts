@@ -5,7 +5,6 @@ const beacons: Record<string, Beacon> = {}
 beacons["ShopIST-001"] = new Beacon("ShopIST-001", new Location({ latitude: 38.73361076643277, longitude: -9.142712429165842 }))
 beacons["ShopIST-002"] = new Beacon("ShopIST-002", new Location({ latitude: 38.73595121972168, longitude: -9.141665026545525 }))
 
-// TODO: Set this as global for every distance calculation
 const MAX_DISTANCE = 100
 
 export default class BeaconService {

@@ -1,6 +1,5 @@
 import fetch from 'cross-fetch'
 
-// FIXME: Remove this
 const BING_MAPS_API_KEY = process.env.BING_MAPS_API_KEY
 const BING_MAPS_API_URL = 'https://dev.virtualearth.net/REST/V1/Routes'
 

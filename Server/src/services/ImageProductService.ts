@@ -27,7 +27,6 @@ export class ImageProductService {
 
 	static getAllImages(barcode: string): string[] {
 		if (productImages[barcode] !== undefined) {
-			// TODO: Show only 10??? more recent
 			return productImages[barcode]
 		}
 		throw "Can't find product"
