@@ -310,38 +310,41 @@ class PantryUI : Fragment() {
                 val globalData = requireActivity().applicationContext as ShopIST
                 if (!globalData.isAPIConnected && pantryList.isShared) {
                     transferItem.background = context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
+                    transferItem.isEnabled = false
                 }
                 else {
-                    transferItem.setOnClickListener {
-                        if (item.pantryQuantity == 0) return@setOnClickListener
-
-                        item.pantryQuantity = item.pantryQuantity - 1
-                        item.needingQuantity = item.needingQuantity + 1
-
-                        if (pantryList.isShared) {
-                            API.getInstance(requireContext()).updatePantry(pantryList)
-                        }
-
-                        (requireActivity().applicationContext as ShopIST).savePersistent()
-                        pantryQuantityView.text = item.pantryQuantity.toString()
-                        needingQuantityView.text = item.needingQuantity.toString()
-                        if (item.pantryQuantity == 0) {
-                            (it as ImageButton).background =
-                                context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
-                        } else {
-                            (it as ImageButton).background =
-                                context!!.getDrawable(R.drawable.arrow_button_bg)
-                        }
-                        //do stuff
-                    }
                     if(item.pantryQuantity == 0) {
                         transferItem.background = context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
+                        transferItem.isEnabled = false
                     }
                     else {
                         transferItem.background = context!!.getDrawable(R.drawable.arrow_button_bg)
+                        transferItem.isEnabled = true
                     }
                 }
 
+                transferItem.setOnClickListener {
+                    if (item.pantryQuantity == 0) return@setOnClickListener
+
+                    item.pantryQuantity = item.pantryQuantity - 1
+                    item.needingQuantity = item.needingQuantity + 1
+
+                    if (pantryList.isShared) {
+                        API.getInstance(requireContext()).updatePantry(pantryList)
+                    }
+
+                    (requireActivity().applicationContext as ShopIST).savePersistent()
+                    pantryQuantityView.text = item.pantryQuantity.toString()
+                    needingQuantityView.text = item.needingQuantity.toString()
+                    if (item.pantryQuantity == 0) {
+                        (it as ImageButton).background =
+                            context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
+                    } else {
+                        (it as ImageButton).background =
+                            context!!.getDrawable(R.drawable.arrow_button_bg)
+                    }
+                    //do stuff
+                }
                 // Set last image
                 if (item.product.barcode != null) {
                     // Update images from server
