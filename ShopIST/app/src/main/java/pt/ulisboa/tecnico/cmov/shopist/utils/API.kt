@@ -53,7 +53,9 @@ class API constructor(context: Context) {
     private fun setConnection(error: VolleyError?) {
         if (error == null) {
             globalData.isAPIConnected = true
-        } else globalData.isAPIConnected = error !is TimeoutError
+        } else {
+            globalData.isAPIConnected = error !is TimeoutError && error !is NoConnectionError
+        }
     }
 
     private fun getUpdateDto(received: String): PantryUpdateDto {
