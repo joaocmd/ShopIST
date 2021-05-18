@@ -37,16 +37,16 @@ app.use(express.json())
 registerEndpoints(app)
 
 // HTTP version on port 3000
-app.listen(port, () => console.log(`Listening on port ${port}`))
+// app.listen(port, () => console.log(`Listening on port ${port}`))
 
-// const privateKey = fs.readFileSync( '/keys/private.pem')
-// const certificate = fs.readFileSync( '/keys/certificate.pem' )
+const privateKey = fs.readFileSync( '/keys/private.pem')
+const certificate = fs.readFileSync( '/keys/certificate.pem' )
 
-// createServer({
-// 	key: privateKey,
-// 	cert: certificate
-// }, app).listen(443, () => {
-// 	console.log("Server started on port 443")
-// })
+createServer({
+	key: privateKey,
+	cert: certificate
+}, app).listen(443, () => {
+	console.log("Server started on port 443")
+})
 
 export default app
