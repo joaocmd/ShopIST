@@ -321,15 +321,12 @@ class PantryUI : Fragment() {
                     pantryQuantityView.text = item.pantryQuantity.toString()
                     needingQuantityView.text = item.needingQuantity.toString()
                     if(item.pantryQuantity == 0) {
-                        (it as Button).background.setTint(context!!.getColor(R.color.gray_not_usable))
-                        //android:backgroundTint="@color/gray_not_usable"
+                        (it as ImageButton).background.setTint(context!!.getColor(R.color.gray_not_usable))
                     }
-                    //do stuff
                 }
 
                 if(item.pantryQuantity == 0) {
                     transferItem.background.setTint(context!!.getColor(R.color.gray_not_usable))
-                    //android:backgroundTint="@color/gray_not_usable"
                 }
 
                 // Set last image
