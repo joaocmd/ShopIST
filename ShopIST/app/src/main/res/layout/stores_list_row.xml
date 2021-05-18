@@ -44,6 +44,7 @@
                 android:layout_weight="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:text="50%"
+                android:textColor="@color/green_good"
                 android:gravity="center" />
 
             <TextView

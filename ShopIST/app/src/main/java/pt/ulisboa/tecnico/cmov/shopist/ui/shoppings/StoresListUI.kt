@@ -159,13 +159,6 @@ class StoresListUI : Fragment() {
                 val itemQuantityTotal = store.itemQuantityTotal(globalData.pantries.toList())
                 itemPercentage.text = itemQuantityTotal.toString()
 
-                /* TODO: HUGO FIX THIS! */
-                val startColor = Color.parseColor("#821e1e")
-                val endColor = Color.parseColor("#67a327")
-
-                val color = ColorUtils.blendARGB(startColor, endColor, 1f)
-
-                itemPercentage.setTextColor(color)
                 val cardView: View = view.findViewById(R.id.rowCard)
                 cardView.setOnClickListener {
                     view.findNavController().navigate(

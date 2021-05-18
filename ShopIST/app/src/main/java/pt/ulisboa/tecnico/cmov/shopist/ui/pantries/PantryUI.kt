@@ -307,26 +307,39 @@ class PantryUI : Fragment() {
                     displayFullScreenImage(it as ImageView)
                 }
 
-                transferItem.setOnClickListener {
-                    if(item.pantryQuantity == 0) return@setOnClickListener
-
-                    item.pantryQuantity = item.pantryQuantity - 1
-                    item.needingQuantity = item.needingQuantity + 1
-
-                    if (pantryList.isShared) {
-                        API.getInstance(requireContext()).updatePantry(pantryList)
-                    }
-
-                    (requireActivity().applicationContext as ShopIST).savePersistent()
-                    pantryQuantityView.text = item.pantryQuantity.toString()
-                    needingQuantityView.text = item.needingQuantity.toString()
-                    if(item.pantryQuantity == 0) {
-                        (it as ImageButton).background.setTint(context!!.getColor(R.color.gray_not_usable))
-                    }
+                val globalData = requireActivity().applicationContext as ShopIST
+                if (!globalData.isAPIConnected && pantryList.isShared) {
+                    transferItem.background = context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
                 }
+                else {
+                    transferItem.setOnClickListener {
+                        if (item.pantryQuantity == 0) return@setOnClickListener
 
-                if(item.pantryQuantity == 0) {
-                    transferItem.background.setTint(context!!.getColor(R.color.gray_not_usable))
+                        item.pantryQuantity = item.pantryQuantity - 1
+                        item.needingQuantity = item.needingQuantity + 1
+
+                        if (pantryList.isShared) {
+                            API.getInstance(requireContext()).updatePantry(pantryList)
+                        }
+
+                        (requireActivity().applicationContext as ShopIST).savePersistent()
+                        pantryQuantityView.text = item.pantryQuantity.toString()
+                        needingQuantityView.text = item.needingQuantity.toString()
+                        if (item.pantryQuantity == 0) {
+                            (it as ImageButton).background =
+                                context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
+                        } else {
+                            (it as ImageButton).background =
+                                context!!.getDrawable(R.drawable.arrow_button_bg)
+                        }
+                        //do stuff
+                    }
+                    if(item.pantryQuantity == 0) {
+                        transferItem.background = context!!.getDrawable(R.drawable.arrow_button_bg_disabled)
+                    }
+                    else {
+                        transferItem.background = context!!.getDrawable(R.drawable.arrow_button_bg)
+                    }
                 }
 
                 // Set last image
