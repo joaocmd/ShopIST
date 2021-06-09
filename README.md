@@ -15,7 +15,7 @@ For frontend (situated at [/ShopIST](/ShopIST)):
 
 Backend:
 1. Go to folder [`Server/`](Server/)
-2. Copy the file [`.env.example`](Server/.env.example), name it [`.env.xml`](Server/.env), and insert your Google Translation API key and Bing Maps API key.
+2. Copy the file [`.env.example`](Server/.env.example), name it [`.env`](Server/.env), and insert your Google Translation API key and Bing Maps API key.
 3. Insert your keys (private and public) in [/keys/](/keys) (or change the path in [`index.ts`](Server/src/index.ts) on lines 42 and 43 for the private and public keys, accordingly)
 4. Run `npm i --also=dev`
 5. Run `npx ts-node src/index.ts` (or `npm start`)
